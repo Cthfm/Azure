@@ -1,0 +1,3 @@
+# KQL
+
+Kusto Query Language (KQL) serves as a powerful tool for threat hunters operating within Azure environments. Specifically designed for querying large datasets, KQL allows analysts to efficiently explore Azure Monitor logs, Azure Security Center data, and other telemetry sources. Its syntax, resembling SQL, enables threat hunters to craft complex queries to pinpoint suspicious activities, anomalies, and potential security threats across cloud services. By mastering KQL, threat hunters can perform proactive threat detection, conduct forensic investigations, and generate actionable insights crucial for maintaining the security posture of Azure deployments.
