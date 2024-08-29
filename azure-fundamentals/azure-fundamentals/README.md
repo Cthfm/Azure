@@ -12,6 +12,8 @@ This section provides a foundational overview of key Azure concepts tailored for
 
 **Azure Licensing Overview**: Understanding Azure licensing helps threat hunters navigate cost implications and compliance requirements associated with Azure services, ensuring alignment with security strategies and budget constraints.
 
+**Azure Hierarchy -** Understand the components of a tenant and how reach resource type interacts with each other within the tenant hierarchy.&#x20;
+
 **Azure Shared Responsibility**: The shared responsibility model outlines the division of security responsibilities between Azure and its customers, guiding threat hunters in implementing appropriate security measures and monitoring practices.
 
 **Fundamental Azure Services**: An overview of core Azure services relevant to threat hunting, including Azure Security Center, Azure Monitor, Azure Sentinel, and others essential for monitoring, detecting, and responding to security threats.
