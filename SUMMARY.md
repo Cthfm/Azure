@@ -134,4 +134,5 @@
     * [Reputational Scoring](threat-hunting-in-azure/microsoft-defender-threat-intelligence/reputational-scoring.md)
     * [Analyst Insights](threat-hunting-in-azure/microsoft-defender-threat-intelligence/analyst-insights.md)
     * [Microsoft Defender TI: Copilot Integration](threat-hunting-in-azure/microsoft-defender-threat-intelligence/microsoft-defender-ti-copilot-integration.md)
+  * [Hands On Threat Hunting Examples](threat-hunting-in-azure/hands-on-threat-hunting-examples.md)
   * [OSINT Feeds](threat-hunting-in-azure/osint-feeds.md)
