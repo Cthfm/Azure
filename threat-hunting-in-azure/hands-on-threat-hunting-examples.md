@@ -10,13 +10,13 @@ Practical, hands-on experience is crucial for mastering threat hunting in Azure 
 
 **Setup**
 
-* **Azure Subscription:** Ensure you have access to an Azure subscription with Azure Active Directory (AAD) and Azure Monitor logs enabled.
-* **Audit Logs:** Ensure that logging is enabled for Azure AD sign-in and audit logs.
+* **Azure Subscription:** Ensure you have access to an Azure subscription with Azure Entra ID and Azure Monitor logs enabled.
+* **Audit Logs:** Ensure that logging is enabled for Azure Entra ID sign-in and audit logs.
 * **Attack Simulation:** Use a different location or a compromised account to simulate unauthorized access attempts to the Azure portal.
 
 **Exercise Steps**
 
-1.  **Access Sign-In Logs:** Use Azure Monitor or Azure Sentinel to access and search through Azure AD sign-in logs.
+1.  **Access Sign-In Logs:** Use Azure Monitor or Azure Sentinel to access and search through Azure Entra ID sign-in logs.
 
     ```kusto
     SigninLogs
