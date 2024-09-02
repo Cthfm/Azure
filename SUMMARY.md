@@ -128,7 +128,7 @@
   * [MITRE Att\&ck: Azure](threat-hunting-in-azure/mitre-att-and-ck-azure/README.md)
     * [MITRE Att\&ck Azure AD Matrix](threat-hunting-in-azure/mitre-att-and-ck-azure/mitre-att-and-ck-azure-ad-matrix.md)
     * [MITRE Att\&CK: Azure Security Control Mapping](threat-hunting-in-azure/mitre-att-and-ck-azure/mitre-att-and-ck-azure-security-control-mapping.md)
-  * [Threat Intelligence](threat-hunting-in-azure/threat-intelligence.md)
+  * [Azure Threat Hunting Ideas](threat-hunting-in-azure/azure-threat-hunting-ideas.md)
   * [Microsoft Defender Threat Intelligence](threat-hunting-in-azure/microsoft-defender-threat-intelligence/README.md)
     * [Data Sets](threat-hunting-in-azure/microsoft-defender-threat-intelligence/data-sets.md)
     * [Reputational Scoring](threat-hunting-in-azure/microsoft-defender-threat-intelligence/reputational-scoring.md)
