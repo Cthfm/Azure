@@ -83,6 +83,8 @@
         * [Packet Capture: Scale Sets](azure-fundamentals/logging/network-watcher/packet-capture/packet-capture-scale-sets.md)
     * [Compute Resources](azure-fundamentals/logging/compute-resources/README.md)
       * [Azure Monitor Agent](azure-fundamentals/logging/compute-resources/azure-monitor-agent.md)
+      * [VM Insights](azure-fundamentals/logging/compute-resources/vm-insights/README.md)
+        * [VM Insights Tables](azure-fundamentals/logging/compute-resources/vm-insights/vm-insights-tables.md)
     * [Storage Accounts](azure-fundamentals/logging/storage-accounts/README.md)
       * [Storage Account Logging](azure-fundamentals/logging/storage-accounts/storage-account-logging/README.md)
         * [File](azure-fundamentals/logging/storage-accounts/storage-account-logging/file/README.md)
