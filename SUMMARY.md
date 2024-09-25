@@ -9,19 +9,18 @@
 
 ## Azure Fundamentals
 
-* [Azure Fundamentals Overview](azure-fundamentals/azure-fundamentals-overview.md)
-* [Azure Fundamentals Overview](azure-fundamentals/azure-fundamentals-overview-1/README.md)
-  * [Azure Documentation](azure-fundamentals/azure-fundamentals-overview-1/azure-documentation.md)
-  * [Azure Entra](azure-fundamentals/azure-fundamentals-overview-1/azure-entra.md)
-  * [Azure Hierarchy](azure-fundamentals/azure-fundamentals-overview-1/azure-hierarchy.md)
-  * [Identities](azure-fundamentals/azure-fundamentals-overview-1/identities.md)
-  * [Azure Entra Roles](azure-fundamentals/azure-fundamentals-overview-1/azure-entra-roles.md)
-  * [Azure RBAC](azure-fundamentals/azure-fundamentals-overview-1/azure-rbac.md)
-  * [Azure Licensing Overview](azure-fundamentals/azure-fundamentals-overview-1/azure-licensing-overview/README.md)
-    * [Azure Entra ID Premium Licenses Comparison](azure-fundamentals/azure-fundamentals-overview-1/azure-licensing-overview/azure-entra-id-premium-licenses-comparison.md)
-  * [Azure Shared Responsibility Model](azure-fundamentals/azure-fundamentals-overview-1/azure-shared-responsibility-model.md)
-  * [Azure Frameworks](azure-fundamentals/azure-fundamentals-overview-1/azure-frameworks.md)
-  * [Azure Security Services](azure-fundamentals/azure-fundamentals-overview-1/azure-security-services.md)
+* [Azure Fundamentals Overview](azure-fundamentals/azure-fundamentals-overview/README.md)
+  * [Azure Documentation](azure-fundamentals/azure-fundamentals-overview/azure-documentation.md)
+  * [Azure Entra](azure-fundamentals/azure-fundamentals-overview/azure-entra.md)
+  * [Azure Hierarchy](azure-fundamentals/azure-fundamentals-overview/azure-hierarchy.md)
+  * [Identities](azure-fundamentals/azure-fundamentals-overview/identities.md)
+  * [Azure Entra Roles](azure-fundamentals/azure-fundamentals-overview/azure-entra-roles.md)
+  * [Azure RBAC](azure-fundamentals/azure-fundamentals-overview/azure-rbac.md)
+  * [Azure Licensing Overview](azure-fundamentals/azure-fundamentals-overview/azure-licensing-overview/README.md)
+    * [Azure Entra ID Premium Licenses Comparison](azure-fundamentals/azure-fundamentals-overview/azure-licensing-overview/azure-entra-id-premium-licenses-comparison.md)
+  * [Azure Shared Responsibility Model](azure-fundamentals/azure-fundamentals-overview/azure-shared-responsibility-model.md)
+  * [Azure Frameworks](azure-fundamentals/azure-fundamentals-overview/azure-frameworks.md)
+  * [Azure Security Services](azure-fundamentals/azure-fundamentals-overview/azure-security-services.md)
 
 ## Azure CLI
 
@@ -161,6 +160,6 @@
   * [Hands On Threat Hunting Examples](threat-hunting/threat-hunting-in-azure/hands-on-threat-hunting-examples.md)
   * [OSINT Feeds](threat-hunting/threat-hunting-in-azure/osint-feeds.md)
 
-***
+## Microsoft Resources
 
-* [Welcome](welcome-1.md)
+* [Microsoft Incident Response Ninja Hub](microsoft-resources/microsoft-incident-response-ninja-hub.md)

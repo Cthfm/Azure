@@ -1,3 +1,0 @@
-# Azure Fundamentals Overview
-
-"The Cloud Threat Hunting Field Manual: Azure" is your essential companion for mastering proactive cybersecurity strategies within Microsoft's cloud platform. This book dives deep into Azure Fundamentals, offering a comprehensive understanding of its architecture and services. Readers will explore PowerShell for automation, Kusto Query Language (KQL) for advanced log analysis, and Azure's logging capabilities for effective threat detection and response. With a focus on practical threat hunting concepts and insights into the MITRE ATT\&CK framework, this manual provides actionable techniques to hunt and mitigate threats effectively in Azure environments.&#x20;
