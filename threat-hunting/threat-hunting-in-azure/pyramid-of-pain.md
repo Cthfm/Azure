@@ -1,6 +1,6 @@
 # Pyramid of Pain
 
-<figure><img src="../.gitbook/assets/Screenshot-2020-09-21-at-18.10.29-scaled-1.jpg" alt=""><figcaption><p><a href="https://phxtechsol.com/wp-content/uploads/2020/09/Screenshot-2020-09-21-at-18.10.29-scaled-1.jpg">https://phxtechsol.com/wp-content/uploads/2020/09/Screenshot-2020-09-21-at-18.10.29-scaled-1.jpg</a></p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/Screenshot-2020-09-21-at-18.10.29-scaled-1.jpg" alt=""><figcaption><p><a href="https://phxtechsol.com/wp-content/uploads/2020/09/Screenshot-2020-09-21-at-18.10.29-scaled-1.jpg">https://phxtechsol.com/wp-content/uploads/2020/09/Screenshot-2020-09-21-at-18.10.29-scaled-1.jpg</a></p></figcaption></figure>
 
 ## Overview
 
