@@ -164,3 +164,4 @@
 ## Microsoft Resources
 
 * [Microsoft Incident Response Ninja Hub](microsoft-resources/microsoft-incident-response-ninja-hub.md)
+* [Microsoft Defender XDR Ninja Hub](microsoft-resources/microsoft-defender-xdr-ninja-hub.md)
