@@ -132,6 +132,7 @@
     * [Azure Monitor Documentation](azure-logging-references/logging/azure-monitor/azure-monitor-documentation.md)
   * [Microsoft Defender for Cloud](azure-logging-references/logging/microsoft-defender-for-cloud/README.md)
     * [Microsoft Defender for Cloud References](azure-logging-references/logging/microsoft-defender-for-cloud/microsoft-defender-for-cloud-references.md)
+  * [Sysmon](azure-logging-references/logging/sysmon.md)
 
 ## Threat Hunting
 
