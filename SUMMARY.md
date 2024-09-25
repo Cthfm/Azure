@@ -1,8 +1,10 @@
 # Table of contents
 
+* [Welcome](README.md)
+
 ## Getting Started
 
-* [Account Setup](README.md)
+* [Account Setup](<README (1).md>)
   * [Account Creation Instructions](getting-started/account-setup/account-creation-instructions.md)
 
 ## Azure Fundamentals
@@ -161,4 +163,4 @@
 
 ***
 
-* [Welcome](welcome.md)
+* [Welcome](welcome-1.md)

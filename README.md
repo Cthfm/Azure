@@ -1,3 +1,16 @@
-# Account Setup
+---
+cover: .gitbook/assets/Blue Futuristic Cyber Security Presentation (5).jpg
+coverY: 0
+---
 
-Setting up an Azure account and installing the Azure CLI are crucial initial steps for threat hunters looking to leverage Microsoft's cloud platform effectively. Creating an Azure account involves signing up on the Azure portal to access subscription plans tailored to organizational needs. Once logged in, installing the Azure CLI allows threat hunters to manage Azure resources directly from their command-line interface. This setup facilitates seamless deployment, monitoring, and automation of security operations within Azure environments, empowering threat hunters to execute commands, scripts, and queries for proactive threat detection and response.
+# Welcome
+
+The Cloud Threat Hunting Field Manual: Azure is your essential companion for mastering proactive cybersecurity strategies within Microsoft's cloud platform.&#x20;
+
+
+
+## **JUMP RIGHT IN**
+
+
+
+<table data-view="cards"><thead><tr><th></th><th></th><th></th><th data-hidden data-card-target data-type="content-ref"></th><th data-hidden data-card-cover data-type="files"></th></tr></thead><tbody><tr><td></td><td></td><td></td><td><a href="azure-fundamentals/azure-fundamentals-overview.md">azure-fundamentals-overview.md</a></td><td><a href=".gitbook/assets/Blue Futuristic Cyber Security Presentation (1).jpg">Blue Futuristic Cyber Security Presentation (1).jpg</a></td></tr><tr><td></td><td></td><td></td><td><a href="broken-reference">Broken link</a></td><td><a href=".gitbook/assets/Blue Futuristic Cyber Security Presentation (2).jpg">Blue Futuristic Cyber Security Presentation (2).jpg</a></td></tr><tr><td></td><td></td><td></td><td></td><td><a href=".gitbook/assets/Blue Futuristic Cyber Security Presentation (4) (1).jpg">Blue Futuristic Cyber Security Presentation (4) (1).jpg</a></td></tr></tbody></table>
