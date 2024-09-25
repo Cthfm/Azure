@@ -158,3 +158,7 @@
     * [Microsoft Defender TI: Copilot Integration](threat-hunting/threat-hunting-in-azure/microsoft-defender-threat-intelligence/microsoft-defender-ti-copilot-integration.md)
   * [Hands On Threat Hunting Examples](threat-hunting/threat-hunting-in-azure/hands-on-threat-hunting-examples.md)
   * [OSINT Feeds](threat-hunting/threat-hunting-in-azure/osint-feeds.md)
+
+***
+
+* [Welcome](welcome.md)
