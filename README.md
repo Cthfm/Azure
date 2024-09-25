@@ -1,4 +1,5 @@
 ---
+icon: hand-wave
 cover: .gitbook/assets/Blue Futuristic Cyber Security Presentation (5).jpg
 coverY: 0
 ---
