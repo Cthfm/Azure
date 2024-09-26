@@ -42,18 +42,10 @@
 
 * [KQL Overview](kql/kql-overview/README.md)
   * [KQL Introduction](kql/kql-overview/kql-introduction.md)
-  * [Quick Reference](kql/kql-overview/quick-reference.md)
   * [Data Types](kql/kql-overview/data-types.md)
-  * [Project](kql/kql-overview/project.md)
-  * [Extend](kql/kql-overview/extend.md)
-  * [Find](kql/kql-overview/find.md)
-  * [Sort](kql/kql-overview/sort.md)
-  * [Where](kql/kql-overview/where.md)
+  * [Quick Reference](kql/kql-overview/quick-reference.md)
   * [Render](kql/kql-overview/render.md)
-  * [Search Operator](kql/kql-overview/search-operator.md)
   * [Basic Queries](kql/kql-overview/basic-queries.md)
-  * [Advanced Query Techniques](kql/kql-overview/advanced-query-techniques.md)
-  * [Time Series Analysis](kql/kql-overview/time-series-analysis.md)
 
 ## Powershell
 
