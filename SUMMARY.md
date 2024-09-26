@@ -21,6 +21,15 @@
   * [Azure Shared Responsibility Model](azure-fundamentals/azure-fundamentals-overview/azure-shared-responsibility-model.md)
   * [Azure Frameworks](azure-fundamentals/azure-fundamentals-overview/azure-frameworks.md)
   * [Azure Security Services](azure-fundamentals/azure-fundamentals-overview/azure-security-services.md)
+  * [Conditional Access Policies](azure-fundamentals/azure-fundamentals-overview/conditional-access-policies/README.md)
+    * [How Conditional Access Policies Work](azure-fundamentals/azure-fundamentals-overview/conditional-access-policies/how-conditional-access-policies-work.md)
+    * [Benefits of Conditional Access](azure-fundamentals/azure-fundamentals-overview/conditional-access-policies/benefits-of-conditional-access.md)
+    * [Best Practices for Conditional Access](azure-fundamentals/azure-fundamentals-overview/conditional-access-policies/best-practices-for-conditional-access.md)
+    * [Conditions for Conditional Access](azure-fundamentals/azure-fundamentals-overview/conditional-access-policies/conditions-for-conditional-access.md)
+    * [Conditional Access Controls](azure-fundamentals/azure-fundamentals-overview/conditional-access-policies/conditional-access-controls.md)
+    * [Sign-In Risk and Identity Protection](azure-fundamentals/azure-fundamentals-overview/conditional-access-policies/sign-in-risk-and-identity-protection.md)
+    * [Conditional Access Session Control](azure-fundamentals/azure-fundamentals-overview/conditional-access-policies/conditional-access-session-control.md)
+    * [Name Locations IP Location](azure-fundamentals/azure-fundamentals-overview/conditional-access-policies/name-locations-ip-location.md)
 
 ## Azure CLI
 
@@ -130,8 +139,7 @@
     * [Alerts](azure-logging-references/logging/azure-monitor/alerts.md)
     * [Automation](azure-logging-references/logging/azure-monitor/automation.md)
     * [Azure Monitor Documentation](azure-logging-references/logging/azure-monitor/azure-monitor-documentation.md)
-  * [Microsoft Defender for Cloud](azure-logging-references/logging/microsoft-defender-for-cloud/README.md)
-    * [Microsoft Defender for Cloud References](azure-logging-references/logging/microsoft-defender-for-cloud/microsoft-defender-for-cloud-references.md)
+  * [Defender for Cloud](azure-logging-references/logging/defender-for-cloud.md)
   * [Sysmon](azure-logging-references/logging/sysmon.md)
 
 ## Threat Hunting
@@ -181,3 +189,7 @@
 ## Azure Sentinel
 
 * [Sentinel Overview](azure-sentinel/sentinel-overview.md)
+
+## Microsoft Defender
+
+* [Microsoft Defender for Cloud References](microsoft-defender/microsoft-defender-for-cloud-references.md)
