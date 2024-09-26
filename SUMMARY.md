@@ -165,3 +165,9 @@
 
 * [Microsoft Incident Response Ninja Hub](microsoft-resources/microsoft-incident-response-ninja-hub.md)
 * [Microsoft Defender XDR Ninja Hub](microsoft-resources/microsoft-defender-xdr-ninja-hub.md)
+
+## Security Research & Resources
+
+* [Azure Goat](security-research-and-resources/azure-goat.md)
+* [Azure Security Research](security-research-and-resources/azure-security-research.md)
+* [Azure Related CVEs](security-research-and-resources/azure-related-cves.md)
