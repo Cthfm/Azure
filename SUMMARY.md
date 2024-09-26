@@ -41,19 +41,19 @@
 
 * [PowerShell for Azure](powershell/powershell-for-azure/README.md)
   * [Powershell Documentation](powershell/powershell-for-azure/powershell-documentation.md)
+  * [Powershell Basics](powershell/powershell-for-azure/powershell-basics.md)
+  * [Understanding Powershell Variables](powershell/powershell-for-azure/understanding-powershell-variables.md)
+  * [Understanding Cmdlets](powershell/powershell-for-azure/understanding-cmdlets.md)
+  * [Powershell Console & ISE](powershell/powershell-for-azure/powershell-console-and-ise.md)
   * [Powershell: Microsoft Graph SDK](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/README.md)
     * [Permission Types](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/permission-types.md)
     * [Authentication Examples](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/authentication-examples.md)
     * [Cmdlet Reference](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/cmdlet-reference.md)
   * [Powershell: Azure Module](powershell/powershell-for-azure/powershell-azure-module/README.md)
     * [Installation Instructions](powershell/powershell-for-azure/powershell-azure-module/installation-instructions.md)
-    * [Powershell Basics](powershell/powershell-for-azure/powershell-azure-module/powershell-basics.md)
     * [Powershell Azure CLI: Windows](powershell/powershell-for-azure/powershell-azure-module/powershell-azure-cli-windows.md)
     * [Powershell Azure CLI: Linux](powershell/powershell-for-azure/powershell-azure-module/powershell-azure-cli-linux.md)
     * [Powershell Azure CLI: MacOS](powershell/powershell-for-azure/powershell-azure-module/powershell-azure-cli-macos.md)
-    * [Powershell Console & ISE](powershell/powershell-for-azure/powershell-azure-module/powershell-console-and-ise.md)
-    * [Understanding Cmdlets](powershell/powershell-for-azure/powershell-azure-module/understanding-cmdlets.md)
-    * [Understanding Powershell Variables](powershell/powershell-for-azure/powershell-azure-module/understanding-powershell-variables.md)
     * [Example Azure Cmdlets](powershell/powershell-for-azure/powershell-azure-module/example-azure-cmdlets.md)
 
 ## Azure Logging References
