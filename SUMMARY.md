@@ -42,6 +42,15 @@
 
 * [KQL Overview](kql/kql-overview/README.md)
   * [KQL Introduction](kql/kql-overview/kql-introduction.md)
+  * [Quick Reference](kql/kql-overview/quick-reference.md)
+  * [Data Types](kql/kql-overview/data-types.md)
+  * [Project](kql/kql-overview/project.md)
+  * [Extend](kql/kql-overview/extend.md)
+  * [Find](kql/kql-overview/find.md)
+  * [Sort](kql/kql-overview/sort.md)
+  * [Where](kql/kql-overview/where.md)
+  * [Render](kql/kql-overview/render.md)
+  * [Search Operator](kql/kql-overview/search-operator.md)
   * [Basic Queries](kql/kql-overview/basic-queries.md)
   * [Advanced Query Techniques](kql/kql-overview/advanced-query-techniques.md)
   * [Time Series Analysis](kql/kql-overview/time-series-analysis.md)
@@ -140,6 +149,7 @@
     * [Automation](azure-logging-references/logging/azure-monitor/automation.md)
     * [Azure Monitor Documentation](azure-logging-references/logging/azure-monitor/azure-monitor-documentation.md)
   * [Defender for Cloud](azure-logging-references/logging/defender-for-cloud.md)
+  * [Intune](azure-logging-references/logging/intune.md)
   * [Sysmon](azure-logging-references/logging/sysmon.md)
 
 ## Threat Hunting
@@ -185,10 +195,14 @@
 * [Defender XDR Overview](defender-xdr/defender-xdr-overview.md)
 * [Defender XDR Licensing](defender-xdr/defender-xdr-licensing.md)
 * [Defender XDR Default Retention](defender-xdr/defender-xdr-default-retention.md)
+* [Defender XDR Advanced Hunting Table Schemas](defender-xdr/defender-xdr-advanced-hunting-table-schemas.md)
+* [Automated Response Requirements](defender-xdr/automated-response-requirements.md)
+* [Supported Response Actions](defender-xdr/supported-response-actions.md)
 
 ## Azure Sentinel
 
 * [Sentinel Overview](azure-sentinel/sentinel-overview.md)
+* [Azure Sentinel Deployments](azure-sentinel/azure-sentinel-deployments.md)
 
 ## Microsoft Defender
 
