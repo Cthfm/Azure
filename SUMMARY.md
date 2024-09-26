@@ -177,3 +177,7 @@
 * [Defender XDR Overview](defender-xdr/defender-xdr-overview.md)
 * [Defender XDR Licensing](defender-xdr/defender-xdr-licensing.md)
 * [Defender XDR Default Retention](defender-xdr/defender-xdr-default-retention.md)
+
+## Azure Sentinel
+
+* [Sentinel Overview](azure-sentinel/sentinel-overview.md)
