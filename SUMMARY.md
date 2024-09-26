@@ -171,3 +171,9 @@
 * [Azure Goat](security-research-and-resources/azure-goat.md)
 * [Azure Security Research](security-research-and-resources/azure-security-research.md)
 * [Azure Related CVEs](security-research-and-resources/azure-related-cves.md)
+
+## Defender XDR
+
+* [Defender XDR Overview](defender-xdr/defender-xdr-overview.md)
+* [Defender XDR Licensing](defender-xdr/defender-xdr-licensing.md)
+* [Defender XDR Default Retention](defender-xdr/defender-xdr-default-retention.md)
