@@ -203,6 +203,13 @@
 
 * [Sentinel Overview](azure-sentinel/sentinel-overview.md)
 * [Azure Sentinel Deployments](azure-sentinel/azure-sentinel-deployments.md)
+* [Supported Data](azure-sentinel/supported-data.md)
+* [Workbook, Playbook, Notebook Comparison](azure-sentinel/workbook-playbook-notebook-comparison.md)
+* [Sentinel Workbooks](azure-sentinel/sentinel-workbooks.md)
+* [Entities](azure-sentinel/entities.md)
+* [User and Entity Behavior Analytics](azure-sentinel/user-and-entity-behavior-analytics.md)
+* [Anomaly Detection](azure-sentinel/anomaly-detection.md)
+* [Mult-Stage Attack Detection](azure-sentinel/mult-stage-attack-detection.md)
 
 ## Microsoft Defender
 
