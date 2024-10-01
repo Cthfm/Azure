@@ -206,3 +206,10 @@
 ## Microsoft Defender
 
 * [Microsoft Defender for Cloud References](microsoft-defender/microsoft-defender-for-cloud-references.md)
+
+## Azure Policy
+
+* [Azure Policy](azure-policy/azure-policy.md)
+* [Azure Policy Components](azure-policy/azure-policy-components.md)
+* [Azure Policy Effect](azure-policy/azure-policy-effect.md)
+* [Use Cases for Azure Policy](azure-policy/use-cases-for-azure-policy.md)
