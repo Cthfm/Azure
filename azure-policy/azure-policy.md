@@ -36,3 +36,5 @@ Azure Policy can also be used to enforce MFA (Multi-Factor Authentication) for p
 * **Enforce Critical Security Controls**: Prevent misconfigurations like open public endpoints, missing encryption, or weak password policies that could lead to breaches.
 * **Security Auditing**: Continuously audit resources and use the resulting logs to hunt for risks in configurations, deviations from baseline security standards, and patterns that could indicate malicious behavior.
 * **Automated Remediation**: Policies with the **DeployIfNotExists** or **Modify** effect can automatically remediate common security misconfigurations, reducing the attack surface for potential threats.
+
+{% embed url="https://learn.microsoft.com/en-us/azure/governance/policy/" %}
