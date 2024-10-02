@@ -12,14 +12,20 @@ Obtain a list of the Service Principals within a given tenant.&#x20;
 az ad sp list --all --query '[].{description:tags[0], displayName:displayName, id:id appid:appid}' -o json
 ```
 
-### Search by DisplayName
+### Azure CLI: Search by DisplayName
 
 ```bash
 az ad sp list --display-name Azure
 ```
 
-### Search by ID
+### Azure CLI: Search by ID
 
 ```bash
 az ad sp show --id 00000000-0000-0000-0000-000000000000
+```
+
+### Powershell Command
+
+```powershell
+et-AzureADServicePrincipal -Filter "DisplayName eq '<display-name>'" | fl *
 ```
