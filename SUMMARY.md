@@ -59,6 +59,7 @@
     * [Permission Types](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/permission-types.md)
     * [Authentication Examples](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/authentication-examples.md)
     * [Cmdlet Reference](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/cmdlet-reference.md)
+    * [Permission Reference](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/permission-reference.md)
   * [Powershell: Azure Module](powershell/powershell-for-azure/powershell-azure-module/README.md)
     * [Installation Instructions](powershell/powershell-for-azure/powershell-azure-module/installation-instructions.md)
     * [Powershell Azure CLI: Windows](powershell/powershell-for-azure/powershell-azure-module/powershell-azure-cli-windows.md)
@@ -211,5 +212,31 @@
 
 * [Azure Policy](azure-policy/azure-policy.md)
 * [Azure Policy Components](azure-policy/azure-policy-components.md)
+* [Policy Assignments](azure-policy/policy-assignments.md)
+* [Initiative Definition](azure-policy/initiative-definition.md)
+* [Scope Azure Policy](azure-policy/scope-azure-policy.md)
+* [Azure Policy Rules](azure-policy/azure-policy-rules.md)
+* [Azure Policy Parameters](azure-policy/azure-policy-parameters.md)
+* [Azure Remediation Task Structure](azure-policy/azure-remediation-task-structure.md)
 * [Azure Policy Effect](azure-policy/azure-policy-effect.md)
 * [Use Cases for Azure Policy](azure-policy/use-cases-for-azure-policy.md)
+
+## Intune
+
+* [Intune Overview](intune/intune-overview.md)
+* [Intune Licensing](intune/intune-licensing.md)
+* [Intune API Permission Scopes](intune/intune-api-permission-scopes.md)
+* [Intune Sample Script Resources](intune/intune-sample-script-resources.md)
+
+## Microsoft Purview
+
+* [Purview Overview](microsoft-purview/purview-overview.md)
+* [Audit Log Schema](microsoft-purview/audit-log-schema.md)
+
+## Adversary Emulation
+
+* [GraphRunner](adversary-emulation/graphrunner.md)
+* [AzureHound](adversary-emulation/azurehound.md)
+* [AADInternals](adversary-emulation/aadinternals.md)
+* [RoadTools](adversary-emulation/roadtools.md)
+* [Oh365UserFinder](adversary-emulation/oh365userfinder.md)

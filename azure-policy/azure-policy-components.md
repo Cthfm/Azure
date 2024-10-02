@@ -6,15 +6,40 @@ Azure Policy is made up of several core components that help you define, assign,
 
 ***
 
-### **1. Policy Definition**
+### **1. Policy Basics - Policy Definition**
 
 A **Policy Definition** is the core rule that specifies what is allowed or disallowed within your environment. This is where you define the conditions that a resource must meet to be considered compliant or non-compliant.
 
 * **Example**: You can create a policy definition that requires **all virtual machines (VMs) to use managed disks**. If a VM is created without a managed disk, the policy will flag it as non-compliant.
 * **Structure of a Policy Definition**:
-  * **DisplayName**: The name of the policy (e.g., "Require Managed Disks for VMs").
-  * **Description**: A brief explanation of what the policy does.
-  * **PolicyRule**: The core logic, where you define the `if` and `then` conditions. For example, `if` a VM doesn’t have a managed disk, `then` deny its creation or log it as non-compliant.
+
+1. **Display Name and Description**:
+   * These identify the policy and provide context.
+   * _Display Name_: Max 128 characters.
+   * _Description_: Max 512 characters.
+2. **Policy Type**:
+   * There are three policy types:
+     * **Builtin**: Provided by Microsoft.
+     * **Custom**: Created by users.
+     * **Static**: Regulatory Compliance policies based on Microsoft audits.
+3. **Mode**:
+   * **Resource Manager modes**:
+     * `all`: Evaluates all resource types.
+     * `indexed`: Evaluates only resource types that support tags and locations.
+   * **Resource Provider modes**:
+     * Different modes manage specific resource types, such as Kubernetes clusters, Key Vaults, Virtual Network Managers, and others, with varying levels of compliance and enforcement capabilities.
+     * Example: `Microsoft.Kubernetes.Data` for managing Kubernetes components.
+4. **Versioning** (Preview):
+   * Policies can support versioning using a {Major}.{Minor}.{Patch} format, indicating the level of changes in the policy.
+   * Different states, such as deprecated or preview, indicate the status of policy versions.
+5. **Metadata**:
+   * An optional field that tracks information about the policy definition.
+   * Common properties include `version`, `category`, `preview`, and `deprecated`.
+6. **Policy Rule**:
+   * Core logic defined under `if-then` conditions.
+   * Example: In the policy for "Allowed Locations," it checks if a resource’s location is within a list of allowed locations, and if not, applies a "deny" effect.
+7. **Effect**:
+   * The action to take when a resource is non-compliant, such as `deny`, `audit`, or `deployIfNotExists`.
 
 **Example of a Policy Rule**:
 

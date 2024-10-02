@@ -6,7 +6,7 @@ Threat hunting is a proactive and iterative security practice aimed at detecting
 
 
 
-<figure><img src="../../../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ## **Key Stages of the Threat Hunting Process**
 
