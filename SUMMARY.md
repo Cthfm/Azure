@@ -88,6 +88,7 @@
         * [AADNonInteractiveUserSignInLogs](azure-logging-references/logging/entra-id-logging/identity-based-logs/sign-in-logs/aadnoninteractiveusersigninlogs.md)
         * [AADManagedIdentitySignInLogs](azure-logging-references/logging/entra-id-logging/identity-based-logs/sign-in-logs/aadmanagedidentitysigninlogs.md)
         * [AADServicePrincipalSignInLogs](azure-logging-references/logging/entra-id-logging/identity-based-logs/sign-in-logs/aadserviceprincipalsigninlogs.md)
+        * [First Party Sign-In Activity](azure-logging-references/logging/entra-id-logging/identity-based-logs/sign-in-logs/first-party-sign-in-activity.md)
       * [Provisioning Logs (AADProvisioningLogs)](azure-logging-references/logging/entra-id-logging/identity-based-logs/provisioning-logs-aadprovisioninglogs.md)
       * [Microsoft Graph Activity](azure-logging-references/logging/entra-id-logging/identity-based-logs/microsoft-graph-activity.md)
       * [Identity Protection](azure-logging-references/logging/entra-id-logging/identity-based-logs/identity-protection/README.md)
