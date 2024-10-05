@@ -266,6 +266,10 @@
 * [Microsoft 365: Authentication](microsoft-365/microsoft-365-authentication.md)
 * [Microsoft 365: Session Times](microsoft-365/microsoft-365-session-times.md)
 
+## Microsoft Defender 365
+
+* [Licensing](microsoft-defender-365/licensing.md)
+
 ## Microsoft 365: UAL
 
 * [Unified Audit Log (UAL) Overview](microsoft-365-ual/unified-audit-log-ual-overview.md)
@@ -288,28 +292,17 @@
 
 * [Microsoft 365: Sharepoint Security](microsoft-365-sharepoint/microsoft-365-sharepoint-security.md)
 
+## Microsoft Purview
+
+* [Insider Risk Management](microsoft-purview-1/insider-risk-management/README.md)
+  * [Risk Management Settings](microsoft-purview-1/insider-risk-management/risk-management-settings.md)
+  * [Insider Risk Management Policy Templates](microsoft-purview-1/insider-risk-management/insider-risk-management-policy-templates.md)
+* [Microsoft Purview eDiscovery](microsoft-purview-1/microsoft-purview-ediscovery.md)
+
 ## Microsoft 365 References
 
 * [Microsoft 365 References: Good UAL Hunting](microsoft-365-references/microsoft-365-references-good-ual-hunting.md)
 
-## Microsoft Defender 365
-
-* [Licensing](microsoft-defender-365/licensing.md)
-
-***
-
-* [Page](page.md)
-
 ## Sharepoint OneDrive Security
 
 * [Security References](sharepoint-onedrive-security/security-references.md)
-
-## Microsoft 365: Insider Risk Management
-
-* [Insider Risk Management](microsoft-365-insider-risk-management/insider-risk-management.md)
-* [Risk Management Settings](microsoft-365-insider-risk-management/risk-management-settings.md)
-* [Microsoft 365 Insider Risk Management Policy Templates](microsoft-365-insider-risk-management/microsoft-365-insider-risk-management-policy-templates.md)
-
-## Group 1
-
-* [eDiscovery](group-1/ediscovery.md)
