@@ -4,8 +4,6 @@
 
 Azure Policy is made up of several core components that help you define, assign, and enforce security standards within your environment. As a threat hunter, it’s crucial to understand how these components interact and how they can be tailored to your security needs.
 
-***
-
 ### **1. Policy Basics - Policy Definition**
 
 A **Policy Definition** is the core rule that specifies what is allowed or disallowed within your environment. This is where you define the conditions that a resource must meet to be considered compliant or non-compliant.
@@ -44,7 +42,7 @@ A **Policy Definition** is the core rule that specifies what is allowed or disal
 **Example of a Policy Rule**:
 
 ```json
-jsonCopy code{
+{
   "if": {
     "field": "Microsoft.Compute/virtualMachines/storageProfile.osDisk.managedDisk.id",
     "exists": "false"
@@ -95,8 +93,6 @@ Every policy has an **Effect** that defines what happens when a resource does no
   * **Example**: If a VM is created without a monitoring agent, Azure Policy can automatically deploy the agent to ensure compliance.
 
 **Choosing the Right Effect**: As a threat hunter, you might use **Audit** or **Deny** for different scenarios. For instance, you could start with an **Audit** effect to see which resources are non-compliant, then switch to **Deny** once you’ve ensured that the policy won’t block legitimate resource creation.
-
-***
 
 ### **5. Parameters**
 

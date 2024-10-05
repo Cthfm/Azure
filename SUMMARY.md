@@ -140,11 +140,11 @@
     * [Workbooks](azure-logging-references/logging/azure-monitor/workbooks.md)
     * [Dashboards](azure-logging-references/logging/azure-monitor/dashboards.md)
     * [Alerts](azure-logging-references/logging/azure-monitor/alerts.md)
-    * [Automation](azure-logging-references/logging/azure-monitor/automation.md)
     * [Azure Monitor Documentation](azure-logging-references/logging/azure-monitor/azure-monitor-documentation.md)
   * [Defender for Cloud](azure-logging-references/logging/defender-for-cloud.md)
   * [Intune](azure-logging-references/logging/intune.md)
   * [Sysmon](azure-logging-references/logging/sysmon.md)
+  * [Purview Audit Log Schema](azure-logging-references/logging/purview-audit-log-schema.md)
 
 ## Threat Hunting
 
@@ -204,23 +204,26 @@
 * [User and Entity Behavior Analytics](azure-sentinel/user-and-entity-behavior-analytics.md)
 * [Anomaly Detection](azure-sentinel/anomaly-detection.md)
 * [Mult-Stage Attack Detection](azure-sentinel/mult-stage-attack-detection.md)
+* [Sentinel: Az CLI](azure-sentinel/sentinel-az-cli.md)
 
 ## Microsoft Defender
 
 * [Microsoft Defender for Cloud References](microsoft-defender/microsoft-defender-for-cloud-references.md)
+* [Defender for Cloud: Az CLI](microsoft-defender/defender-for-cloud-az-cli.md)
 
 ## Azure Policy
 
 * [Azure Policy](azure-policy/azure-policy.md)
 * [Azure Policy Components](azure-policy/azure-policy-components.md)
-* [Policy Assignments](azure-policy/policy-assignments.md)
-* [Initiative Definition](azure-policy/initiative-definition.md)
-* [Scope Azure Policy](azure-policy/scope-azure-policy.md)
 * [Azure Policy Rules](azure-policy/azure-policy-rules.md)
-* [Azure Policy Parameters](azure-policy/azure-policy-parameters.md)
-* [Azure Remediation Task Structure](azure-policy/azure-remediation-task-structure.md)
-* [Azure Policy Effect](azure-policy/azure-policy-effect.md)
+* [Scope Azure Policy](azure-policy/scope-azure-policy.md)
+* [Policy Assignments](azure-policy/policy-assignments.md)
+* [Policy Effect](azure-policy/policy-effect.md)
+* [Initiative Definition](azure-policy/initiative-definition.md)
+* [Policy Parameters](azure-policy/policy-parameters.md)
+* [Remediation Task Structure](azure-policy/remediation-task-structure.md)
 * [Use Cases for Azure Policy](azure-policy/use-cases-for-azure-policy.md)
+* [Azure Policy: Az CLI](azure-policy/azure-policy-az-cli.md)
 
 ## Intune
 
@@ -232,12 +235,81 @@
 ## Microsoft Purview
 
 * [Purview Overview](microsoft-purview/purview-overview.md)
-* [Audit Log Schema](microsoft-purview/audit-log-schema.md)
+* [Purview: Az CLI](microsoft-purview/purview-az-cli.md)
 
 ## Adversary Emulation
 
-* [GraphRunner](adversary-emulation/graphrunner.md)
 * [AzureHound](adversary-emulation/azurehound.md)
 * [AADInternals](adversary-emulation/aadinternals.md)
 * [RoadTools](adversary-emulation/roadtools.md)
 * [Oh365UserFinder](adversary-emulation/oh365userfinder.md)
+* [GraphRunner](adversary-emulation/graphrunner.md)
+
+## Automation
+
+* [Automation Overview](automation/automation.md)
+* [Logic Apps](automation/logic-apps/README.md)
+  * [How Logic Apps Work](automation/logic-apps/how-logic-apps-work.md)
+  * [Logic App Types](automation/logic-apps/logic-app-types.md)
+  * [Triggers](automation/logic-apps/triggers.md)
+  * [Connectors](automation/logic-apps/connectors.md)
+  * [Conditional Logic and Control Flow](automation/logic-apps/conditional-logic-and-control-flow.md)
+  * [APIs in Logic Apps](automation/logic-apps/apis-in-logic-apps.md)
+  * [Handling Large Workflows with Stateful Logic Apps](automation/logic-apps/handling-large-workflows-with-stateful-logic-apps.md)
+  * [External Service Integration](automation/logic-apps/external-service-integration.md)
+  * [Securing, Managing, and Scaling Azure Logic Apps](automation/logic-apps/securing-managing-and-scaling-azure-logic-apps.md)
+  * [Logic Apps: Az CLI](automation/logic-apps/logic-apps-az-cli.md)
+
+## Microsoft 365
+
+* [Microsoft 365 Overview](microsoft-365/microsoft-365-overview.md)
+* [Microsoft 365: Authentication](microsoft-365/microsoft-365-authentication.md)
+* [Microsoft 365: Session Times](microsoft-365/microsoft-365-session-times.md)
+
+## Microsoft 365: UAL
+
+* [Unified Audit Log (UAL) Overview](microsoft-365-ual/unified-audit-log-ual-overview.md)
+* [Audited Activities](microsoft-365-ual/audited-activities.md)
+* [Supported Services](microsoft-365-ual/supported-services.md)
+* [UAL Schema](microsoft-365-ual/ual-schema.md)
+* [UAL Schema: Service Specific Parameters](microsoft-365-ual/ual-schema-service-specific-parameters.md)
+* [Mailbox Auditing](microsoft-365-ual/mailbox-auditing.md)
+
+## Microsoft 365: Exchange Online
+
+* [Exchange Online: Security Features](microsoft-365-exchange-online/exchange-online-security-features.md)
+* [Reporting, Audit Log, Email Tracing Reference](microsoft-365-exchange-online/reporting-audit-log-email-tracing-reference.md)
+
+## Microsoft 365: OneDrive
+
+* [OneDrive Security](microsoft-365-onedrive/onedrive-security.md)
+
+## Microsoft 365: Sharepoint
+
+* [Microsoft 365: Sharepoint Security](microsoft-365-sharepoint/microsoft-365-sharepoint-security.md)
+
+## Microsoft 365 References
+
+* [Microsoft 365 References: Good UAL Hunting](microsoft-365-references/microsoft-365-references-good-ual-hunting.md)
+
+## Microsoft Defender 365
+
+* [Licensing](microsoft-defender-365/licensing.md)
+
+***
+
+* [Page](page.md)
+
+## Sharepoint OneDrive Security
+
+* [Security References](sharepoint-onedrive-security/security-references.md)
+
+## Microsoft 365: Insider Risk Management
+
+* [Insider Risk Management](microsoft-365-insider-risk-management/insider-risk-management.md)
+* [Risk Management Settings](microsoft-365-insider-risk-management/risk-management-settings.md)
+* [Microsoft 365 Insider Risk Management Policy Templates](microsoft-365-insider-risk-management/microsoft-365-insider-risk-management-policy-templates.md)
+
+## Group 1
+
+* [eDiscovery](group-1/ediscovery.md)

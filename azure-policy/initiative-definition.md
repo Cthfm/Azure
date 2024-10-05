@@ -1,13 +1,15 @@
 # Initiative Definition
 
+## Azure Initiative Definition <a href="#azure-policy-initiative-definition-structure" id="azure-policy-initiative-definition-structure"></a>
+
 The structure of an Azure Policy **initiative definition** allows you to group multiple related policy definitions into a single entity, making it easier to manage and apply policies to your resources. Here's a detailed breakdown of the key elements involved in creating and managing a policy initiative definition:
 
-#### 1. **Display Name and Description**
+### 1. **Display Name and Description**
 
 * **Display Name:** A human-readable name that identifies the initiative in the Azure portal.
 * **Description:** A brief explanation of the initiative’s purpose.
 
-#### 2. **Metadata**
+### 2. **Metadata**
 
 * The metadata field provides additional information about the initiative. Common properties include:
   * **Version:** Tracks the version of the initiative definition.
@@ -15,14 +17,14 @@ The structure of an Azure Policy **initiative definition** allows you to group m
   * **Preview:** Boolean value indicating if the initiative is in preview.
   * **Deprecated:** Boolean value indicating if the initiative is deprecated.
 
-#### 3. **Version (Preview)**
+### 3. **Version (Preview)**
 
 * Initiatives can have multiple versions (like policies). Versioning allows you to track and use different iterations of an initiative and its underlying policies.
   * **Major Version:** Indicates significant changes that may affect the initiative's behavior.
   * **Minor Version:** Represents smaller changes like additional parameters or logic adjustments.
   * **Patch Version:** Covers bug fixes, text changes, or emergency security patches.
 
-#### 4. **Parameters**
+### 4. **Parameters**
 
 * Parameters in initiatives allow you to customize the policies within the initiative when applying them to different scopes. They help reduce the need for duplicating policy definitions.
 * Properties include:
@@ -53,7 +55,7 @@ The structure of an Azure Policy **initiative definition** allows you to group m
 }
 ```
 
-#### 5. **Policy Definitions**
+### 5. **Policy Definitions**
 
 * The `policyDefinitions` section defines which policies are part of the initiative. Each policy can receive parameters defined at the initiative level.
 * Properties include:
@@ -88,7 +90,7 @@ The structure of an Azure Policy **initiative definition** allows you to group m
 ]
 ```
 
-#### 6. **Policy Groups**
+### 6. **Policy Groups**
 
 * Policy groups allow you to categorize policies within an initiative, which is particularly useful for regulatory compliance. Grouping helps organize related policies into a logical structure, such as by security controls or compliance domains.
 
@@ -162,7 +164,7 @@ code{
 }
 ```
 
-#### **Key Takeaways**
+### **Key Takeaways**
 
 * **Initiatives** simplify policy management by grouping multiple policy definitions into a single entity.
 * **Parameters** are critical in ensuring reusability and flexibility.
