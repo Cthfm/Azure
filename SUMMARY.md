@@ -60,6 +60,7 @@
     * [Authentication Examples](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/authentication-examples.md)
     * [Cmdlet Reference](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/cmdlet-reference.md)
     * [Permission Reference](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/permission-reference.md)
+    * [Security API References](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/security-api-references.md)
   * [Powershell: Azure Module](powershell/powershell-for-azure/powershell-azure-module/README.md)
     * [Installation Instructions](powershell/powershell-for-azure/powershell-azure-module/installation-instructions.md)
     * [Powershell Azure CLI: Windows](powershell/powershell-for-azure/powershell-azure-module/powershell-azure-cli-windows.md)
