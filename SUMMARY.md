@@ -233,11 +233,6 @@
 * [Intune API Permission Scopes](intune/intune-api-permission-scopes.md)
 * [Intune Sample Script Resources](intune/intune-sample-script-resources.md)
 
-## Microsoft Purview
-
-* [Purview Overview](microsoft-purview/purview-overview.md)
-* [Purview: Az CLI](microsoft-purview/purview-az-cli.md)
-
 ## Adversary Emulation
 
 * [AzureHound](adversary-emulation/azurehound.md)
