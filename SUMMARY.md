@@ -233,6 +233,10 @@
 * [Intune API Permission Scopes](intune/intune-api-permission-scopes.md)
 * [Intune Sample Script Resources](intune/intune-sample-script-resources.md)
 
+## Windows Host Security
+
+* [Basic vs Advanced Security Auditing](windows-host-security/basic-vs-advanced-security-auditing.md)
+
 ## Adversary Emulation
 
 * [AzureHound](adversary-emulation/azurehound.md)
