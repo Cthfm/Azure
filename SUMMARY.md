@@ -30,6 +30,7 @@
     * [Sign-In Risk and Identity Protection](azure-fundamentals/azure-fundamentals-overview/conditional-access-policies/sign-in-risk-and-identity-protection.md)
     * [Conditional Access Session Control](azure-fundamentals/azure-fundamentals-overview/conditional-access-policies/conditional-access-session-control.md)
     * [Name Locations IP Location](azure-fundamentals/azure-fundamentals-overview/conditional-access-policies/name-locations-ip-location.md)
+  * [Azure Quotas](azure-fundamentals/azure-fundamentals-overview/azure-quotas.md)
 
 ## Azure CLI
 
