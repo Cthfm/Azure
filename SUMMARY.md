@@ -236,6 +236,7 @@
 ## Windows Host Security
 
 * [Basic vs Advanced Security Auditing](windows-host-security/basic-vs-advanced-security-auditing.md)
+* [Sysmon](windows-host-security/sysmon.md)
 
 ## Adversary Emulation
 
