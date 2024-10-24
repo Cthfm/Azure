@@ -236,6 +236,8 @@
 
 ## Windows Host Security
 
+* [Windows System Architecture and OS Fundamentals](windows-host-security/windows-system-architecture-and-os-fundamentals.md)
+* [SysInternals](windows-host-security/sysinternals.md)
 * [Basic vs Advanced Security Auditing](windows-host-security/basic-vs-advanced-security-auditing.md)
 * [Sysmon](windows-host-security/sysmon.md)
 
