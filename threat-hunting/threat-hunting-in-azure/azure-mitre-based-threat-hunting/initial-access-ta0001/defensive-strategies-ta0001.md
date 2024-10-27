@@ -117,16 +117,16 @@ The Initial Access (TA0001) phase involves attackers gaining entry into a target
 
 ### **Summary of Defensive Measures for TA0001**
 
-| **Defensive Strategy**                | **Mitigates**                             | **Azure Solution**                                     |
-| ------------------------------------- | ----------------------------------------- | ------------------------------------------------------ |
-| Secure Public-Facing Applications     | T1190 - Exploit Public-Facing Application | Use WAF and Defender for App Services                  |
-| Enforce Multi-Factor Authentication   | T1078 - Valid Accounts                    | Use Conditional Access and Identity Protection         |
-| Harden Remote Services                | T1133 - External Remote Services          | Apply JIT access and restrict Bastion access           |
-| Detect and Block Phishing             | T1566 - Phishing                          | Use Defender for O365 to block phishing emails         |
-| Monitor OAuth Grants and Permissions  | T1199 - Trusted Relationship              | Use Sentinel to detect OAuth consent phishing          |
-| Rotate and Monitor Credentials        | T1078 - Valid Accounts                    | Use Key Vault for secret management and rotation       |
-| Apply Conditional Access Policies     | T1199 - Trusted Relationship              | Block access from untrusted devices and networks       |
-| Secure DevOps Pipelines               | T1195 - Supply Chain Compromise           | Use Azure DevOps scanning and Key Vault for secrets    |
-| Block Legacy Authentication Protocols | T1078.002 - Domain Accounts               | Disable basic authentication protocols                 |
-| Automate Detection and Response       | T1133 - External Remote Services          | Use Sentinel playbooks for automated incident response |
-| Tenant Access Policies                | T1199 - Trusted Relationship              | Use Least Privilege and MFA                            |
+| **Defensive Strategy**                | **Mitigates**                             | **Azure Solution**                                                    |
+| ------------------------------------- | ----------------------------------------- | --------------------------------------------------------------------- |
+| Secure Public-Facing Applications     | T1190 - Exploit Public-Facing Application | Use WAF and Defender for App Services                                 |
+| Enforce Multi-Factor Authentication   | T1078 - Valid Accounts                    | Use Conditional Access and Identity Protection                        |
+| Harden Remote Services                | T1133 - External Remote Services          | Apply JIT access and restrict Bastion access                          |
+| Detect and Block Phishing             | T1566 - Phishing                          | Use Defender for O365 to block phishing emails                        |
+| Monitor OAuth Grants and Permissions  | T1199 - Trusted Relationship              | Use Azure Activity logs to detect OAuth consent phishing              |
+| Rotate and Monitor Credentials        | T1078 - Valid Accounts                    | Use Key Vault for secret management and rotation                      |
+| Apply Conditional Access Policies     | T1199 - Trusted Relationship              | Block access from untrusted devices and networks                      |
+| Secure DevOps Pipelines               | T1195 - Supply Chain Compromise           | Use Azure DevOps to scan images and Key Vault for secrets management. |
+| Block Legacy Authentication Protocols | T1078.002 - Domain Accounts               | Disable basic authentication protocols                                |
+| Automate Detection and Response       | T1133 - External Remote Services          | Use Sentinel playbooks for automated incident response                |
+| Tenant Access Policies                | T1199 - Trusted Relationship              | Use Least Privilege and MFA                                           |
