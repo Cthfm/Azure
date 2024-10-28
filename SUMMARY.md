@@ -261,8 +261,10 @@
 ## Adversary Emulation
 
 * [AzureHound](adversary-emulation/azurehound.md)
-* [AADInternals](adversary-emulation/aadinternals.md)
-* [RoadTools](adversary-emulation/roadtools.md)
+* [AADInternals](adversary-emulation/aadinternals/README.md)
+  * [Install](adversary-emulation/aadinternals/install.md)
+* [RoadTools](adversary-emulation/roadtools/README.md)
+  * [Install](adversary-emulation/roadtools/install.md)
 * [Oh365UserFinder](adversary-emulation/oh365userfinder.md)
 * [GraphRunner](adversary-emulation/graphrunner.md)
 
