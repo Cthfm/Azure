@@ -28,8 +28,6 @@ Attackers may manipulate accounts to maintain and/or elevate access.
 * **T1098.005 - Registered Device**\
   Attackers that already have initial access will modify existing Intune policies to register a rouge device.
 
-***
-
 ### **2. Create an Account**
 
 **Technique: T1136- Create Account**\
