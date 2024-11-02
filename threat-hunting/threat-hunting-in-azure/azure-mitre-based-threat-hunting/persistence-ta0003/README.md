@@ -61,9 +61,6 @@ Attackers change authentication configurations and processes to access user cred
 * **Pass-Through Authentication (PTA)** delegates authentication requests from Azure AD to on-premises Active Directory through a PTA agent. Compromising the PTA agent allows adversaries to intercept or manipulate authentication requests. Specifically:
   * **DLL Injection**: Attackers may inject a malicious DLL into the `AzureADConnectAuthenticationAgentService` on the PTA server. This backdoor approach could allow attackers to intercept credentials, authorize unauthorized access, or bypass MFA by manipulating the response that goes back to Entra ID.
   * **Credential Harvesting**: Injected code can intercept and log user credentials that pass through PTA for later misuse, enabling attackers to authenticate as any user​​.
-
-<!---->
-
 * **AD FS (Active Directory Federation Services)** provides a federation link for single sign-on (SSO) between on-premises AD and cloud applications. Attackers targeting AD FS can modify configuration files, specifically:
   * **Microsoft.IdentityServer.Servicehost Configuration**: Editing the configuration file (`Microsoft.IdentityServer.Servicehost.exe.config`) to load a malicious DLL can create fake tokens with any claim, effectively bypassing MFA and gaining access to any cloud resources trusted by AD FS.
   * **Custom Claims Injection**: By manipulating claims, attackers could generate valid tokens for any user or even escalate privileges by granting extra permissions, making it challenging to detect their presence in cloud environments like AWS or GCP that also federate with AD FS​.
@@ -87,18 +84,3 @@ Attackers may obtain and abuse credentials of existing accounts as a means of ga
 ### **Summary Techniques for TA0003**
 
 <table><thead><tr><th>Key Concept</th><th width="214">Technique</th><th>Azure Example</th></tr></thead><tbody><tr><td>Account Manipulation</td><td>T1098 - Account Manipulation</td><td><strong>T1098.001 - Add Additional Credentials</strong>: Attacker creates additional credentials for persistence. Example: <code>$servicePrincipal = Get-AzADServicePrincipal -DisplayName &#x3C;App_Name></code><br>`Get-AzADApplication -ApplicationId &#x3C;App_Id></td></tr><tr><td>Create an Account</td><td>T1136 - Create Account</td><td><strong>T1136.003 - Cloud Account</strong>: Attacker creates a new user within Azure AD for persistence.<br>Example: <code>az ad user create --display-name CTHFM_Persistence --password l33thax0rh3r3!nth3b4s3 --user-principal-name user@cthfm.onmicrosoft.com</code></td></tr><tr><td>Modify Authentication Process</td><td>T1556 - Modify Authentication Process</td><td><strong>T1556.006 - Multifactor Authentication</strong>: Disable or alter MFA settings to maintain access.<br><br><strong>T1556.003 - Hybrid Identity</strong>: Attackers exploit PTA agent to intercept or manipulate credentials and bypass MFA through DLL injection or credential harvesting.<br><br>Example: Injecting a malicious DLL into <code>AzureADConnectAuthenticationAgentService</code> on PTA agent for credential logging.<br><br><strong>AD FS Manipulation</strong>: Modifying <code>Microsoft.IdentityServer.Servicehost.exe.config</code> to create backdoor tokens, allowing unrestricted cloud access.<br><br><strong>Direct Modifications from Entra ID</strong>: Attackers with Global Admin privileges may register rogue PTA agents or alter Conditional Access policies to selectively enforce or bypass MFA and other security controls.</td></tr><tr><td>Valid Accounts</td><td>T1078 - Valid Accounts</td><td><strong>T1078.001 - Default Accounts</strong>: Using default credentials for access.<br><br><strong>T1556.003 - Cloud Accounts</strong>: Gain access through compromised Azure AD accounts, often via phishing or brute force.</td></tr></tbody></table>
-
-###
-
-### **How to Detect and Mitigate Persistence in Azure**
-
-1. **Audit User and Service Accounts Regularly:**
-   * Review Azure AD for newly created or suspicious accounts with high privileges.
-2. **Monitor Role Assignments:**
-   * Use **Azure AD Privileged Identity Management (PIM)** to limit and monitor access to sensitive roles.
-3. **Enable Alerts for Automation Changes:**
-   * Configure alerts when **automation accounts, runbooks, or service principals** are modified.
-4. **Apply Conditional Access Policies:**
-   * Enforce **MFA for all accounts** and restrict access based on geolocation and device compliance.
-5. **Rotate Secrets and Keys Regularly:**
-   * Ensure service principal keys and tokens are rotated and monitored for misuse.
