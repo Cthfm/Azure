@@ -1,10 +1,10 @@
-# MITRE Att\&ck Azure AD Matrix
+# MITRE Att\&ck Identity Provider Matrix
 
 ## Overview:
 
-Azure AD (Active Directory) Matrix is a specific adaptation of the MITRE ATT\&CK framework tailored to identify and mitigate attacks on Azure Active Directory. This matrix provides a comprehensive view of tactics and techniques specifically relevant to threats targeting Azure AD environments. Provided below are sample tactics and techniques within the Azure AD Matrix.
+Identity Provider Matrix is a specific adaptation of the MITRE ATT\&CK framework tailored to identify and mitigate attacks on Microsoft Entra. This matrix provides a comprehensive view of tactics and techniques specifically relevant to threats targeting Entra ID environments. Provided below are sample tactics and techniques within the Identity Provider Matrix.
 
-####
+
 
 ### 1. Initial Access
 
