@@ -38,6 +38,7 @@
       * [Invalidate Refresh Tokens](azure-fundamentals/azure-fundamentals-overview/azure-tokens/refresh-tokens/invalidate-refresh-tokens.md)
     * [Primary Refresh Tokens](azure-fundamentals/azure-fundamentals-overview/azure-tokens/primary-refresh-tokens.md)
     * [Continuous Access Evaluation (CAE)](azure-fundamentals/azure-fundamentals-overview/azure-tokens/continuous-access-evaluation-cae.md)
+    * [Token Protection: Conditional Access (Public Preview)](azure-fundamentals/azure-fundamentals-overview/azure-tokens/token-protection-conditional-access-public-preview.md)
 
 ## Azure CLI
 

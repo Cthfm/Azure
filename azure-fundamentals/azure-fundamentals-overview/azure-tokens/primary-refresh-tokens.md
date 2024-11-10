@@ -2,9 +2,9 @@
 
 ### **Primary Refresh Token (PRT) Overview**
 
-A **Primary Refresh Token (PRT)** is an essential authentication artifact used in the **Microsoft Entra ID** ecosystem (formerly Azure AD) to enable **Single Sign-On (SSO)** across applications and services on a user's device. It is a **JSON Web Token (JWT)** that serves as a foundational component to streamline user authentication, reduce repeated login prompts, and provide secure access to multiple applications without requiring users to reauthenticate frequently.
+A Primary Refresh Token (PRT) is an essential authentication artifact used in the Microsoft Entra ID to enable Single Sign-On (SSO) across applications and services on a user's device. It is a JSON Web Token (JWT) that serves as a foundational component to streamline user authentication, reduce repeated login prompts, and provide secure access to multiple applications without requiring users to reauthenticate frequently.
 
-PRTs are designed for **Windows 10 and later**, **Windows Server 2016 and later**, as well as **iOS** and **Android** devices. These tokens are fundamental for creating a seamless and secure experience for users accessing different apps and services using the same device.
+PRTs are designed for Windows 10 and later, Windows Server 2016 and later, as well as iOS and Android devices. These tokens are fundamental for creating a seamless and secure experience for users accessing different apps and services using the same device.
 
 ### **Key Concepts and Components of a PRT**
 
@@ -20,9 +20,9 @@ PRTs function in conjunction with several key components in the Microsoft Entra 
 A PRT includes:
 
 * **Device ID**: This identifies the specific device to which the PRT is tied. It helps Microsoft Entra ID determine the state of the device, such as whether it complies with organizational policies.
-* **Session Key**: A **symmetric key** used as proof of possession, ensuring that any token request made using a PRT comes from the original device. This key is encrypted and bound to the device to prevent unauthorized use.
+* **Session Key**: A symmetric key used as proof of possession, ensuring that any token request made using a PRT comes from the original device. This key is encrypted and bound to the device to prevent unauthorized use.
 
-The PRT is a **secure and opaque** token, meaning that its contents are not accessible to client components and are only readable by Microsoft Entra ID.
+The PRT is a secure and opaque token, meaning that its contents are not accessible to client components and are only readable by Microsoft Entra ID.
 
 ### **How is a PRT Issued?**
 
@@ -60,7 +60,7 @@ The security of a PRT is primarily handled by binding it to the device:
 
 ### **Multi-Factor Authentication (MFA) and PRT**
 
-* When users sign in using **Windows Hello for Business**, the PRT issued contains an **MFA claim**. This means that applications relying on the PRT do not need additional MFA prompts, providing a smoother user experience.
+* When users sign in using Windows Hello for Business, the PRT issued contains an MFA claim. This means that applications relying on the PRT do not need additional MFA prompts, providing a smoother user experience.
 * MFA can also be triggered during token requests through WAM if additional verification is required, and the renewed PRT will carry this MFA claim.
 
 ### **PRT Invalidation Scenarios**
@@ -73,7 +73,7 @@ A PRT can be invalidated for several reasons:
 
 ### **PRT Usage During App Token Requests**
 
-* When an application, like Outlook, requires an access token, the **WAM plugin** uses the PRT to request the token.
+* When an application, like Outlook, requires an access token, the WAM plugin uses the PRT to request the token.
 * The WAM plugin signs these requests with the **session key**, ensuring that Microsoft Entra ID can validate the origin and integrity of the request.
 * If successful, Microsoft Entra ID issues an **access token** and a **refresh token**, encrypted with the session key, which are securely managed by the WAM plugin.
 
@@ -85,10 +85,10 @@ A PRT can be invalidated for several reasons:
 ### **PRT and Security Considerations**
 
 * PRT is a **sensitive artifact** and must be protected rigorously. It is critical to bind the PRT to the TPM to ensure that it cannot be extracted from the device or reused elsewhere.
-* Microsoft Entra **Conditional Access policies** are not evaluated when issuing or renewing a PRT, so security at the device level must be ensured.
+* Microsoft Entra Conditional Access policies are not evaluated when issuing or renewing a PRT, so security at the device level must be ensured.
 * **TPM 2.0** is recommended for all Microsoft Entra devices to enhance the security of PRTs. TPM 1.2 is not used for PRT protection due to reliability concerns.
 
 ### **PRT Renewal and MFA Claims**
 
-* **MFA During Sign-In**: If users log in with **Windows Hello for Business** or if MFA is required during WAM token requests, the renewed PRT will contain an **MFA claim**, extending the MFA validity without prompting users multiple times.
+* **MFA During Sign-In**: If users log in with Windows Hello for Business or if MFA is required during WAM token requests, the renewed PRT will contain an MFA claim, extending the MFA validity without prompting users multiple times.
 * **Partitioned PRTs**: Windows maintains separate PRTs for different credential types (e.g., password, Windows Hello, smart card). Each PRT contains specific claims related to the credential used, keeping MFA claims isolated.
