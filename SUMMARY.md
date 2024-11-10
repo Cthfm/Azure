@@ -185,6 +185,7 @@
         * [Defensive Strategies: TA0003](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/persistence-ta0003/defensive-strategies-ta0003.md)
       * [Privilege Escalation: TA0004](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/privilege-escalation-ta0004/README.md)
         * [Defensive Strategies: TA0004](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/privilege-escalation-ta0004/defensive-strategies-ta0004.md)
+        * [Detections KQL](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/privilege-escalation-ta0004/detections-kql.md)
       * [Defense Evasion: TA0005](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/defense-evasion-ta0005/README.md)
         * [Defensive Strategies for TA0005](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/defense-evasion-ta0005/defensive-strategies-for-ta0005.md)
         * [Log Samples and Queries: TA0005](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/defense-evasion-ta0005/log-samples-and-queries-ta0005.md)

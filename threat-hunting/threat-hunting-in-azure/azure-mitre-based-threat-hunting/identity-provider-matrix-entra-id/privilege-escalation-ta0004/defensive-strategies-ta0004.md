@@ -22,8 +22,10 @@ Attackers may manipulate accounts to maintain or elevate access to victim system
 
 **T1098.001 - Additional Cloud Credentials**
 
-* **Defensive Strategy**: Disable SAS Token generation when possible and use RBAC instead. Otherwise ensure SAS token generation permissions and enforce short token expiration times (hours, not days).&#x20;
-* **Monitoring and Alerting**: Enable alerts for SAS token generation and audit all generated tokens for unusual permissions or extended expiration periods. Ensure to isolate SAS token creation to specific set of users. Monitor OAuth Application credentials and review changes to App Registration settings for additional credentials.
+* **Defensive Strategy**: Disable SAS Token generation when possible and use User Delegation SAS Tokens whenever feasible. This is due to the tokens being secured with Entra ID Credentials versus storage account keys.&#x20;
+* **Defensive Strategies Continued:** Other strategies include but are not limited short token expiration times (hours, not days) in a SAS Token Policy, blocking SAS Token Authentication via Conditional Access, blocking access to view storage account keys to prevent users from creating them.
+* **Monitoring and Alerting SAS Tokens:** Enable alerts when the storage account and audit all generated tokens for unusual permissions or extended expiration periods.&#x20;
+* **Monitoring and Alerting OAuth Applications:** Monitor OAuth Application credentials and review changes to App Registration settings for any additional credentials or modifications.
 
 **T1098.003 - Additional Cloud Roles**
 
@@ -57,20 +59,18 @@ Attackers may obtain and abuse credentials of existing accounts as a means of ga
 
 **T1556.003 - Cloud Accounts**
 
-* **Defensive Strategy**: Implement MFA and Conditional Access for all cloud accounts and enforce password rotation policies. Utilize Azure AD Identity Protection to monitor for risky sign-ins and enforce strict authentication requirements.
+* **Defensive Strategy**: Implement MFA and Conditional Access for all cloud accounts and enforce password rotation policies. Utilize Entra ID Identity Protection to monitor for risky sign-ins and enforce strict authentication requirements.
 * **Monitoring and Alerting**: Enable alerts for risky login behavior such as login attempts from unusual locations or new devices. Use Microsoft Defender for Cloud, Sentinel and or Defender XDR to monitor and respond to potential brute-force or phishing attempts targeting cloud accounts.
 
 ### **Summary of Defensive Measures for TA0004**
 
-| **Defensive Strategy**                      | **Mitigates**                                 | **Azure Solution**                                     |
-| ------------------------------------------- | --------------------------------------------- | ------------------------------------------------------ |
-| Utilize JIT Access                          | T1548 - Abuse Elevation Control Mechanism     | Ensure JIT Access is configured for 'Manual' Approval, |
-| Monitor Role Assignment                     | T1098 - Account Manipulation                  | Use Azure Monitor and alerts for RBAC changes          |
-| Implement Multi-Factor Authentication (MFA) | T1134 - Access Token Manipulation             | Enforce MFA via Conditional Access                     |
-| Secure Service Principals and Accounts      | T1098.001 - Additional Cloud Credentials      | Rotate keys and monitor service principals             |
-| Patch and Harden VMs                        | T1068 - Exploitation for Privilege Escalation | Use Update Management and Defender for VMs             |
-| Monitor APIs for Misuse                     | T1106 - Native API                            | Use Azure Sentinel to detect API-based privilege abuse |
-| Detect and Respond to Escalation Attempts   | T1548 - Abuse Elevation Control Mechanism     | Use Sentinel and automated responses                   |
-| Use Conditional Access Policies             | T1078.002 - Domain Accounts                   | Block access from untrusted sources                    |
-| Disable Unused Services                     | T1548 - Abuse Elevation Control Mechanism     | Disable RunCommand and legacy authentication           |
-| Audit Configurations and Logs               | T1199 - Trusted Relationship                  | Use Azure Policy and Security Center for assessments   |
+| **Defensive Strategy**                 | **Mitigates**                                | **Azure Solution**                                                                                                                                                              |
+| -------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Utilize JIT Access                     | T1548 - Abuse Elevation Control Mechanism    | Ensure JIT Access is configured for 'Manual' Approval,                                                                                                                          |
+| Monitor Role Assignment                | T1098.003 - Additional Cloud Roles           | Use Azure Monitor and alerts for RBAC changes                                                                                                                                   |
+| SAS Policy Hardening                   | **T1**098.001 - Additional Cloud Credentials | Limit access to view storage account keys, disable SAS token authentication via conditional access, use User Delegated SAS Tokens.                                              |
+| OAuth Application Credential Hardening | **T1**098.001 - Additional Cloud Credentials | Monitor updates to existing OAuth credentials and application registration updates.                                                                                             |
+| Device Hardening                       | T1098.005 - Registered Device                | Deploy Intune policies to harden and secure devices alongside Conditional Access to prevent non-compliant devices on the network.                                               |
+| Tenant Trust Relationship Hardening    | T1484.002 - Trust Modification               | Use least privilege with tenant to tenant access. Monitor changes in configuration of tenant trust relationships.                                                               |
+| Default Account Hardening              | T1078.001 - Default Accounts                 | Establish SOPs to prevent default credentialed resources being deployed. Deploy proper monitoring for new devices deployed on the network. Conduct regular auditing of systems. |
+| Cloud Account Hardening                | T1556.003 - Cloud Accounts                   | Deploy MFA and Conditional Access Policies where appropriate. Utilize Identity protection for risky users and sign-in activity.                                                 |
