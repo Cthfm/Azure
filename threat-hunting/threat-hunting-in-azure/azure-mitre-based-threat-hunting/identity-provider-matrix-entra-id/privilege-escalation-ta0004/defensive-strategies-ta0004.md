@@ -6,10 +6,8 @@ Defending against Privilege Escalation in Azure environments requires tight acce
 
 ## 1. **Abuse Elevation Control Mechanism**
 
-**Technique: T1548 - Abuse Elevation Control Mechanism**
-
-* **Defensive Strategy**: Implement Just-In-Time (JIT) access and review JIT configuration in Azure Entra ID Privileged Identity Management (PIM) settings. Avoid setting ‘Automatic Approval Mode’ on sensitive resources.
-* **Monitoring and Alerting**: Establish alerts for changes in JIT configurations and monitor logs for abnormal access requests, particularly for high-privilege roles. Log and review activity in Entra ID PIM audit logs, focusing on privilege elevation attempts.
+**Technique: T1548 - Abuse Elevation Control Mechanism**\
+Attackers circumvent systems that are designed to elevate a principal's access and gain higher privileges.
 
 **T1548.005 - Temporary Elevated Cloud Access**
 
@@ -20,8 +18,7 @@ Defending against Privilege Escalation in Azure environments requires tight acce
 
 **Technique: T1098 - Account Manipulation**
 
-* **Defensive Strategy**: Regularly review and enforce sign-in risk and user risk policies in Azure to restrict account manipulation, such as password resets and MFA bypasses. Utilize **Privileged Identity Management (PIM)** to set just-in-time role activation, minimizing persistent access to privileged roles.
-* **Monitoring and Alerting**: Set up **alerts for changes to account properties** (e.g., MFA settings, role assignments). Log modifications to sensitive accounts, such as those with admin or contributor roles, in Azure AD logs. Review principals that given highly permissive role assignments.&#x20;
+Attackers may manipulate accounts to maintain or elevate access to victim systems. This may involve actions like modifying credentials or permission groups to retain control. Attackers might also subvert security policies, such as repeatedly updating passwords to bypass duration policies and extend compromised access.
 
 **T1098.001 - Additional Cloud Credentials**
 
@@ -40,10 +37,8 @@ Defending against Privilege Escalation in Azure environments requires tight acce
 
 ### 3. **Domain or Tenant Policy Modification**
 
-**Technique: T1484 - Domain or Tenant Policy Modification**
-
-* **Defensive Strategy**: Limit the number of accounts with permissions to modify domain trusts and use **Conditional Access Policies** to restrict high-impact actions to specific locations or IP ranges. Regularly review domain trust relationships and limit federated identity access.
-* **Monitoring and Alerting**: Enable logging and alerts for changes to domain trust configurations. Periodically review Azure Activity Audit logs for new or modified domain trust entries and cross-check them against approved configurations.
+**Technique: T1484 - Abuse Elevation Control Mechanism**\
+Attackers exploit privileged automation tools to run high-level tasks.
 
 **T1484.002 - Trust Modification**
 
@@ -52,10 +47,8 @@ Defending against Privilege Escalation in Azure environments requires tight acce
 
 ### 4. **Valid Accounts**
 
-**T1078 - Valid Accounts**
-
-* **Defensive Strategy**: Disable unused or default accounts and enforce strong password policies with MFA on all accounts. Limit the exposure of login interfaces and use Conditional Access to require MFA, particularly for privileged roles.
-* **Monitoring and Alerting**: Log failed and successful login attempts for all accounts. Review logs to identify any default account logins and monitor for excessive failed login attempts. Ensure to use Identity protection and lock down access with conditional access policies. Ensure to eliminate bad passwords by implementing Entra Password Protection.
+**Technique:** T1078 **- Valid Accounts**\
+Attackers may obtain and abuse credentials of existing accounts as a means of gaining
 
 **T1078.001 - Default Accounts**
 
@@ -72,7 +65,7 @@ Defending against Privilege Escalation in Azure environments requires tight acce
 | **Defensive Strategy**                      | **Mitigates**                                 | **Azure Solution**                                     |
 | ------------------------------------------- | --------------------------------------------- | ------------------------------------------------------ |
 | Utilize JIT Access                          | T1548 - Abuse Elevation Control Mechanism     | Ensure JIT Access is configured for 'Manual' Approval, |
-| Monitor Role Assignments                    | T1098 - Account Manipulation                  | Use Azure Monitor and alerts for RBAC changes          |
+| Monitor Role Assignment                     | T1098 - Account Manipulation                  | Use Azure Monitor and alerts for RBAC changes          |
 | Implement Multi-Factor Authentication (MFA) | T1134 - Access Token Manipulation             | Enforce MFA via Conditional Access                     |
 | Secure Service Principals and Accounts      | T1098.001 - Additional Cloud Credentials      | Rotate keys and monitor service principals             |
 | Patch and Harden VMs                        | T1068 - Exploitation for Privilege Escalation | Use Update Management and Defender for VMs             |
