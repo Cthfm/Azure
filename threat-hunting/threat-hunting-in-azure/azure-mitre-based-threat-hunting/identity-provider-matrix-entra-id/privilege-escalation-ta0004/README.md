@@ -2,7 +2,7 @@
 
 ### **Overview**
 
-Privilege Escalation refers to how attackers **gain higher-level permissions** within a compromised system to execute critical tasks, access sensitive data, or disable security controls. In **Azure environments**, privilege escalation often involves abusing misconfigurations, identities, and role assignments.
+Privilege Escalation refers to how attackers gain higher-level permissions within a compromised system to execute critical tasks, access sensitive data, or disable security controls. In **Azure environments**, privilege escalation often involves abusing misconfigurations, identities, and role assignments.
 
 ### **1.** Abuse Elevation Control Mechanism
 
