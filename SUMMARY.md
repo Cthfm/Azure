@@ -31,6 +31,13 @@
     * [Conditional Access Session Control](azure-fundamentals/azure-fundamentals-overview/conditional-access-policies/conditional-access-session-control.md)
     * [Name Locations IP Location](azure-fundamentals/azure-fundamentals-overview/conditional-access-policies/name-locations-ip-location.md)
   * [Azure Quotas](azure-fundamentals/azure-fundamentals-overview/azure-quotas.md)
+  * [Azure Tokens](azure-fundamentals/azure-fundamentals-overview/azure-tokens/README.md)
+    * [Access Tokens](azure-fundamentals/azure-fundamentals-overview/azure-tokens/access-tokens.md)
+    * [ID Tokens](azure-fundamentals/azure-fundamentals-overview/azure-tokens/id-tokens.md)
+    * [Refresh Tokens](azure-fundamentals/azure-fundamentals-overview/azure-tokens/refresh-tokens/README.md)
+      * [Invalidate Refresh Tokens](azure-fundamentals/azure-fundamentals-overview/azure-tokens/refresh-tokens/invalidate-refresh-tokens.md)
+    * [Primary Refresh Tokens](azure-fundamentals/azure-fundamentals-overview/azure-tokens/primary-refresh-tokens.md)
+    * [Continuous Access Evaluation (CAE)](azure-fundamentals/azure-fundamentals-overview/azure-tokens/continuous-access-evaluation-cae.md)
 
 ## Azure CLI
 
@@ -177,7 +184,6 @@
         * [Defensive Strategies: TA0003](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/persistence-ta0003/defensive-strategies-ta0003.md)
       * [Privilege Escalation: TA0004](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/privilege-escalation-ta0004/README.md)
         * [Defensive Strategies: TA0004](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/privilege-escalation-ta0004/defensive-strategies-ta0004.md)
-        * [Log Samples and Queries: TA0004](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/privilege-escalation-ta0004/log-samples-and-queries-ta0004.md)
       * [Defense Evasion: TA0005](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/defense-evasion-ta0005/README.md)
         * [Defensive Strategies for TA0005](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/defense-evasion-ta0005/defensive-strategies-for-ta0005.md)
         * [Log Samples and Queries: TA0005](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/defense-evasion-ta0005/log-samples-and-queries-ta0005.md)
@@ -285,3 +291,8 @@
   * [External Service Integration](automation/logic-apps/external-service-integration.md)
   * [Securing, Managing, and Scaling Azure Logic Apps](automation/logic-apps/securing-managing-and-scaling-azure-logic-apps.md)
   * [Logic Apps: Az CLI](automation/logic-apps/logic-apps-az-cli.md)
+
+***
+
+* [Incident Response](incident-response.md)
+* [Overview](overview.md)
