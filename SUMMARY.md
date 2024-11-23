@@ -191,7 +191,6 @@
         * [Log Samples and Queries: TA0005](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/defense-evasion-ta0005/log-samples-and-queries-ta0005.md)
       * [Credential Access: TA0006](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/credential-access-ta0006/README.md)
         * [Defensive Strategies for TA0006](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/credential-access-ta0006/defensive-strategies-for-ta0006.md)
-        * [Log Samples and Queries: TA0006](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/credential-access-ta0006/log-samples-and-queries-ta0006.md)
       * [Discovery: TA0007](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/discovery-ta0007/README.md)
         * [Defensive Strategies: TA0007](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/discovery-ta0007/defensive-strategies-ta0007.md)
       * [Lateral Movement TA0008](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/identity-provider-matrix-entra-id/lateral-movement-ta0008/README.md)

@@ -1,94 +1,67 @@
----
-hidden: true
----
-
 # Credential Access: TA0006
 
 ## Overview
 
 The Credential Access tactic focuses on how attackers attempt to steal or collect credentials (such as usernames, passwords, access tokens, or cryptographic keys) from compromised systems to gain unauthorized access. In Azure environments, attackers target Entra ID accounts, service principals, OAuth tokens, API keys, and password stores to escalate privileges or maintain persistence.
 
-### **1. Stealing Authentication Tokens**
+#### **1. Brute Force (T1110)**
 
-**Technique:** T1552 - Unsecured Credentials\
-Attackers search for **access tokens or secrets** left unprotected in memory, files, or logs.
+* **Password Guessing (T1110.001)**
+  * **Example:** Attackers manually or programmatically attempt common passwords (e.g., `Password123`, `Welcome2023`) against an Entra ID user account.
+  *   **Tools:** Scripts using Azure CLI with commands like:
 
-*   **T1552.001 - Credentials in Files**\
-    **Azure Example:** Extract **API keys or service principal credentials** from **unprotected configuration files** stored in Blob Storage.
+      ```bash
+      az login --username user@domain.com --password Password123
+      ```
+* **Password Cracking (T1110.002)**
+  * **Example:** Attackers use hashed credentials captured from on-premise or cloud systems and crack them offline with tools like **hashcat** or **John the Ripper**.
+* **Password Spraying (T1110.003)**
+  * **Example:** Attackers try a common password (e.g., `Winter2023`) across multiple accounts in Entra ID to bypass account lockouts triggered by multiple failed attempts on a single account.
+  * **Tools:** **MSOLSpray** or custom PowerShell scripts.
+* **Credential Stuffing (T1110.004)**
+  * **Example:** Attackers use previously leaked credentials from other breaches to attempt logins on Entra ID accounts.
+  * **Tools:** Automated scripts or credential stuffing tools like **Sentry MBA**.
 
-    ```bash
-    az storage blob download --container-name config --name creds.json --file /tmp/creds.json
-    ```
-*   **T1552.004 - Credentials in Cloud Metadata**\
-    **Azure Example:** Query **Azure Instance Metadata Service (IMDS)** on a compromised VM to retrieve temporary access tokens.
+### **2. Exploitation for Credential Access (T1212)**
 
-    ```bash
-    curl -H "Metadata: true" "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01"
-    ```
+* **Example:** Exploiting vulnerabilities in **Azure AD Connect** or OAuth misconfigurations to extract credentials directly from memory or to gain access tokens.
 
-### **2. Dumping Password Hashes or Secrets from Memory**
+### **3. Forge Web Credentials (T1606)**
 
-**Technique:** T1003 - OS Credential Dumping\
-Attackers extract **password hashes** or **cached credentials** from memory for offline cracking or re-use.
+* **SAML Tokens (T1606.002)**
+  * **Example:** Attackers generate forged SAML tokens using stolen private keys or exploiting vulnerabilities in identity federation setups.
+  * **Tools:** **ADFSpoof** to create forged tokens that grant unauthorized access to Azure resources.
 
-*   **Azure Example:** Use **Mimikatz** on a Windows VM in Azure to dump cached passwords or **Primary Refresh Tokens (PRTs)**, which can be used to bypass MFA.
+### **4. Modify Authentication Process (T1556)**
 
-    ```powershell
-    Invoke-Mimikatz -Command "sekurlsa::logonpasswords"
-    ```
+* **Multi-Factor Authentication (T1556.004)**
+  * **Example:** Attackers exploit MFA bypass techniques, such as using legacy authentication protocols (e.g., IMAP or SMTP), which do not enforce MFA.
+* **Hybrid Identity (T1556.005)**
+  * **Example:** Exploiting misconfigured **Azure AD Connect** to sync compromised on-premise credentials to Entra ID, enabling attackers to pivot from on-premise to cloud.
+* **Conditional Access Policies**
+  * **Example:** Attackers exploit weakly configured policies, such as whitelisting of IP ranges or trusted devices, to bypass conditional access restrictions.
+* **Multi-Factor Authentication Request Generation**
+  * **Example:** Using **MFA fatigue attacks**, attackers repeatedly generate push notifications until the user unintentionally approves the request.
 
-### **3. Extracting OAuth Tokens and API Keys**
+### **5. Steal Application Access Token (T1528)**
 
-**Technique:** T1550 - Use Alternate Authentication Material\
-Attackers steal **OAuth tokens** or **service principal keys** to bypass authentication.
+* **Example:** Attackers steal OAuth 2.0 tokens from environments like browser storage, CLI tools, or Azure Key Vault to impersonate users or applications.
+* #### **Steal or Forge Authentication Certificates (T1552.004)**
+  * **Example:** Attackers steal private certificates used for app registration or API authentication to impersonate services or users.
+  * **Tools:** Tools like **Certify** or **Mimikatz** can be used to extract certificates.
 
-* **T1550.001 - Application Access Tokens**\
-  **Azure Example:** Access a user’s **Microsoft Graph API tokens** by compromising their session or via phishing.
+### **7. Unsecured Credentials (T1552)**
 
-### **4. Brute-Forcing Credentials**
-
-**Technique:** T1110 - Brute Force\
-Attackers attempt to guess **weak passwords** or **API keys** via automated tools.
-
-* **T1110.003 - Password Spraying**\
-  **Azure Example:** Perform a **password spraying attack** against Azure AD accounts to find users with weak passwords.
-
-### **5. Keylogging and Input Capture**
-
-**Technique:** T1056 - Input Capture\
-Attackers collect **user credentials** by logging keystrokes or capturing input from login forms.
-
-* **T1056.001 - Keylogging**\
-  **Azure Example:** Deploy malware on a compromised **Azure VM** to log user input and steal credentials.
-
-### **6. Exploiting Service Principals for Credential Theft**
-
-**Technique:** T1078 - Valid Accounts (Cloud Accounts)\
-Attackers compromise **service principals** to steal their **keys or secrets**, enabling long-term access.
-
-*   **Azure Example:** Use **Azure CLI** to list and export service principal credentials.
+* **Example:** Attackers locate plaintext credentials in Azure resource configurations, scripts, or storage accounts.
+*   **Command to Monitor:**
 
     ```bash
-    az ad sp list --output json > service_principals.json
+    bashCopy codeaz storage account keys list --account-name <storage_account>
     ```
 
-### **7. Exfiltrating Secrets from Azure Key Vault**
+###
 
-**Technique:** T1555 - Credentials from Password Stores\
-Attackers access **Azure Key Vault** to exfiltrate stored secrets or certificates.
-
-*   **Azure Example:** Use **compromised service principal credentials** to extract secrets from Key Vault.
-
-    ```bash
-    az keyvault secret show --name db-password --vault-name <vault-name>
-    ```
-
-### **8. Exploiting Cloud Identity Tokens (PRTs)**
-
-**Technique:** T1550.004 - Web Session Cookie\
-Attackers steal **Primary Refresh Tokens (PRTs)** from hybrid-joined devices to impersonate users without re-authentication.
-
-* **Azure Example:** Use **Mimikatz** to extract PRTs from a compromised device, allowing unauthorized access to Microsoft 365 services.
+###
 
 ### **Summary of Key Concepts with Techniques and Azure Examples for TA0006**
 

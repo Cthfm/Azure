@@ -1,161 +1,89 @@
 # Defensive Strategies: TA0007
 
-## **Defensive Strategies for TA0007 - Discovery**
+## Defensive Strategies for TA0007 - Discovery
 
-The **Discovery (TA0007)** tactic involves attackers gathering **critical information about accounts, networks, configurations, and resources** to plan their next moves. Defending against these reconnaissance efforts in **Azure** requires **monitoring, hardening configurations, and restricting permissions** to minimize data exposure.
+The Discovery (TA0007) tactic involves attackers gathering critical information about accounts, resources, and configurations to plan subsequent moves. Defending against these activities in Entra ID environments requires monitoring, restricting permissions, and hardening configurations to limit exposure.
 
-### **1. Monitor and Restrict Account and Group Discovery**
+### **1. Account Discovery**
 
-**Mitigates:** T1087 - Account Discovery, T1069 - Permission Groups Discovery
+**Mitigates:** T1087 - Account Discovery\
+**Action:** Prevent attackers from enumerating Entra ID accounts to identify potential targets.\
+**Azure Procedure:**
 
-* **Action:** Prevent attackers from enumerating users, roles, and permissions.
-* **Azure Procedure:**
-  * Use **Role-Based Access Control (RBAC)** to restrict permissions for accessing user and group information.
-  * Monitor **Azure AD audit logs** for queries targeting **user or group listings**.
-  *   Enable **Azure Sentinel alerts** to detect unauthorized API calls, such as:
+* Use **Role-Based Access Control (RBAC)** to restrict directory enumeration to least privilege.
+* Enable **audit logging** and set alerts for user enumeration attempts in **Entra ID audit logs**.
+* Apply **Conditional Access Policies** to enforce MFA and restrict access to sensitive APIs.
 
-      ```bash
-      az ad user list --output table
-      ```
-  * Use **Azure AD Privileged Identity Management (PIM)** to limit privileged roles like **Global Administrator**.
+### **2. Cloud Account Enumeration**
 
-### **2. Harden Metadata Services to Prevent Token Theft**
+**Mitigates:** T1087.004 - Cloud Account\
+**Action:** Prevent attackers from locating valuable or privileged accounts in Entra ID.\
+**Azure Procedure:**
 
-**Mitigates:** T1552.004 - Credentials in Cloud Metadata
+* Monitor for suspicious commands such as `Get-AzADUser`.
+* Restrict **API** and **CLI permissions** to authorized users only.
+* Enable **Azure Security Defaults** to enforce MFA for all users automatically.
 
-* **Action:** Secure **Azure Instance Metadata Service (IMDS)** to prevent attackers from retrieving tokens.
-*   **Azure Procedure:**
+### **3. Cloud Service Dashboard Access**
 
-    * Use **Network Security Groups (NSGs)** to restrict access to IMDS.
-    * Monitor for IMDS access using **Azure Defender for VMs** and **Azure Sentinel**.
-    * Disable unnecessary outbound access to **169.254.169.254** (IMDS IP).
+**Mitigates:** T1087 - Cloud Service Dashboard\
+**Action:** Block unauthorized access to the Azure Portal and prevent attackers from exploring services and configurations.\
+**Azure Procedure:**
+
+* Enforce **RBAC** to limit portal access to essential personnel.
+* Require the use of **privileged access workstations (PAWs)** for administrative tasks.
+* Conduct **regular access reviews** to identify and remove unnecessary access.
+
+### **4. Cloud Service Discovery**
+
+**Mitigates:** T1526 - Cloud Service Discovery\
+**Action:** Prevent attackers from using CLI, APIs, or dashboards to list cloud services and resources.\
+**Azure Procedure:**
+
+* Disable unused Azure services to reduce the attack surface.
+*   Monitor and set alerts for commands like:
 
     ```bash
-    curl -H "Metadata: true" http://169.254.169.254/metadata/identity/oauth2/token
+    az resource list --output table
     ```
+* Implement service principal restrictions and enforce **least privilege** for API calls.
 
-### **3. Restrict Permissions for Network and System Discovery**
+### **5. Password Policy Discovery**
 
-**Mitigates:** T1016 - System Network Configuration Discovery, T1018 - Remote System Discovery
+**Mitigates:** T1201 - Password Policy Discovery\
+**Action:** Prevent attackers from querying Entra ID password policies to inform brute-force or credential stuffing attacks.\
+**Azure Procedure:**
 
-* **Action:** Limit access to **VNet and NSG configurations** to prevent unauthorized network mapping.
-* **Azure Procedure:**
-  * Apply **RBAC policies** to restrict access to virtual network and peering configuration.
-  * Monitor **NSG rule changes** with **Azure Monitor**.
-  * Use **Azure Policy** to enforce best practices for **network segmentation** and **restricted peering**.
-  *   Set alerts for commands like:
+* Enable strong password policies using **banned password lists**.
+* Monitor changes to password policies via **Entra audit logs** and set alerts.
+* Use **Smart Lockout** to block brute-force attempts based on behavior analysis.
 
-      ```bash
-      az network vnet peering list --output table
-      ```
+### **6. Permission Groups Discovery**
 
-### **4. Monitor and Audit Role and Permission Assignments**
+**Mitigates:** T1069 - Permission Groups Discovery\
+**Action:** Block unauthorized enumeration of groups to identify privileged or misconfigured group memberships.\
+**Azure Procedure:**
 
-**Mitigates:** T1069.002 - Domain Groups Discovery
+* Restrict group enumeration permissions to necessary roles only.
+* Implement **Privileged Identity Management (PIM)** for critical groups, such as Global Administrators.
+* Monitor group changes using **Azure Monitor** or **Microsoft Sentinel**.
 
-* **Action:** Regularly audit **role assignments and group memberships** to detect privilege escalation paths.
-* **Azure Procedure:**
-  * Use **Azure AD PIM** to limit and monitor changes to **privileged roles**.
-  * Configure **Azure Sentinel alerts** for new role assignments.
-  *   Regularly review **role assignments** with commands like:
+### **7. Cloud Groups Enumeration**
 
-      ```bash
-      az role assignment list --output table
-      ```
+**Mitigates:** T1069.003 - Cloud Groups\
+**Action:** Prevent attackers from enumerating Entra ID cloud groups to locate administrative or sensitive access roles.\
+**Azure Procedure:**
 
-### **5. Detect and Block Automated Service Enumeration**
+*   Monitor and restrict the use of commands such as:
 
-**Mitigates:** T1057 - Process Discovery
-
-* **Action:** Monitor for **automated enumeration** of VMs, databases, and storage accounts.
-* **Azure Procedure:**
-  * Use **Azure Monitor** and **Sentinel** to detect bulk resource listing.
-  *   Set alerts for suspicious API queries:
-
-      ```bash
-      az vm list --output table
-      az sql server list --output table
-      ```
-  * Apply **RBAC** to limit which users can view resource details.
-
-### **6. Monitor Automation Accounts and Runbook Modifications**
-
-**Mitigates:** T1083 - File and Directory Discovery
-
-* **Action:** Track changes to **automation accounts and runbooks** to prevent abuse.
-* **Azure Procedure:**
-  * Monitor **Azure Automation logs** for suspicious activity involving runbook modifications.
-  *   Use **Sentinel alerts** for unauthorized access to automation tasks:
-
-      ```bash
-      az automation runbook list --output table
-      ```
-  * Limit automation account permissions using **RBAC**.
-
-### **7. Detect Security Tool Enumeration Attempts**
-
-**Mitigates:** T1518 - Software Discovery
-
-* **Action:** Monitor for **queries targeting security tools and configurations**.
-* **Azure Procedure:**
-  * Use **Azure Sentinel** to detect API queries related to security configurations.
-  *   Set alerts for changes in **Azure Defender for Cloud** or monitoring agents:
-
-      ```bash
-      az security pricing list --output table
-      az vm extension list --query "[?type=='Microsoft.Azure.Monitoring.Agent']" --output table
-      ```
-  * Ensure security tools cannot be disabled by unauthorized users through **RBAC**.
-
-### **8. Use Just-in-Time (JIT) VM Access**
-
-**Mitigates:** T1018 - Remote System Discovery
-
-* **Action:** Apply **JIT access** to reduce the attack surface for **VM enumeration and remote system discovery**.
-* **Azure Procedure:**
-  * Enable **JIT access** in **Defender for Cloud** to limit access windows for RDP and SSH.
-  * Monitor **Azure Activity Logs** for unauthorized attempts to access VMs.
-
-### **9. Detect and Respond to VNet Peering Discovery Attempts**
-
-**Mitigates:** T1016 - System Network Configuration Discovery
-
-* **Action:** Monitor for **VNet peering enumeration** that may indicate reconnaissance.
-* **Azure Procedure:**
-  * Use **Azure Monitor** to track VNet peering queries.
-  *   Set alerts for suspicious commands like:
-
-      ```bash
-      az network vnet peering list --output table
-      ```
-
-***
-
-### **10. Automate Incident Response with Sentinel Playbooks**
-
-**Mitigates:** Multiple Discovery Techniques
-
-* **Action:** Use **automated playbooks** to respond to suspicious discovery attempts.
-* **Azure Procedure:**
-  * Configure **Azure Sentinel playbooks** to disable compromised accounts or block IPs in real-time.
-  * Set playbooks to trigger on API calls involving:
-    * Bulk listing of users or groups
-    * Unauthorized role changes
-    * Enumeration of network and security configurations
-
-***
+    ```bash
+    az ad group list --output table
+    az ad group member list --output table
+    ```
+* Conduct regular access reviews of sensitive groups to detect unauthorized access.
+* Enforce **just-in-time (JIT)** access for administrative groups using **PIM**.
 
 ### **Summary of Defensive Procedures for TA0007**
 
-| **Defensive Strategy**                | **Mitigates**                                  | **Azure Procedure**                                      |
-| ------------------------------------- | ---------------------------------------------- | -------------------------------------------------------- |
-| Monitor Account and Group Discovery   | T1087 - Account Discovery                      | Track API calls for user and group enumeration           |
-| Harden Metadata Services              | T1552.004 - Credentials in Cloud Metadata      | Use NSGs to block unauthorized IMDS access               |
-| Limit Network Discovery               | T1016 - System Network Configuration Discovery | Apply RBAC to restrict VNet access                       |
-| Audit Role and Permission Assignments | T1069 - Permission Groups Discovery            | Use PIM and Sentinel to monitor role changes             |
-| Detect Automated Resource Enumeration | T1057 - Process Discovery                      | Monitor resource listing commands with Azure Sentinel    |
-| Monitor Automation Tasks and Runbooks | T1083 - File and Directory Discovery           | Track automation account modifications using Monitor     |
-| Detect Security Tool Enumeration      | T1518 - Software Discovery                     | Use Sentinel to monitor queries targeting security tools |
-| Use JIT Access for VMs                | T1018 - Remote System Discovery                | Apply JIT access in Defender for Cloud                   |
-| Monitor VNet Peering Queries          | T1016 - System Network Configuration Discovery | Track peering queries with Azure Monitor                 |
-| Automate Incident Response            | Multiple Discovery Techniques                  | Use Sentinel playbooks for real-time response            |
+<table data-header-hidden><thead><tr><th width="292"></th><th></th><th></th></tr></thead><tbody><tr><td><strong>Defensive Strategy</strong></td><td><strong>Mitigates</strong></td><td><strong>Azure Procedure</strong></td></tr><tr><td>Monitor and Restrict Account Discovery</td><td>T1087 - Account Discovery</td><td>- Use RBAC to restrict directory enumeration to least privilege.<br>- Enable audit logging and alerts for user enumeration.<br>- Apply Conditional Access Policies to enforce MFA and restrict access to sensitive APIs.</td></tr><tr><td>Monitor Cloud Account Enumeration</td><td>T1087.004 - Cloud Account</td><td>- Monitor for suspicious commands like <code>Get-AzADUser</code>.<br>- Restrict API and CLI permissions to authorized users.<br>- Enable Azure Security Defaults to enforce MFA for all users automatically.</td></tr><tr><td>Restrict Cloud Service Dashboard Access</td><td>T1087 - Cloud Service Dashboard</td><td>- Enforce RBAC to limit portal access.<br>- Require the use of privileged access workstations (PAWs) for administrative tasks.<br>- Conduct regular access reviews to remove unnecessary access.</td></tr><tr><td>Prevent Unauthorized Cloud Service Discovery</td><td>T1526 - Cloud Service Discovery</td><td>- Disable unused Azure services.<br>- Monitor and set alerts for commands like <code>az resource list --output table</code>.<br>- Implement service principal restrictions and enforce least privilege.</td></tr><tr><td>Monitor Password Policy Discovery Attempts</td><td>T1201 - Password Policy Discovery</td><td>- Enable strong password policies using banned password lists.<br>- Monitor changes to password policies via Entra audit logs and set alerts.<br>- Use Smart Lockout to block brute-force attempts.</td></tr><tr><td>Block Permission Groups Enumeration</td><td>T1069 - Permission Groups Discovery</td><td>- Restrict group enumeration permissions to necessary roles.<br>- Implement PIM for critical groups like Global Administrators.<br>- Monitor group changes using Azure Monitor or Microsoft Sentinel.</td></tr><tr><td>Detect Cloud Groups Enumeration Attempts</td><td>T1069.003 - Cloud Groups</td><td>- Monitor and restrict commands like <code>az ad group list</code> and <code>az ad group member list</code>.<br>- Conduct access reviews of sensitive groups.<br>- Enforce JIT access for administrative groups using PIM.</td></tr></tbody></table>
+
