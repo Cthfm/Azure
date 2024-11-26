@@ -12,7 +12,7 @@
   * Implement policies to ensure that tokens are only issued to compliant devices and trusted locations.
   * Enforce MFA for token issuance where possible.
 * **Audit and Monitoring**:
-  * Use Azure Monitor or Microsoft Sentinel to track unusual API calls or token activity via logs such as Azure AD Sign-ins and Application logs.
+  * Use Azure Monitor or Microsoft Sentinel to track unusual API calls or token activity via logs such as Azure Entra ID Sign-ins and Application logs.
 
 ### **2. Pass the Hash (T1550.002)**
 
@@ -49,7 +49,7 @@
   * Enforce short session lifetimes and require frequent re-authentication for sensitive accounts.
   * Use HTTP-only, Secure, and SameSite attributes for cookies to reduce client-side tampering and cross-site attacks.
 * **Zero Trust Enforcement**:
-  * Leverage continuous access evaluation (CAE) in Azure AD to monitor for unusual session activities and enforce token revocation dynamically.
+  * Leverage continuous access evaluation (CAE) in Azure Entra ID to monitor for unusual session activities and enforce token revocation dynamically.
 * **Browser Security**:
   * Encourage users to avoid public or untrusted devices and clear sessions after use.
   * Deploy Microsoft Defender SmartScreen or similar tools to prevent phishing that may steal cookies.
@@ -69,3 +69,4 @@
 | Incident Response Playbooks       | Develop playbooks for compromised credentials, including automated token and session revocation through PowerShell or Azure AD APIs.                                                                                                             |
 | Conditional Access Policies       | Implement session control policies in Microsoft Defender for Cloud Apps to enforce real-time access restrictions.                                                                                                                                |
 | User Education                    | Train users to identify and avoid phishing attempts that target session cookies or token theft.                                                                                                                                                  |
+| Continuous Access Evaluation      | Enable within applications as well as users access Microsoft applications such as Outlook and SharePoint.                                                                                                                                        |
