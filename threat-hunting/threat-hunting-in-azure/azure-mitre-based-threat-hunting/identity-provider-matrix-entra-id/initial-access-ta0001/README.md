@@ -9,7 +9,7 @@ The Initial Access phase in the MITRE ATT\&CK framework refers to how attackers 
 **Technique: T1190 - Exploit Public-Facing Application**\
 Attackers target vulnerabilities in exposed services to gain unauthorized access.
 
-* &#x20;Exploit a **vulnerable web app hosted on Azure App Service** to upload a malicious web shell and gain control over the backend server.
+* &#x20;Exploit a vulnerable web app hosted on Azure App Service to **uplo**ad a malicious web shell and gain control over the backend server.
 
 ### **2. Leveraging Stolen Credentials (Valid Accounts)**
 
@@ -17,7 +17,7 @@ Attackers target vulnerabilities in exposed services to gain unauthorized access
 Attackers use compromised or weak credentials to log into systems without triggering alarms.
 
 * **T1078.004 - Cloud Accounts:**\
-  Use **stolen Azure AD tokens** to access resources without MFA, such as Key Vault secrets and Blob storage.
+  Use stolen Entra ID tokens to access resources without MFA, such as Key Vault secrets and Blob storage.
 
 ### **3. Phishing for Credentials or Token Hijacking**
 
