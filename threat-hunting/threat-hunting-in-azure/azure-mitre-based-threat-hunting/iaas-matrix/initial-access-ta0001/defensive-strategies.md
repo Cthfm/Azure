@@ -70,6 +70,4 @@ The following provides a list of strategies for defending against the techniques
 5. **Zero Trust Architecture:**
    * Use conditional access policies to validate the context of logins.
 6. Invest in Identity Protection or Microsoft Defender
-   * Utilize Azure Entra Identity Protection and Defender  to detect anomalous behaviors.&#x20;
-7. Consider token protections
-   * Consider token protection like CAE and Token Protection: Conditional Access
+   * Utilize Azure Entra Identity Protection and Defender to detect anomalous behaviors.&#x20;
