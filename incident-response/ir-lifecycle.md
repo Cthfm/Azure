@@ -1,5 +1,7 @@
 # IR Lifecycle
 
+<figure><img src="../.gitbook/assets/ir_image.jpg" alt=""><figcaption></figcaption></figure>
+
 **Core IR Lifecycle**:
 
 * **Preparation**: Develop IR policies, train teams, and configure tools.
