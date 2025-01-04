@@ -299,5 +299,10 @@
 
 ***
 
-* [Incident Response](incident-response.md)
-* [Overview](overview.md)
+* [Incident Response](incident-response/README.md)
+  * [Azure IR Program Development Cheat Sheet](incident-response/azure-ir-program-development-cheat-sheet.md)
+  * [Azure IR vs On-Prem IR](incident-response/azure-ir-vs-on-prem-ir.md)
+  * [IR Lifecycle](incident-response/ir-lifecycle.md)
+  * [Azure Native Tools](incident-response/azure-native-tools.md)
+  * [Azure IR Playbooks (MS Guidance)](incident-response/azure-ir-playbooks-ms-guidance.md)
+  * [Ransomware (MS Guidance)](incident-response/ransomware-ms-guidance.md)
