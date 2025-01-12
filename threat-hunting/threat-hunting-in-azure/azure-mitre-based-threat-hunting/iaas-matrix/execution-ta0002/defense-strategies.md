@@ -1,5 +1,9 @@
 # Defense Strategies
 
+## Overview
+
+The MITRE ATT\&CK TA0002: Execution tactic focuses on how adversaries execute malicious code on a target system or environment to achieve their goals, such as persistence, data theft, or lateral movement. In the context of Azure, this involves leveraging various methods like exploiting Azure Functions, manipulating APIs, or abusing scripting environments. Below is a detailed discussion of defensive strategies for mitigating execution techniques in Azure.
+
 ### 1. Cloud Administration Command (T1651)
 
 Involves adversaries abusing legitimate cloud administrative tools, such as Azure CLI or PowerShell, to execute malicious commands or manipulate cloud resources.
@@ -50,7 +54,7 @@ Adversaries execute malicious code in serverless computing environments like Azu
 * **Code Review**: Implement secure code review practices for all serverless functions.
 * **Resource Policies**: Apply strict permissions on serverless resources to prevent unauthorized deployment or execution.
 * **Monitor Deployments**: Set up alerts for unusual deployments or updates to serverless functions.
-* **Logging**: Enable detailed function execution logging (e.g., Azure Function logs) to monitor behavior. [https://learn.microsoft.com/en-us/azure/azure-functions/monitor-functions?tabs=portal](https://learn.microsoft.com/en-us/azure/azure-functions/monitor-functions?tabs=portal)
+* **Logging**: Enable detailed function execution logging (e.g., Azure Function logs) to monitor behavior. The link provided here provides practices from Microsoft. [https://learn.microsoft.com/en-us/azure/azure-functions/monitor-functions?tabs=portal](https://learn.microsoft.com/en-us/azure/azure-functions/monitor-functions?tabs=portal)
 * **Utilize Least Privilege** - Ensure only users that need access to trigger or utilize Lambda functions where possible.&#x20;
 
 ### **5. User Execution (T1204)**
