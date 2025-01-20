@@ -200,6 +200,8 @@
         * [Defensive Strategies](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/iaas-matrix/initial-access-ta0001/defensive-strategies.md)
       * [Execution: TA0002](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/iaas-matrix/execution-ta0002/README.md)
         * [Defense Strategies](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/iaas-matrix/execution-ta0002/defense-strategies.md)
+      * [Persistence: TA0003](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/iaas-matrix/persistence-ta0003/README.md)
+        * [Defensive Strategies](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/iaas-matrix/persistence-ta0003/defensive-strategies.md)
   * [Microsoft Defender Threat Intelligence](threat-hunting/threat-hunting-in-azure/microsoft-defender-threat-intelligence/README.md)
     * [Data Sets](threat-hunting/threat-hunting-in-azure/microsoft-defender-threat-intelligence/data-sets.md)
     * [Reputational Scoring](threat-hunting/threat-hunting-in-azure/microsoft-defender-threat-intelligence/reputational-scoring.md)
