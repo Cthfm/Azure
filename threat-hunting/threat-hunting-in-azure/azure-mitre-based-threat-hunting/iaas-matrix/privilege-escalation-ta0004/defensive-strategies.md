@@ -59,8 +59,6 @@ Defending against privilege escalation in Azure involves enforcing least privile
 
 ### General Guidance Across Techniques
 
-#### **General Recommendations**
-
 The following are the key takeaways that you can deploy within your environment into order to prevent and or detection this tactic being used within your environment.&#x20;
 
 * Centralize Logging: Aggregate logs from Azure AD, Azure Monitor, and Log Analytics into a single workspace for real-time analysis.
