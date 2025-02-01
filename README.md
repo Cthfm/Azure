@@ -26,7 +26,7 @@ Whether you're new to cloud security or an experienced practitioner, this guide 
 
 
 
-{% @mailchimp/mailchimpSubscribe fullWidth="true" %}
+{% @mailchimp/mailchimpSubscribe fullWidth="false" %}
 
 ### **Jump Right In**
 
