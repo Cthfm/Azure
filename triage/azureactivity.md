@@ -31,3 +31,12 @@ AzureActivity
 | where Caller == "badactor@cthfm.com" and CategoryValue == 'Administrative'
 | project ResourceProviderValue, ResourceGroup, OperationNameValue, ActivityStatusValue, Properties
 ```
+
+CallerIP:
+
+```kusto
+AzureActivity
+| where Caller == "badactor@cthfm.com" 
+| summarize count() by CallerIpAddress
+```
+
