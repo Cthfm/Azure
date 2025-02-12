@@ -317,3 +317,4 @@
 
 * [AzureActivity](triage/azureactivity.md)
 * [AuditLogs](triage/auditlogs.md)
+* [Sign-In Logs](triage/sign-in-logs.md)
