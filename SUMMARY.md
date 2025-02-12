@@ -312,3 +312,7 @@
   * [Azure Native Tools](incident-response/azure-native-tools.md)
   * [Azure IR Playbooks (MS Guidance)](incident-response/azure-ir-playbooks-ms-guidance.md)
   * [Ransomware (MS Guidance)](incident-response/ransomware-ms-guidance.md)
+
+## Triage
+
+* [Azure Activity Logs](triage/azure-activity-logs.md)
