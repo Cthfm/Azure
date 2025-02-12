@@ -315,4 +315,5 @@
 
 ## Triage
 
+* [AzureActivity](triage/azureactivity.md)
 * [AuditLogs](triage/auditlogs.md)
