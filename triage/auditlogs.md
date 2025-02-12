@@ -16,8 +16,8 @@ These are merely ideas and can be developed to meet your organization needs.
 
 This search will show the overview of the user or app activities with key fields.
 
-````
-```AuditLogs|
+```kusto
+AuditLogs|
 extend initiatedByJson = parse_json(InitiatedBy)  // Parse InitiatedBy JSON
 | extend user_id = tostring(initiatedByJson.user.id),
          user_displayName = tostring(initiatedByJson.user.displayName),
@@ -27,13 +27,12 @@ extend initiatedByJson = parse_json(InitiatedBy)  // Parse InitiatedBy JSON
 | where user_principalName == "badactor@cthfm.com"  // Filter on user
 | project user_principalName, ActivityDisplayName, Resource, ResourceGroup, AdditionalDetails, TargetResources, LoggedByService, Result
 ```
-````
 
 ### 2. Services and Operations Completed by Application or User
 
 This shows the services that the user or application interacted with and the associated count. This gives us the scope of the activity within a given time frame.
 
-<pre><code><strong>AuditLogs
+<pre class="language-kusto"><code class="lang-kusto"><strong>AuditLogs
 </strong>|extend initiatedByJson = parse_json(InitiatedBy)  // Parse InitiatedBy JSON
 | extend user_id = tostring(initiatedByJson.user.id),
          user_displayName = tostring(initiatedByJson.user.displayName),
@@ -46,8 +45,7 @@ This shows the services that the user or application interacted with and the ass
 
 ### 3. Associated User Agents
 
-````
-```
+```kusto
 AuditLogs
 | where isnotempty(AdditionalDetails)  // Ensure field is not null
 | extend detailsJson = parse_json(tostring(AdditionalDetails))  // Parse additionalDetails as JSON array
@@ -63,18 +61,16 @@ AuditLogs
 | where user_principalName == "badactor@cthfm.com" 
 | summarize count() by UserAgent
 ```
-````
 
 ### 4. Resource Interactions:
 
-````
-```
+```kusto
 AuditLogs
 | where isnotempty(TargetResources)  // Ensure field exists
 | extend resourcesJson = parse_json(tostring(TargetResources))  // Convert JSON array
 | mv-expand resourcesJson  // Expand each object in the array
 | extend 
-    userPrincipalName = tostring(resourcesJson.userPrincipalName),
+    resource_userPrincipalName = tostring(resourcesJson.userPrincipalName),
     modifiedProperties = tostring(resourcesJson.modifiedProperties),
     type = tostring(resourcesJson.type) // Extract modifiedProperties array
 | extend initiatedByJson = parse_json(InitiatedBy)  // Parse InitiatedBy JSON
@@ -84,11 +80,8 @@ AuditLogs
          app_id = tostring(initiatedByJson.app.id), // parse app id
          app_displayName = tostring(initiatedByJson.app.displayName) // parse app display name
 | where user_principalName == "badactor@cthfm.com" 
-| summarize count() by user_principalName, type, userPrincipalName, modifiedProperties
+| summarize count() by user_principalName, type, resource_userPrincipalName, modifiedProperties
 ```
-````
-
-
 
 ### Resources:
 
