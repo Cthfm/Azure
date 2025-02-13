@@ -8,17 +8,13 @@ hidden: true
 
 The following are some basic KQL commands to do principal-based triage. This table is for Entra ID. It Includes system activity information about user and group management managed applications and directory activities.
 
-{% hint style="danger" %}
-These are merely ideas and can be developed to meet your organization needs.
-{% endhint %}
-
 ### 1. Overview Search
 
 This search will show the overview of the user or app activities with key fields.
 
 ```kusto
-AuditLogs|
-extend initiatedByJson = parse_json(InitiatedBy)  // Parse InitiatedBy JSON
+AuditLogs
+| extend initiatedByJson = parse_json(InitiatedBy)  // Parse InitiatedBy JSON
 | extend user_id = tostring(initiatedByJson.user.id),
          user_displayName = tostring(initiatedByJson.user.displayName),
          user_principalName = tostring(initiatedByJson.user.userPrincipalName),
@@ -33,7 +29,7 @@ extend initiatedByJson = parse_json(InitiatedBy)  // Parse InitiatedBy JSON
 This shows the services that the user or application interacted with and the associated count. This gives us the scope of the activity within a given time frame.
 
 <pre class="language-kusto"><code class="lang-kusto"><strong>AuditLogs
-</strong>|extend initiatedByJson = parse_json(InitiatedBy)  // Parse InitiatedBy JSON
+</strong>| extend initiatedByJson = parse_json(InitiatedBy)  // Parse InitiatedBy JSON
 | extend user_id = tostring(initiatedByJson.user.id),
          user_displayName = tostring(initiatedByJson.user.displayName),
          user_principalName = tostring(initiatedByJson.user.userPrincipalName),
