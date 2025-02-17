@@ -22,15 +22,15 @@ Exploitation for Defense Evasion occurs when attackers leverage vulnerabilities 
 
 Impair Defenses refers to techniques where attackers disable, modify, or evade security tools to avoid detection and maintain persistence.&#x20;
 
-_**Disable or Modify Tools (T1562.001)**_
+**Disable or Modify Tools (T1562.001)**
 
 * **Example:** An attacker disables Microsoft Defender for Endpoint in Azure Security Center via PowerShell (`Set-MpPreference -DisableRealtimeMonitoring $true`) to evade detection.
 
-_**Disable or Modify Cloud Firewall (T1562.007)**_
+**Disable or Modify Cloud Firewall (T1562.007)**
 
 * **Example:** An attacker modifies Azure Network Security Group (NSG) rules to allow external traffic to an internal resource, thereby bypassing firewall restrictions.
 
-_**Disable or Modify Cloud Logs (T1562.008)**_
+**Disable or Modify Cloud Logs (T1562.008)**
 
 *   **Example:** Using Azure CLI, an attacker disables diagnostic logging for Azure Key Vault or other resources to prevent activity tracking:
 
@@ -66,7 +66,7 @@ Refers to adversaries modifying cloud compute resources to gain persistence, esc
     az snapshot create --resource-group MyResourceGroup --source MyOSDisk --name MySnapshot
     ```
 
-_**Create Cloud Instance (**_**T1578.002)**
+**Create Cloud Instance (T1578.002)**
 
 * **Example:** An attacker creates a new Azure VM in a different region to establish persistence and avoid detection.
 

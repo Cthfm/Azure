@@ -2,7 +2,7 @@
 
 ## Overview:
 
-Defending against privilege escalation in Azure involves enforcing least privilege with Role-Based Access Control (RBAC), using Privileged Identity Management (PIM) for just-in-time access, and regularly auditing permissions. Enable logging for role assignments and sign-ins, and monitor activities with Azure Sentinel and Defender for Cloud to detect anomalies. Secure sensitive resources like Key Vault and Automation Accounts with managed identities, conditional access, and private endpoints. These measures, combined with automated threat detection and response, effectively mitigate privilege escalation risks. Let's take a look at defensive strategies for each technique.&#x20;
+Defending against privilege escalation in Azure involves enforcing least privilege with Role-Based Access Control (RBAC), using Privileged Identity Management (PIM) for just-in-time access, and regularly auditing permissions. Enable logging for role assignments and sign-ins and monitor activities with Azure Sentinel and Defender for Cloud to detect anomalies. Secure sensitive resources like Key Vault and Automation Accounts with managed identities, conditional access, and private endpoints. These measures, combined with automated threat detection and response, effectively mitigate privilege escalation risks. Let's take a look at defensive strategies for each technique.&#x20;
 
 ### **T1548 - Abuse Elevation Control Mechanism**
 
