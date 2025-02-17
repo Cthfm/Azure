@@ -9,7 +9,7 @@ The following page goes over a list of security services that are utilized withi
 * **Azure Security Center**: Provides unified security management and advanced threat protection across hybrid cloud workloads.
 * **Azure Monitor**: Collects and analyzes telemetry data from Azure resources, applications, and infrastructure for monitoring and alerting.
 * **Azure Sentinel**: A cloud-native SIEM (Security Information and Event Management) and SOAR (Security Orchestration, Automation, and Response) solution for intelligent security analytics and threat detection.
-* **Azure Active Directory (Azure AD)**: Identity and access management service that helps secure user identities and access to applications and resources.
+* **Azure Entra (Formerly Azure AD)**: Identity and access management service that helps secure user identities and access to applications and resources.
 * **Azure Key Vault**: Safeguards cryptographic keys and secrets used by cloud applications and services.
 * **Azure Firewall**: Provides network-level protection to Azure Virtual Network resources.
 * **Azure DDoS Protection**: Defends Azure-hosted applications from distributed denial of service (DDoS) attacks.

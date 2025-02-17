@@ -25,7 +25,7 @@ Azure Entra ID Premium P1 is designed for enterprises that need more advanced id
 
 ## Azure Entra ID Premium P2
 
-**Description**: Azure Entra IDPremium P2 includes all the features of P1 and adds advanced identity protection and privileged identity management capabilities. It is aimed at organizations that require comprehensive security and identity governance.
+**Description**: Azure Entra ID Premium P2 includes all the features of P1 and adds advanced identity protection and privileged identity management capabilities. It is aimed at organizations that require comprehensive security and identity governance.
 
 ### **Key Features**:
 

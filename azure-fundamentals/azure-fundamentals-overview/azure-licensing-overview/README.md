@@ -1,8 +1,8 @@
 # Azure Licensing Overview
 
-### **Overview:**&#x20;
+## **Overview:**&#x20;
 
-Azure offers flexible pricing models to accommodate various business needs: **Pay-As-You-Go**, **Reserved Instances**, and **Spot Pricing**. **Pay-As-You-Go** allows users to pay for services as they use them, ideal for unpredictable workloads. **Reserved Instances** provide significant cost savings for committing to use specific services for one or three years, suitable for stable, long-term workloads. **Spot Pricing** offers discounts for using spare capacity, perfect for non-critical or interruptible tasks. These models provide cost-effective options tailored to different usage patterns and budget requirements. This section goes over each of these in more detail.
+Azure offers flexible pricing models to accommodate various business needs. This section goes over each of these in more detail.
 
 ### **1. Pay-As-You-Go (PAYG)**
 

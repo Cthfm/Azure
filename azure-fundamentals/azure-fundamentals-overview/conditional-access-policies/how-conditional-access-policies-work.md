@@ -1,5 +1,9 @@
 # How Conditional Access Policies Work
 
+## **Overview:**
+
+The following goes over how conditional access are evaluated and how they work. This section provides an example of a conditional access policy.
+
 ### **How Conditional Access Works**
 
 When a user attempts to access an Azure AD-protected resource, Azure AD evaluates the sign-in attempt against the active Conditional Access policies. Based on the defined conditions, the policies will either allow access, block access, or require additional actions, such as MFA or device compliance.

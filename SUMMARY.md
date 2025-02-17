@@ -204,6 +204,7 @@
         * [Defensive Strategies](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/iaas-matrix/persistence-ta0003/defensive-strategies.md)
       * [Privilege Escalation TA0004:](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/iaas-matrix/privilege-escalation-ta0004/README.md)
         * [Defensive Strategies](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/iaas-matrix/privilege-escalation-ta0004/defensive-strategies.md)
+      * [Defense Evasion (TA0005)](threat-hunting/threat-hunting-in-azure/azure-mitre-based-threat-hunting/iaas-matrix/defense-evasion-ta0005.md)
   * [Microsoft Defender Threat Intelligence](threat-hunting/threat-hunting-in-azure/microsoft-defender-threat-intelligence/README.md)
     * [Data Sets](threat-hunting/threat-hunting-in-azure/microsoft-defender-threat-intelligence/data-sets.md)
     * [Reputational Scoring](threat-hunting/threat-hunting-in-azure/microsoft-defender-threat-intelligence/reputational-scoring.md)
@@ -313,8 +314,8 @@
   * [Azure IR Playbooks (MS Guidance)](incident-response/azure-ir-playbooks-ms-guidance.md)
   * [Ransomware (MS Guidance)](incident-response/ransomware-ms-guidance.md)
 
-## Triage
+## Basic Triage
 
-* [AzureActivity](triage/azureactivity.md)
-* [AuditLogs](triage/auditlogs.md)
-* [Sign-In Logs](triage/sign-in-logs.md)
+* [AzureActivity](basic-triage/azureactivity.md)
+* [AuditLogs](basic-triage/auditlogs.md)
+* [Sign-In Logs](basic-triage/sign-in-logs.md)
