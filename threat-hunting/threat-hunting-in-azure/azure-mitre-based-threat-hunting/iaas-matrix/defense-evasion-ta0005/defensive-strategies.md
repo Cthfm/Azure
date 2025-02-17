@@ -163,5 +163,5 @@ Defensive strategies within the Defense Evasion (TA0005) requires enforcing stro
 
 * Enable Microsoft Defender for Cloud: Provides built-in detection for many of these attacks.
 * Implement Zero Trust: Limit access based on least privilege and enforce strong authentication.
-* Use Azure Sentinel for Detection: Build detection rules for suspicious privilege escalation, log tampering, and configuration changes.
+* Use Azure Sentinel or a third party SIEM for Detection: Build detection rules for suspicious privilege escalation, log tampering, and configuration changes.
 * Regularly Review Activity Logs: Use Azure Activity Logs, Microsoft Defender for Cloud Apps, and Azure Monitor to track anomalies.
