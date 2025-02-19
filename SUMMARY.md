@@ -313,6 +313,13 @@
   * [IR Lifecycle](incident-response/ir-lifecycle.md)
   * [Azure Native Tools](incident-response/azure-native-tools.md)
   * [Azure IR Playbooks (MS Guidance)](incident-response/azure-ir-playbooks-ms-guidance.md)
+  * [Containment](incident-response/containment/README.md)
+    * [Short Term Containment](incident-response/containment/short-term-containment/README.md)
+      * [Identity Based Contaiment](incident-response/containment/short-term-containment/identity-based-contaiment.md)
+      * [Virtual Machine Containment](incident-response/containment/short-term-containment/virtual-machine-containment.md)
+      * [Storage Account Containment](incident-response/containment/short-term-containment/storage-account-containment.md)
+      * [Network Containment](incident-response/containment/short-term-containment/network-containment.md)
+    * [Containment Automation](incident-response/containment/containment-automation.md)
   * [Ransomware (MS Guidance)](incident-response/ransomware-ms-guidance.md)
 
 ## Basic Triage
