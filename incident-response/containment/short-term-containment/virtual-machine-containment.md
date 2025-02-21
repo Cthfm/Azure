@@ -4,11 +4,12 @@
 
 #### **Isolating Compromised VMs**
 
-* **Objective:** Prevent further spread of the attack.
-* **Method:** Use Network Security Groups (NSGs) to block external access.
-* **Steps:**
-  1. Navigate to **NSG settings**.
-  2. Block all inbound and outbound traffic for the compromised VM.
+**Method:** Use Network Security Groups (NSGs) to block external access via portal
+
+**Steps:**
+
+1. Navigate to NSG settings.
+2. Block all inbound and outbound traffic for the compromised VM.
 
 #### **Using Just-in-Time (JIT) Access**
 
