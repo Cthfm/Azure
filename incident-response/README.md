@@ -16,7 +16,7 @@ Incident Response is the structured approach to managing and mitigating security
 
 ### **Core IR Lifecycle**:
 
-<figure><img src="../../.gitbook/assets/ir_image.jpg" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/ir_image.jpg" alt=""><figcaption></figcaption></figure>
 
 * **Preparation**: Develop IR policies, train teams, and configure tools.
 * **Detection and Analysis**: Identify security events and understand their scope and impact.
