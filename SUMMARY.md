@@ -290,6 +290,25 @@
 * [Oh365UserFinder](adversary-emulation/oh365userfinder.md)
 * [GraphRunner](adversary-emulation/graphrunner.md)
 
+## Incident Response
+
+* [Incident Response](incident-response/incident-response/README.md)
+  * [Azure IR Program Development Cheat Sheet](incident-response/incident-response/azure-ir-program-development-cheat-sheet.md)
+  * [Azure IR Playbooks (MS Guidance)](incident-response/incident-response/azure-ir-playbooks-ms-guidance.md)
+  * [Ransomware (MS Guidance)](incident-response/incident-response/ransomware-ms-guidance.md)
+  * [Containment](incident-response/incident-response/containment/README.md)
+    * [Containment](incident-response/incident-response/containment/containment/README.md)
+      * [Identity Based Contaiment](incident-response/incident-response/containment/containment/identity-based-contaiment/README.md)
+        * [User](incident-response/incident-response/containment/containment/identity-based-contaiment/user.md)
+        * [Service Principal](incident-response/incident-response/containment/containment/identity-based-contaiment/service-principal.md)
+        * [Managed Identity](incident-response/incident-response/containment/containment/identity-based-contaiment/managed-identity.md)
+      * [Virtual Machine Containment](incident-response/incident-response/containment/containment/virtual-machine-containment.md)
+      * [Storage Account Containment](incident-response/incident-response/containment/containment/storage-account-containment.md)
+      * [Network Containment](incident-response/incident-response/containment/containment/network-containment.md)
+      * [PCAP Acquisition](incident-response/incident-response/containment/containment/pcap-acquisition.md)
+    * [Containment Automation](incident-response/incident-response/containment/containment-automation/README.md)
+      * [Service Principal Containment](incident-response/incident-response/containment/containment-automation/service-principal-containment.md)
+
 ## Automation
 
 * [Automation Overview](automation/automation.md)
@@ -304,28 +323,6 @@
   * [External Service Integration](automation/logic-apps/external-service-integration.md)
   * [Securing, Managing, and Scaling Azure Logic Apps](automation/logic-apps/securing-managing-and-scaling-azure-logic-apps.md)
   * [Logic Apps: Az CLI](automation/logic-apps/logic-apps-az-cli.md)
-
-***
-
-* [Incident Response](incident-response/README.md)
-  * [Azure IR Program Development Cheat Sheet](incident-response/azure-ir-program-development-cheat-sheet.md)
-  * [Azure IR vs On-Prem IR](incident-response/azure-ir-vs-on-prem-ir.md)
-  * [IR Lifecycle](incident-response/ir-lifecycle.md)
-  * [Azure Native Tools](incident-response/azure-native-tools.md)
-  * [Azure IR Playbooks (MS Guidance)](incident-response/azure-ir-playbooks-ms-guidance.md)
-  * [Containment](incident-response/containment/README.md)
-    * [Short Term Containment](incident-response/containment/short-term-containment/README.md)
-      * [Identity Based Contaiment](incident-response/containment/short-term-containment/identity-based-contaiment/README.md)
-        * [User](incident-response/containment/short-term-containment/identity-based-contaiment/user.md)
-        * [Service Principal](incident-response/containment/short-term-containment/identity-based-contaiment/service-principal.md)
-        * [Managed Identity](incident-response/containment/short-term-containment/identity-based-contaiment/managed-identity.md)
-      * [Virtual Machine Containment](incident-response/containment/short-term-containment/virtual-machine-containment.md)
-      * [Storage Account Containment](incident-response/containment/short-term-containment/storage-account-containment.md)
-      * [Network Containment](incident-response/containment/short-term-containment/network-containment.md)
-      * [PCAP Acquisition](incident-response/containment/short-term-containment/pcap-acquisition.md)
-    * [Containment Automation](incident-response/containment/containment-automation/README.md)
-      * [Service Principal Containment](incident-response/containment/containment-automation/service-principal-containment.md)
-  * [Ransomware (MS Guidance)](incident-response/ransomware-ms-guidance.md)
 
 ## Basic Triage
 
