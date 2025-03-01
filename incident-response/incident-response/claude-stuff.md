@@ -1,3 +1,7 @@
+---
+hidden: true
+---
+
 # Claude Stuff
 
 ## Comprehensive Azure Incident Response Course

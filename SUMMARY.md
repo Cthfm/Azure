@@ -293,10 +293,7 @@
 ## Incident Response
 
 * [Incident Response](incident-response/README.md)
-  * [Claude Stuff](incident-response/incident-response/claude-stuff.md)
   * [Azure IR Program Development Cheat Sheet](incident-response/azure-ir-program-development-cheat-sheet.md)
-  * [Azure IR Playbooks (MS Guidance)](incident-response/azure-ir-playbooks-ms-guidance.md)
-  * [Ransomware (MS Guidance)](incident-response/ransomware-ms-guidance.md)
   * [Containment](incident-response/containment/README.md)
     * [Containment](incident-response/containment/short-term-containment/README.md)
       * [Identity Based Contaiment](incident-response/containment/short-term-containment/identity-based-contaiment/README.md)
@@ -308,6 +305,9 @@
       * [Network Containment](incident-response/containment/short-term-containment/network-containment.md)
     * [Containment Automation](incident-response/containment/containment-automation/README.md)
       * [Service Principal Containment](incident-response/containment/containment-automation/service-principal-containment.md)
+  * [Azure IR Playbooks (MS Guidance)](incident-response/azure-ir-playbooks-ms-guidance.md)
+  * [Ransomware (MS Guidance)](incident-response/ransomware-ms-guidance.md)
+  * [Claude Stuff](incident-response/incident-response/claude-stuff.md)
 
 ## Automation
 
@@ -333,6 +333,9 @@
 ## Packet Analysis
 
 * [Wireshark Cheatsheet](packet-analysis/wireshark-cheatsheet.md)
+* [TShark Cheatsheet](packet-analysis/tshark-cheatsheet.md)
+* [TCPDUMP Cheatsheet](packet-analysis/tcpdump-cheatsheet.md)
 * [Protocol Analysis Basics](packet-analysis/protocol-analysis-basics.md)
 * [HTTP Response Code Cheatsheet](packet-analysis/http-response-code-cheatsheet.md)
+* [RFC Protocol Mappings](packet-analysis/rfc-protocol-mappings.md)
 * [PCAP Acquisition](packet-analysis/pcap-acquisition.md)

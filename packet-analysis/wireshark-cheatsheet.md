@@ -1,6 +1,6 @@
 # Wireshark Cheatsheet
 
-## Overview
+### Overview
 
 The following is a cheat sheet for getting started within Wireshark and how to use it.&#x20;
 
@@ -118,13 +118,3 @@ Tip: Use Wireshark profiles to create custom settings for different scenarios (e
 | `Shift + Ctrl + B` | **Go to previous packet in conversation** |
 | `Ctrl + T`         | **Set Time Reference (Latency Analysis)** |
 | `Shift + ← / →`    | **Expand/Collapse packet details**        |
-
-***
-
-### &#x20;**6. Pro Tips for Cybersecurity Analysts**
-
-🔹 **Baseline Normal Traffic:** Before hunting for threats, understand "normal" network behavior.\
-🔹 **Monitor Lateral Movement:** Watch for **SMB, RDP, and WinRM traffic** on internal networks.\
-🔹 **Detect Covert Channels:** Use `dns.qry.name` filter to find **DNS tunneling** (data exfiltration).\
-🔹 **Decode Encrypted Traffic:** If you have **TLS keys**, import them (`Edit → Preferences → TLS`).\
-🔹 **Use Custom Columns:** Add columns for **IP addresses, MAC addresses, and ports** for quick sorting.

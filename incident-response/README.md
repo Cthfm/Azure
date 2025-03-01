@@ -1,7 +1,3 @@
----
-hidden: true
----
-
 # Incident Response
 
 ### **What is Incident Response (IR)?**
