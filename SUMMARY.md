@@ -306,7 +306,6 @@
       * [Virtual Machine Containment](incident-response/containment/short-term-containment/virtual-machine-containment.md)
       * [Storage Account Containment](incident-response/containment/short-term-containment/storage-account-containment.md)
       * [Network Containment](incident-response/containment/short-term-containment/network-containment.md)
-      * [PCAP Acquisition](incident-response/containment/short-term-containment/pcap-acquisition.md)
     * [Containment Automation](incident-response/containment/containment-automation/README.md)
       * [Service Principal Containment](incident-response/containment/containment-automation/service-principal-containment.md)
 
@@ -330,3 +329,10 @@
 * [AzureActivity](basic-triage/azureactivity.md)
 * [AuditLogs](basic-triage/auditlogs.md)
 * [Sign-In Logs](basic-triage/sign-in-logs.md)
+
+## Packet Analysis
+
+* [Wireshark Cheatsheet](packet-analysis/wireshark-cheatsheet.md)
+* [Protocol Analysis Basics](packet-analysis/protocol-analysis-basics.md)
+* [HTTP Response Code Cheatsheet](packet-analysis/http-response-code-cheatsheet.md)
+* [PCAP Acquisition](packet-analysis/pcap-acquisition.md)
