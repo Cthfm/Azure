@@ -10,8 +10,8 @@ To obtain a PCAP (packet capture) in Azure, follow these steps:
 
 Azure provides a built-in tool called **Azure Network Watcher** that allows you to capture network traffic.
 
-* In the **Azure portal**, search for **Network Watcher**.
-* Select the **Network Watcher** instance for your region.
+* In the Azure portal, search for Network Watcher.
+* Select the Network Watcher instance for your region.
 * Enable it if it is not already enabled.
 
 ## **2. Start a Packet Capture - Azure Portal**
