@@ -71,7 +71,7 @@
     * [Permission Reference](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/permission-reference.md)
     * [Microsoft Graph PowerShell Transition](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/microsoft-graph-powershell-transition.md)
     * [Security API References](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/security-api-references.md)
-  * [Powershell: Entra](powershell/powershell-for-azure/powershell-entra.md)
+  * [Powershell: Entra Module](powershell/powershell-for-azure/powershell-entra-module.md)
   * [Powershell: Azure Module](powershell/powershell-for-azure/powershell-azure-module/README.md)
     * [Installation Instructions](powershell/powershell-for-azure/powershell-azure-module/installation-instructions.md)
     * [Powershell Azure CLI: Windows](powershell/powershell-for-azure/powershell-azure-module/powershell-azure-cli-windows.md)
