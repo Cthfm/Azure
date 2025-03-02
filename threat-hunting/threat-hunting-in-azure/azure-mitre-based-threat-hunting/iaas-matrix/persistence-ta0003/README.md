@@ -1,3 +1,7 @@
+---
+hidden: true
+---
+
 # Persistence: TA0003
 
 ## **Overview of TA0003: Persistence**&#x20;

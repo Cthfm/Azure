@@ -1,4 +1,8 @@
-# Execution: TA0002
+---
+hidden: true
+---
+
+# Execution TA0002
 
 The Execution (TA0002) tactic in the MITRE ATT\&CK framework involves adversaries running malicious code or commands to advance their objectives, such as stealing data or achieving persistence. This includes techniques like using command-line interpreters (e.g., PowerShell), exploiting vulnerabilities, or leveraging cloud tools (e.g., Azure CLI). Execution often follows Initial Access (TA0001) and is pivotal in enabling further attack stages. Key defenses include least privilege, monitoring suspicious activity, restricting scripting tools, and behavior-based detection.
 

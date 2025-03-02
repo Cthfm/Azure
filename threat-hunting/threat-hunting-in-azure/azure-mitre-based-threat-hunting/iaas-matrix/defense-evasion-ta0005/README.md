@@ -1,4 +1,8 @@
-# Defense Evasion (TA0005)
+---
+hidden: true
+---
+
+# Defense Evasion TA0005
 
 ## **Overview:**
 

@@ -1,6 +1,10 @@
-# Privilege Escalation TA0004:
+---
+hidden: true
+---
 
-## Overview Privilege Escalation TA0004:
+# Privilege Escalation TA0004
+
+## Overview Privilege Escalation TA0004
 
 Privilege Escalation (TA0004) involves adversaries seeking to gain higher-level permissions on a system or network to execute unauthorized actions. In Azure, this tactic often exploits misconfigurations in Role-Based Access Control (RBAC), Azure Entra, or mismanaged secrets like keys and tokens. Attackers might abuse excessive privileges, escalate roles through service principals, or compromise automation tools and managed identities to gain unauthorized access or perform privileged actions across Azure subscriptions and services. These vectors highlight the critical need for stringent access controls, continuous monitoring, and secure configuration practices within Azure environments. Let's look at the specific techniques and sub techniques provided in the IAAS Matrix.&#x20;
 
