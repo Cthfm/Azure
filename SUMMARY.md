@@ -351,3 +351,13 @@
 * [HTTP Response Code Cheatsheet](packet-analysis/http-response-code-cheatsheet.md)
 * [RFC Protocol Mappings](packet-analysis/rfc-protocol-mappings.md)
 * [PCAP Acquisition](packet-analysis/pcap-acquisition.md)
+
+## Detection Lab
+
+* [Account Creation Instructions](detection-lab/account-creation-instructions.md)
+* [Setup and Install Instructions](detection-lab/setup-and-install-instructions.md)
+
+***
+
+* [VSCode and Code Setup](vscode-and-code-setup.md)
+* [Deploying Code](deploying-code.md)
