@@ -25,7 +25,7 @@ PS C:\Users\cthfm>
 ### 2. Change Directories and Git Clone the Repository
 
 ```
-PS C:\Users\cthfm> cd test
+PS C:\Users\cthfm> cd code
 PS C:\Users\cthfm\code> git clone https://github.com
 Cloning into 'github.com'...
 fatal: repository 'https://github.com/' not found
