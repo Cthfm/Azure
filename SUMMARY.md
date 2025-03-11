@@ -285,6 +285,13 @@
 * [Intune API Permission Scopes](intune/intune-api-permission-scopes.md)
 * [Intune Sample Script Resources](intune/intune-sample-script-resources.md)
 
+***
+
+* [Intune Logging](intune-logging/README.md)
+  * [Configure Logging](intune-logging/configure-logging.md)
+  * [Logging Schema References](intune-logging/logging-schema-references.md)
+  * [Intune Queries and Resources](intune-logging/intune-queries-and-resources.md)
+
 ## Windows Host Security
 
 * [Windows System Architecture and OS Fundamentals](windows-host-security/windows-system-architecture-and-os-fundamentals.md)
