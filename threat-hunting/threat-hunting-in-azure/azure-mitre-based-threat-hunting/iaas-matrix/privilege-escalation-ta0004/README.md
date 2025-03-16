@@ -1,7 +1,3 @@
----
-hidden: true
----
-
 # Privilege Escalation TA0004
 
 ## Overview Privilege Escalation TA0004
@@ -14,7 +10,7 @@ This technique involves exploiting legitimate mechanisms to gain elevated privil
 
 **Temporary Elevated Cloud Access (T1548.005)**
 
-* **Example**: An attacker compromises a **Managed Identity** token on an Azure Virtual Machine (VM). They use the token to temporarily elevate privileges, allowing them to interact with Azure Resource Manager (ARM) APIs to modify resource configurations.
+* **Example**: An attacker compromises a Managed Identity token on an Azure Virtual Machine (VM). They use the token to temporarily elevate privileges, allowing them to interact with Azure Resource Manager (ARM) APIs to modify resource configurations.
 
 ### **T1098 - Account Manipulation**
 
@@ -30,7 +26,7 @@ This technique involves modifying user accounts or access credentials to gain or
 
 #### **SSH Authorized Keys**
 
-* **Example**: After compromising an Azure VM, the attacker modifies the `~/.ssh/authorized_keys` file of the VM’s admin account via an extension deployment script, enabling persistent SSH access without requiring credentials.
+* **Example**: After compromising an Azure VM, the attacker modifies the \~/.ssh/authorized\_keys file of the VM’s admin account via an extension deployment script, enabling persistent SSH access without requiring credentials.
 
 ### **T1546 - Event Triggered Execution**
 
