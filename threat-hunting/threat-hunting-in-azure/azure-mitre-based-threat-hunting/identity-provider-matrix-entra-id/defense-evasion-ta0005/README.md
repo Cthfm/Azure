@@ -11,20 +11,16 @@ The Defense Evasion tactic focuses on hiding malicious activities to avoid detec
 ### **1. Disabling or Modifying Security Controls**
 
 **Technique:** T1562 - Impair Defenses\
-Attackers **disable logging, security alerts, or monitoring tools** to avoid detection.
+Attackers disable logging, security alerts, or monitoring tools to avoid detection.
 
 *   **T1562.001 - Disable or Modify Tools**\
-    **Azure Example:** Disable **Azure Defender** alerts to evade monitoring.
+    Azure Example: Disable Azure Defender alerts to evade monitoring.
 
     ```bash
     az security pricing create --name VirtualMachines --tier 'Free'
     ```
-*   **T1562.004 - Disable Event Logging**\
-    **Azure Example:** Use **PowerShell** to stop or clear Azure AD audit logs.
-
-    ```powershell
-    Stop-Service -Name "AzureADConnect"  
-    ```
+* **T1562.004 - Disable Event Logging**\
+  Azure Example: Use PowerShell to stop or clear Azure AD audit logs.
 
 ### **2. Bypassing Authentication or Conditional Access**
 
@@ -46,7 +42,7 @@ Attackers use **legitimate signed tools** to execute malicious commands, bypassi
 *   **Azure Example:** Use **MSBuild.exe** on a Windows VM to launch payloads while avoiding security alerts.
 
     ```xml
-    xmlCopy code<Project>
+    <Project>
       <Target Name="RunPayload">
         <Exec Command="cmd.exe /c calc.exe" />
       </Target>
@@ -58,37 +54,37 @@ Attackers use **legitimate signed tools** to execute malicious commands, bypassi
 **Technique:** T1055 - Process Injection\
 Attackers hide malicious code within legitimate processes to evade detection.
 
-* **Azure Example:** Inject malicious code into a **PowerShell process** running on a compromised Azure VM to blend into normal operations.
+* **Azure Example:** Inject malicious code into a PowerShell process running on a compromised Azure VM to blend into normal operations.
 
 ### **5. Deleting or Modifying Logs to Cover Tracks**
 
 **Technique:** T1070 - Indicator Removal on Host\
-Attackers remove logs and other traces to **prevent forensic investigations**.
+Attackers remove logs and other traces to prevent forensic investigations.
 
 * **T1070.004 - File Deletion**\
-  **Azure Example:** Delete **Azure Activity Logs** that contain evidence of privilege escalation.
+  **Azure Example:** Delete Azure Activity Logs that contain evidence of privilege escalation.
 
 ### **6. Abusing Policies and Configuration Settings for Evasion**
 
 **Technique:** T1564 - Hide Artifacts\
-Attackers **manipulate policies or settings** to hide their activities or artifacts.
+Attackers manipulate policies or settings to hide their activities or artifacts.
 
 * **T1564.003 - Hidden Window**\
-  **Azure Example:** Run malicious code in the background using **hidden processes** within Automation Accounts to avoid user detection.
+  **Azure Example:** Run malicious code in the background using hidden processes within Automation Accounts to avoid user detection.
 
 ### **7. Exploiting Trusted Relationships to Evade Monitoring**
 
 **Technique:** T1199 - Trusted Relationship\
-Attackers abuse **multi-tenant or federated relationships** to avoid detection.
+Attackers abuse multi-tenant or federated relationships to avoid detection.
 
 * **Azure Example:** Use a trusted tenant's permissions to access sensitive resources without triggering alerts in the victim’s environment.
 
 ### **8. Encrypting or Encoding Payloads to Avoid Detection**
 
 **Technique:** T1027 - Obfuscated Files or Information\
-Attackers use **encryption or encoding** to make their payloads less detectable by security tools.
+Attackers use encryption or encoding to make their payloads less detectable by security tools.
 
-*   **Azure Example:** Deliver **Base64-encoded PowerShell scripts** that bypass antivirus scanning.
+*   **Azure Example:** Deliver Base64-encoded PowerShell scripts that bypass antivirus scanning.
 
     ```powershell
     powershell.exe -EncodedCommand <Base64Payload>
@@ -97,17 +93,17 @@ Attackers use **encryption or encoding** to make their payloads less detectable 
 ### **9. Disguising Malicious Code as Normal Services or Accounts**
 
 **Technique:** T1036 - Masquerading\
-Attackers disguise malicious code or processes as **legitimate services**.
+Attackers disguise malicious code or processes as legitimate services.
 
 * **T1036.005 - Match Legitimate Name or Location**\
-  **Azure Example:** Deploy a malicious automation task named **“Microsoft-Update”** to blend in with legitimate tasks.
+  **Azure Example:** Deploy a malicious automation task named “Microsoft-Update” to blend in with legitimate tasks.
 
 ### **10. Abusing Service Principals and Automation Accounts for Evasion**
 
 **Technique:** T1098 - Account Manipulation\
-Attackers manipulate **service principals** or **automation accounts** to evade detection.
+Attackers manipulate service principals or automation accounts to evade detection.
 
-* **Azure Example:** Add extra credentials to a **service principal**, allowing hidden access to resources.
+* **Azure Example:** Add extra credentials to a service principal, allowing hidden access to resources.
 
 ### **Summary of Key Concepts with Techniques for TA0005**
 

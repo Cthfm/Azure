@@ -234,8 +234,8 @@
 ## Security Research & Resources
 
 * [Azure Goat](security-research-and-resources/azure-goat.md)
-* [Azure Security Research](security-research-and-resources/azure-security-research.md)
-* [Azure Related CVEs](security-research-and-resources/azure-related-cves.md)
+* [Azure Security Research](security-research-and-resources/azure-security-research/README.md)
+  * [Azure Related CVEs](security-research-and-resources/azure-security-research/azure-related-cves.md)
 
 ## Defender XDR
 
