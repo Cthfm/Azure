@@ -26,27 +26,39 @@ PS C:\Users\cthfm>
 
 ```
 PS C:\Users\cthfm> cd code
-PS C:\Users\cthfm\code> git clone https://github.com
-Cloning into 'github.com'...
-fatal: repository 'https://github.com/' not found
+PS C:\Users\cthfm\code> git clone https://github.com/Cthfm/azure-detection-lab.git
+Cloning into 'azure-detection-lab'...
+remote: Enumerating objects: 50, done.
+remote: Counting objects: 100% (50/50), done.
+remote: Compressing objects: 100% (44/44), done.
+remote: Total 50 (delta 13), reused 26 (delta 5), pack-reused 0 (from 0)
+Receiving objects: 100% (50/50), 29.65 KiB | 138.00 KiB/s, done.
+Resolving deltas: 100% (13/13), done.
 PS C:\Users\cthfm\code>
 ```
-
-
 
 ### 3. Open VSCode
 
 ```powershell
-code
+PS C:\Users\cthfm\code> code
 ```
-
-
 
 ### 4. Open Folder
 
 <figure><img src=".gitbook/assets/openfolder_vscode.png" alt=""><figcaption></figcaption></figure>
 
-5. Select the folder \<fix later>
+### 5. Select the 'Code' Folder
 
-<figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
 
+
+
+### 6. Select the folder
+
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+
+
+### 7. Accept the code from the author.
+
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>

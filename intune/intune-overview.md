@@ -4,7 +4,7 @@
 
 Microsoft Intune is a cloud-based solution that securely manages devices, apps, and identities. It supports hybrid and remote workforces by allowing organizations to control access to resources on both company-owned and personal devices. Intune integrates with other Microsoft services and third-party apps, enabling simplified endpoint management and enforcing security policies.
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption><p><a href="https://learn.microsoft.com/en-us/mem/intune/fundamentals/high-level-architecture">https://learn.microsoft.com/en-us/mem/intune/fundamentals/high-level-architecture</a></p></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (14).png" alt=""><figcaption><p><a href="https://learn.microsoft.com/en-us/mem/intune/fundamentals/high-level-architecture">https://learn.microsoft.com/en-us/mem/intune/fundamentals/high-level-architecture</a></p></figcaption></figure>
 
 ### **Key Features:**
 

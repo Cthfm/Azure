@@ -43,3 +43,35 @@ $env:ARM_CLIENT_SECRET="your-client-secret"
 az login --service-principal --username "<appId>" --password "<password>" --tenant "<tenantId>"
 ```
 
+
+
+### 5. Open a Terminal and  run TFState\_Build.PS1
+
+```
+CTRL+Shift+`
+```
+
+<pre><code><strong>PS C:\Users\cthfm\\code\mini_sec_l> .\tfstate_build.ps1  
+</strong></code></pre>
+
+The file will create a backend state file and ensure that you have all the Azure Service modules to complete the task.&#x20;
+
+
+
+### 6. Initialize Terraform and run Terraform Plan
+
+```
+terraform init
+terraform plan
+```
+
+This will prompt you for the region that you want to the resources to be deployed in as well as the external IP address.  This can be found here: [https://whatismyipaddress.com/](https://whatismyipaddress.com/)
+
+
+
+### 7. Terraform Acknowledge
+
+```
+hit yes
+terraform apply
+```
