@@ -20,8 +20,6 @@ d-----          3/3/2025  10:12 PM                code
 PS C:\Users\cthfm>
 ```
 
-
-
 ### 2. Change Directories and Git Clone the Repository
 
 ```
@@ -49,16 +47,16 @@ PS C:\Users\cthfm\code> code
 
 ### 5. Select the 'Code' Folder
 
-<figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 
 
 ### 6. Select the folder
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
 
 
 
 ### 7. Accept the code from the author.
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>

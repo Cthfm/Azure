@@ -362,6 +362,8 @@
 ## Detection Lab
 
 * [Account Creation Instructions](detection-lab/account-creation-instructions.md)
+* [Enable MFA Within Azure Tenant](detection-lab/enable-mfa-within-azure-tenant.md)
+* [Create an Azure Admin With Cloud Shell](detection-lab/create-an-azure-admin-with-cloud-shell.md)
 * [Setup and Install Instructions](detection-lab/setup-and-install-instructions.md)
 
 ***
