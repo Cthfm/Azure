@@ -371,5 +371,6 @@
 * [VSCode and Code Setup](vscode-and-code-setup.md)
 * [Deploying Code](deploying-code.md)
 * [Enabling Logs for Log Analytics Workspace](enabling-logs-for-log-analytics-workspace.md)
+* [Logging Into Windows VM](logging-into-windows-vm.md)
 * [Verifying Logs in Log Analytics Workspace](verifying-logs-in-log-analytics-workspace.md)
 * [Creating Detections: Azure Monitor](creating-detections-azure-monitor.md)

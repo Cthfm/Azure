@@ -2,7 +2,7 @@
 
 ### **Defining Conditional Access**
 
-<figure><img src="../../../.gitbook/assets/image (3) (1) (1).png" alt=""><figcaption><p><a href="https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview">https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview</a></p></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (3) (1) (1) (1).png" alt=""><figcaption><p><a href="https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview">https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview</a></p></figcaption></figure>
 
 Conditional Access is a security capability in Azure Active Directory (Azure AD) that automates access control decisions based on specific conditions. It allows organizations to define policies that enforce security requirements, ensuring that access to applications, services, and data is only granted if certain conditions are met.
 

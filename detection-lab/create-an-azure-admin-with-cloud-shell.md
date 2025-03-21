@@ -1,3 +1,7 @@
+---
+hidden: true
+---
+
 # Create an Azure Admin With Cloud Shell
 
 ## Overview:
@@ -6,15 +10,15 @@ The following shows you how to create an Admin User with Contributor permissions
 
 ### 1. Open Cloud Shell
 
-<figure><img src="../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### 2. Select Powershell when the dialog box opens at the bottom of the page
 
-<figure><img src="../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### 3. Select 'No Storage Account Required' and Select your Subscription
 
-<figure><img src="../.gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### 4. Once the Terminal is loaded, as shown below, dump the included script
 
