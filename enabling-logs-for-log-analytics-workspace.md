@@ -80,7 +80,7 @@ Terraform has already deployed the associated logs but here are instructions on 
 
 <figure><img src=".gitbook/assets/image (18).png" alt=""><figcaption></figcaption></figure>
 
-### Flow Logs
+### Flow Logs - VNET
 
 #### 1. Select Network Watcher and select 'flow logs'
 
@@ -93,3 +93,11 @@ Terraform has already deployed the associated logs but here are instructions on 
 #### 3. Configure a VNET Flow Log with the appropriate 'sec-lab-vnet' in your provisioned flow log storage account
 
 <figure><img src=".gitbook/assets/image (5) (1).png" alt=""><figcaption></figcaption></figure>
+
+### Flow Logs - NSG
+
+{% hint style="danger" %}
+
+{% endhint %}
+
+###

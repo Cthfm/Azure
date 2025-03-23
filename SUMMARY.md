@@ -374,3 +374,4 @@
 * [Logging Into Windows VM](logging-into-windows-vm.md)
 * [Verifying Logs in Log Analytics Workspace](verifying-logs-in-log-analytics-workspace.md)
 * [Creating Detections: Azure Monitor](creating-detections-azure-monitor.md)
+* [Page](page.md)

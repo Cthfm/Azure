@@ -9,7 +9,7 @@ hidden: true
 The following section goes over how to validate logs are being pushed to Azure Monitor.&#x20;
 
 {% hint style="danger" %}
-Logging can be slow in Azure and I've seen logs take up to an hour to appear.
+Logging can be slow in Azure, and I've seen logs take up to an hour to appear.
 {% endhint %}
 
 1. Verify the logs on the list below you can search for the names as show in the snapshot
