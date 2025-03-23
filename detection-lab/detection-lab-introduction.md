@@ -1,6 +1,6 @@
 # Detection Lab Introduction
 
-This is where you build real skills—hands-on, from scratch.
+This is where you build real skills that are hands on and from scratch.
 
 In the next few sections, you’ll create a fully functional cloud lab environment and create a real-world security detection within Azure.&#x20;
 
