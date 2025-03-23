@@ -4,6 +4,10 @@ hidden: true
 
 # VSCode and Code Setup
 
+## Overview
+
+The following section goes over setting up the code repository and how to deploy it via VSCode.
+
 ### 1. Create a Code Directory in PS
 
 ```powershell

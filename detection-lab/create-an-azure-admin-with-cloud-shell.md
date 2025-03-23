@@ -6,7 +6,7 @@ hidden: true
 
 ## Overview:
 
-The following shows you how to create an Admin User with Contributor permissions on the associated subscription
+The following shows you how to create an Admin User with Contributor permissions on the associated subscription. In order to not use the GA account for activities and use a lesser privilege role we create this 'Azure Admin' role.&#x20;
 
 ### 1. Open Cloud Shell
 
@@ -16,7 +16,7 @@ The following shows you how to create an Admin User with Contributor permissions
 
 <figure><img src="../.gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
 
-### 3. Select 'No Storage Account Required' and Select your Subscription
+### 3. Select 'No Storage Account Required', Select your Subscription, and click apply.
 
 <figure><img src="../.gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
 
@@ -47,10 +47,10 @@ Ensure to replace the values with the correct domain name and use a different pa
 # Get Subscription ID
 $SubscriptionId = az account show --query "id" --output tsv
 
-# Debug statements are GOOD
+# Output the subscription ID to user to show what is being set. 
 Write-Host "Using Subscription ID: $SubscriptionId"
 
-# Ensure Subscription ID is set
+# Verify that the subscription was set.
 if ([string]::IsNullOrEmpty($SubscriptionId)) {
     Write-Host "Error: No subscription ID found!"
     exit

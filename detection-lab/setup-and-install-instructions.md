@@ -6,7 +6,7 @@ hidden: true
 
 ### Overview:
 
-This section provides you with the instructions on what you need to install on your machine.&#x20;
+This section provides you with the instructions on what you need to install on your machine to setup the enviroment.&#x20;
 
 ### 1. Install VSCode:
 
