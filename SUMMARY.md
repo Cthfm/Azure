@@ -361,6 +361,7 @@
 
 ## Detection Lab
 
+* [Detection Lab Introduction](detection-lab/detection-lab-introduction.md)
 * [Account Creation Instructions](detection-lab/account-creation-instructions.md)
 * [Enable MFA Within Azure Tenant](detection-lab/enable-mfa-within-azure-tenant.md)
 * [Create an Azure Admin With Cloud Shell](detection-lab/create-an-azure-admin-with-cloud-shell.md)
@@ -374,4 +375,3 @@
 * [Logging Into Windows VM](logging-into-windows-vm.md)
 * [Verifying Logs in Log Analytics Workspace](verifying-logs-in-log-analytics-workspace.md)
 * [Creating Detections: Azure Monitor](creating-detections-azure-monitor.md)
-* [Page](page.md)
