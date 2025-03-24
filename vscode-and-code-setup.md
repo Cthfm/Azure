@@ -63,4 +63,4 @@ PS C:\Users\cthfm\code> code
 
 ### 7. Accept the code from the author.
 
-<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>

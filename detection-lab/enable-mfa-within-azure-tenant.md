@@ -14,7 +14,7 @@ The following shows you how enable MFA for all users by default within the Tenan
 
 ### 2. Enable the MFA Policy within the Tenant
 
-<figure><img src="../.gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 
 

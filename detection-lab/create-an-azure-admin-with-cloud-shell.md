@@ -10,7 +10,7 @@ The following shows you how to create an Admin User with Contributor permissions
 
 ### 1. Open Cloud Shell
 
-<figure><img src="../.gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### 2. Select Powershell when the dialog box opens at the bottom of the page
 
@@ -56,10 +56,10 @@ if ([string]::IsNullOrEmpty($SubscriptionId)) {
     exit
 }
 
-az ad user create --display-name Azure_Admin --password password123!@# --user-principal-name Azure_Admin@<tenantname>.onmicrosoft.com
+az ad user create --display-name Azure_Admin2 --password password123!@ --user-principal-name Azure_Admin2@cthfm.onmicrosoft.com
 
 # Assign Contributor Role
-az role assignment create --assignee "Azure_Admin@<tenantname>.onmicrosoft.com" `
+az role assignment create --assignee "Azure_Admin2@cthfm.onmicrosoft.com" `
                           --role "Contributor" `
                           --scope "/subscriptions/$SubscriptionId"
 ```

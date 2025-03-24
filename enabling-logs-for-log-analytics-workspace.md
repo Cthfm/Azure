@@ -4,7 +4,7 @@ hidden: true
 
 # Enabling Logs for Log Analytics Workspace
 
-## Overview:
+Overview:
 
 The following section ensures that you have logging enabled within your storage account, key vault, Entra, and Resource Graph.
 
@@ -96,8 +96,47 @@ Terraform has already deployed the associated logs but here are instructions on 
 
 ### Flow Logs - NSG
 
-{% hint style="danger" %}
+{% hint style="success" %}
+NSG flow logs were created as part of the Terraform code. As a heads up per Microsoft:
 
+_On September 30, 2027, network security group (NSG) flow logs will be retired. As part of this retirement, you'll no longer be able to create new NSG flow logs starting June 30, 2025. We recommend_ [_migrating_](https://learn.microsoft.com/en-us/azure/network-watcher/nsg-flow-logs-migrate) _to_ [_virtual network flow logs_](https://learn.microsoft.com/en-us/azure/network-watcher/vnet-flow-logs-overview)_, which overcome the limitations of NSG flow logs._&#x20;
+
+These logs are already deployed within the tenant.
 {% endhint %}
 
-###
+
+
+### DNS Queries
+
+{% hint style="success" %}
+This is currently in preview and can confirm that there is no Terraform Support at this time. Thus needs to be created via the portal.&#x20;
+{% endhint %}
+
+#### 1. Search for 'DNS Security' in the Azure Portal
+
+<figure><img src=".gitbook/assets/image (61).png" alt=""><figcaption></figcaption></figure>
+
+#### 2. Create a DNS Security Policy by selecting 'Create'
+
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+
+#### 3. Create the Security DNS policy as shown below
+
+<figure><img src=".gitbook/assets/image (62).png" alt=""><figcaption></figcaption></figure>
+
+#### 4. Select the associated VNET as shown.
+
+
+
+<figure><img src=".gitbook/assets/image (63).png" alt=""><figcaption></figcaption></figure>
+
+#### 5. Ensure the proper VNET is selected and then hit 'Review+Create''
+
+
+
+
+
+<figure><img src=".gitbook/assets/image (64).png" alt=""><figcaption></figcaption></figure>
+
+
+

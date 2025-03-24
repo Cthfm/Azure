@@ -9,10 +9,10 @@ hidden: true
 The following section goes over how to validate logs are being pushed to Azure Monitor.&#x20;
 
 {% hint style="danger" %}
-Logging can be slow in Azure, and I've seen logs take up to an hour to appear.
+I have noticed delays in logging to start in the LAW with VNET and NSG related logs. It may take a while, a few hours, in order for this to start logging.&#x20;
 {% endhint %}
 
-1. Verify the logs on the list below you can search for the names as show in the snapshot
+### 1. Verify the logs on the list below you can search for the names as show in the snapshot.
 
 ```
 Event (Sysmon and AMA Windows Audit Logs created from DCR)
@@ -25,11 +25,16 @@ AzureDiagnostics - Key Vault and other resources
 Perf - AMA Performance Logs for VM
 NTANetAnalytics - VNET Flow Logs
 NTAIpDetails - IP Details from VNet Flow Logs
+DNSQueryLogs - DNS Query Logs
 ```
 
 <figure><img src=".gitbook/assets/image (21).png" alt=""><figcaption></figcaption></figure>
 
-2. Use the following searches for each log type to confirm if logs are logging. You will most likely need to generate logs by signing in accessing resources or generating traffic from the VM.
+### 2. Use the following searches for each log type to confirm if logs are logging.&#x20;
+
+{% hint style="warning" %}
+If the tables are not populating it is most likely due to logs not being generated.
+{% endhint %}
 
 ```kusto
 Sigin Logs
@@ -72,6 +77,10 @@ VNET Netflow Logs
 NTANetAnalytics
 | project TimeGenerated, FlowType, FlowDirection, FlowStatus, FlowStartTime, FlowEndTime, SrcIp, SrcPublicIps, DestIp,DestPublicIps, DestPort, L4Protocol, L7Protocol
 
+DNS Query Logs:
+
+DNSQueryLogs
+| project TimeGenerated, Region, VirtualNetworkId, QueryType, QueryClass, QueryName, Answer, OperationName
 
 ```
 
