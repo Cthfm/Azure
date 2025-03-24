@@ -1,7 +1,3 @@
----
-hidden: true
----
-
 # Create an Azure Admin With Cloud Shell
 
 ## Overview:

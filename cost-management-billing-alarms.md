@@ -1,7 +1,3 @@
----
-hidden: true
----
-
 # Cost Management: Billing Alarms
 
 ### Overview

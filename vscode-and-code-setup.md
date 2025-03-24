@@ -1,7 +1,3 @@
----
-hidden: true
----
-
 # VSCode and Code Setup
 
 ## Overview

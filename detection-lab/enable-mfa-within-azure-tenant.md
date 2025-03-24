@@ -1,7 +1,3 @@
----
-hidden: true
----
-
 # Enable MFA Within Azure Tenant
 
 ## Overview:

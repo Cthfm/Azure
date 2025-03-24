@@ -1,7 +1,3 @@
----
-hidden: true
----
-
 # Enabling Logs for Log Analytics Workspace
 
 Overview:

@@ -1,10 +1,4 @@
----
-hidden: true
----
-
 # Deploying Code
-
-
 
 ## Overview:
 
@@ -24,7 +18,7 @@ Normally we would use a service principal but creating a user to make this easie
 az login 
 ```
 
-### 3. Open a Terminal and  run TFState\_Build.PS1
+### 3. Open a Terminal and run TFState\_Build.PS1
 
 ```
 CTRL+Shift+`

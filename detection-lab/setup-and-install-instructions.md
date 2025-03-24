@@ -1,7 +1,3 @@
----
-hidden: true
----
-
 # Setup and Install Instructions
 
 ### Overview:

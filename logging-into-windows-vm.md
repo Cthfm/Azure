@@ -1,7 +1,3 @@
----
-hidden: true
----
-
 # Logging Into Windows VM
 
 Overview:
