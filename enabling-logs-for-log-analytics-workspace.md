@@ -22,6 +22,12 @@ The following section shows how to enable Entra ID Logging:
 
 #### 4. Name the Diagnostic Setting 'SecLab' and point it to sec-lab-logs. Ensure to select all options with a blue checkmark.&#x20;
 
+{% hint style="success" %}
+Note that Identity based logs were omitted as they require a P2 license. This was done in order to reduce lab costs. You can simply get them enabled by purchasing a P2 licensed user.&#x20;
+{% endhint %}
+
+
+
 <figure><img src=".gitbook/assets/image (6) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### Azure Activity Logs
