@@ -23,7 +23,7 @@ The following section shows how to enable Entra ID Logging:
 #### 4. Name the Diagnostic Setting 'SecLab' and point it to sec-lab-logs. Ensure to select all options with a blue checkmark.&#x20;
 
 {% hint style="success" %}
-Note that Identity based logs were omitted as they require a P2 license. This was done in order to reduce lab costs. You can simply get them enabled by purchasing a P2 licensing.
+Note that Identity based protection logs were omitted as they require a P2 license. These include logs like riskyusers, userriskevents, and serviceprincipalriskevents. This was done in order to reduce lab costs. You can simply get them enabled by purchasing a P2 licensing.
 {% endhint %}
 
 
