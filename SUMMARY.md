@@ -319,6 +319,8 @@
         * [User](incident-response/containment/short-term-containment/identity-based-contaiment/user.md)
         * [Service Principal](incident-response/containment/short-term-containment/identity-based-contaiment/service-principal.md)
         * [Managed Identity](incident-response/containment/short-term-containment/identity-based-contaiment/managed-identity.md)
+        * [Additional Containment - Commands and Stuff](incident-response/incident-response/containment/containment/identity-based-contaiment/additional-containment-commands-and-stuff.md)
+        * [Additional Containment - Automation Functions, Runbooks](incident-response/incident-response/containment/containment/identity-based-contaiment/additional-containment-automation-functions-runbooks.md)
       * [Virtual Machine Containment](incident-response/containment/short-term-containment/virtual-machine-containment.md)
       * [Storage Account Containment](incident-response/containment/short-term-containment/storage-account-containment.md)
       * [Network Containment](incident-response/containment/short-term-containment/network-containment.md)
@@ -376,3 +378,7 @@
 * [Verifying Logs in Log Analytics Workspace](verifying-logs-in-log-analytics-workspace.md)
 * [Creating Detections: Azure Monitor](creating-detections-azure-monitor.md)
 * [Cost Management: Billing Alarms](cost-management-billing-alarms.md)
+
+## AzurePolicy-IAC
+
+* [Introduction](azurepolicy-iac/introduction.md)
