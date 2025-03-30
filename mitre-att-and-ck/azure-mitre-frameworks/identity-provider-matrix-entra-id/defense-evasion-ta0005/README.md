@@ -1,7 +1,3 @@
----
-hidden: true
----
-
 # Defense Evasion: TA0005
 
 ### Overview

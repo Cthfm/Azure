@@ -14,15 +14,6 @@ Attackers search for **a**ccess tokens or secrets left unprotected in memory, fi
 *   **T1550.001: Application Access Token**
 
     Adversaries use tokens such as access, refresh, PRT tokens, or other bearer tokens to authenticate directly with services or applications. In Azure Entra ID, these tokens are commonly issued to apps and can be abused if compromised.
-*   **T1550.002: Pass the Hash**
-
-    Attackers use a stolen NTLM hash to authenticate without needing the plaintext password. In hybrid environments involving Azure Entra ID, this technique can be used against synchronized accounts where password hashes are synchronized to on-premises AD.
-*   **T1550.003: Pass the Ticket**
-
-    Using stolen Kerberos tickets, such as TGTs (Ticket Granting Tickets), attackers gain access to systems or services without re-entering credentials. This is particularly relevant in environments where Entra ID integrates with on-premises AD through Kerberos-based authentication mechanisms.
-*   **T1550.004: Web Session Cookie**
-
-    Adversaries hijack valid web session cookies to impersonate users. In Entra ID, attackers may steal cookies from browsers to bypass MFA and maintain access to cloud services like Microsoft 365 or Azure portal.
 
 
 
