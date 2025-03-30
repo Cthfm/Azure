@@ -99,10 +99,14 @@ If an attacker gains control of a compromised Azure VM, they might attempt packe
 Attackers query password policies to plan credential attacks.
 
 * **Example Attack:**
-  *   Retrieving Azure AD password policy:
+  *   Retrieving Azure Entra ID password policy:
 
       ```powershell
-      Get-MsolPasswordPolicy -DomainName mydomain.com
+      # Connect to Microsoft Graph
+      Connect-MgGraph -Scopes "Policy.Read.All", "Directory.Read.All"
+
+      # Get password policy info
+      Get-MgPolicyAuthenticationMethodsPolicy
       ```
 
 ### **Permission Groups Discovery (T1069)**

@@ -1,135 +1,203 @@
 # Defensive Strategies
 
-### **Account Discovery (T1087)**
+## Defensive Strategies for Discovery Techniques in Azure
 
-Attackers try to enumerate users, groups, and permissions.
+In Microsoft Azure environments, discovery techniques are often the first step adversaries use to map out infrastructure, identities, storage, and network configurations before launching further attacks. Because many of these actions closely resemble legitimate administrative behavior, they can be difficult to detect without proper controls. Defensive strategies must focus on limiting unnecessary visibility, enforcing least privilege, and continuously monitoring for anomalous enumeration activity. This includes implementing strong role-based access control (RBAC), leveraging Conditional Access and Privileged Identity Management (PIM), auditing Azure CLI and Graph API usage, and deploying tools like Microsoft Defender for Cloud and Sentinel to detect and respond to reconnaissance activity. By proactively restricting access and identifying early indicators of unauthorized discovery, organizations can significantly reduce the attacker’s ability to understand and exploit the Azure environment.
 
-#### **Defensive Strategies for T1087.004 – Cloud Account Discovery**
+### **Account Discovery (T1087.004 – Cloud Account Discovery)**
 
-1. **Monitor Azure AD Logs**: Use Azure AD Sign-in Logs and Audit Logs to detect mass enumeration.
-2. **Restrict Directory Read Permissions**: Apply least privilege principle (RBAC) to limit who can execute az ad user list.
-3. **Enable Conditional Access**: Require Multi-Factor Authentication (MFA) for all admin-level users.
-4. **Monitor Unusual API Calls**: Detect excessive az ad user list and Get-EntraGroup calls.&#x20;
-5. **Monitor Azure Activity Logs:** Look for excessive list directory operations.&#x20;
-6. **Enable role-based access control (RBAC):** Use RBAC to restrict API calls.
+Attackers enumerate user accounts to map out identity structures.
+
+✅ **Restrict Directory Read Permissions**\
+Use Entra ID roles carefully—only grant `Directory Readers` to required accounts.
+
+✅ **Enable Entra ID PIM (Privileged Identity Management)**\
+Use time-bound, approval-based elevation for roles like `User Administrator`.
+
+✅ **Monitor Azure CLI and PowerShell Usage**\
+Track use of commands like `az ad user list`, `Get-AzureADUser`, and audit logs for suspicious enumeration.
+
+✅ **Alert on Bulk Account Enumeration**\
+Create Microsoft Sentinel rules to detect high-volume user listings or access to `/users` endpoint via Graph API.
 
 ### **Cloud Infrastructure Discovery (T1580)**
 
-Attackers try to enumerate virtual machines, databases, and cloud resources.
+Attackers enumerate cloud infrastructure like VMs, databases, and resource groups.
 
-#### **Defensive Strategies for T1580**
+✅ **Implement Role-Based Access Control (RBAC)**\
+Restrict `Reader` role and avoid assigning it broadly.
 
-1. **Enable Azure Security Center (Defender for Cloud)**: Use **Defender for Cloud** to flag suspicious API queries.
-2. **Monitor for Excessive Resource Enumeration**: Use AzureActivity log to look for large number of list requests.&#x20;
-3. **Use Role-Based Access Control (RBAC)**: Limit `Reader` role to trusted accounts.
-4. **Enable Logging for Azure Resource Manager (ARM)**: Store Azure Activity Logs for forensic analysis.
-5. **Enable Azure AD Conditional Access:** Use to detect unauthorized API queries.
-6. **Use Microsoft Defender for Cloud and Activity Log:** Use the logs to detect infrastructure enumeration.
+✅ **Limit Subscription Read Access**\
+Segment access with Management Groups and Azure Blueprints.
+
+✅ **Audit ‘az resource list’ and REST API Calls**\
+Use Defender for Cloud and Microsoft Sentinel to monitor Azure Resource Graph queries.
+
+✅ **Detect Use of High-Privilege Read Roles**\
+Alert when roles like `Owner`, `Contributor`, or `Reader` are assigned unexpectedly.
+
+***
 
 ### **Cloud Service Dashboard (T1590.001)**
 
-Attackers may log into portal.azure.com to manually browse resources.
+Adversaries log into the Azure Portal to visually discover assets.
 
-#### **Defensive Strategies for T1590.001**
+✅ **Require MFA for Portal Access**\
+Enforce Conditional Access to require MFA for `portal.azure.com`.
 
-1. **Enable Multi-Factor Authentication (MFA)**: Enforce MFA for all Azure Portal logins.
-2. &#x20;**Use Conditional Access Policies**: Restrict logins based on device compliance and geolocation.
-3. &#x20;**Monitor Azure Portal Access**: Detect logins from new locations or unusual IP addresses.
-4. **Use Azure AD Privileged Identity Management (PIM)**: Require Just-in-Time (JIT) access for high-privilege users.
+✅ **Enable Sign-in Risk Policies**\
+Detect unfamiliar sign-in behavior and risky locations.
+
+✅ **Log Access to the Azure Portal**\
+Review sign-ins to `Azure Portal` app and detect logins from new IPs or devices.
+
+✅ **Terminate Sessions & Investigate**\
+For any unrecognized login, terminate session via Entra ID and trigger incident response playbook.
+
+***
 
 ### **Cloud Service Discovery (T1526)**
 
-Attackers enumerate available services and regions.
+Adversaries enumerate regions and service availability.
 
-#### **Defensive Strategies for T1526**
+✅ **Restrict CLI/API Access to Trusted Users**\
+Only allow service discovery commands (e.g., `az account list-locations`) for trusted accounts.
 
-1. **Monitor for Region Enumeration Attempts**: Review Azure Activity log for any calls Azure Account list location calls.&#x20;
-2. **Enforce Azure Policy**: Restrict resource deployments to approved regions.
-3. **Use Microsoft Defender for Cloud**: Detect unauthorized API calls.
-4. **Limit API Permissions**: Restrict az account list-locations to only those that need to know where resources can be deployed.
+✅ **Lock Down Service Principal Access**\
+Use least-privilege principles for any SPN or identity used in automation.
+
+✅ **Detect Excessive Metadata Queries**\
+Alert on high-frequency use of APIs or CLI commands listing regions, subscriptions, etc.
+
+✅ **Investigate Accounts Performing Enumeration**\
+Flag identities making repeated or abnormal discovery calls and review associated IPs.
 
 ### **Cloud Storage Object Discovery (T1613)**
 
-Attackers scan for publicly accessible storage blobs.
+Adversaries look for publicly accessible or misconfigured storage.
 
-#### **Defensive Strategies for T1613**
+✅ **Disable Public Access to Storage Containers**\
+Set `allowBlobPublicAccess` to false at the storage account level.
 
-1. **Disable Public Blob Access**: Use Azure Policy to enforce private access:
+✅ **Use Private Endpoints for Storage Access**\
+Ensure traffic is internal and uses Azure Private Link.
 
-```json
-  "if": {
-    "field": "Microsoft.Storage/storageAccounts/publicNetworkAccess",
-    "equals": "Enabled"
-  },
-  "then": {
-    "effect": "Deny"
-  }
-}
-```
+✅ **Scan for Open Containers**\
+Use Azure Policy to flag storage accounts with public access enabled.
 
-2. **Enable Storage Logging**: Use Azure Storage Analytics to track blob access.
-3. &#x20;**Monitor Blob Access**: Monitor Storage Blob logs for multiple list calls.
+✅ **Enable Defender for Storage**\
+Generate alerts for anonymous access attempts or data exfiltration.
 
 ### **Log Enumeration (T1005)**
 
-Attackers attempt to access Azure logs.
+Adversaries try to access audit or diagnostic logs.
 
-#### **Defensive Strategies for T1005**
+✅ **Restrict Log Access with RBAC**\
+Only grant `Monitoring Reader` or `Log Analytics Reader` to trusted roles.
 
-1\. **Restrict Access to Logs**: Limit az monitor activity-log list&#x20;
+✅ **Encrypt Logs and Use Diagnostic Settings**\
+Route logs securely to a Log Analytics workspace with access control.
 
-2\. **Use Immutable Logging**: Enable log retention and immutability policies.
+✅ **Track `az monitor` Usage**\
+Review use of CLI commands like `az monitor activity-log list`.
 
-3\. **Monitor for Unusual Log Access**: Monitor Azure Activity for unauthorized principals attempting to access or read logs.&#x20;
+✅  **Alert on Unauthorized Log Access Attempts**\
+Detect access to logs from unexpected users or IPs.
 
 ### **Network Service Discovery (T1046)**
 
-Attackers scan Azure virtual networks and Network Security Groups (NSGs).
+Adversaries scan VNets or use NSG data to identify reachable services.
 
-#### **Defensive Strategies for T1046**
+✅ **Use NSGs and Azure Firewall to Block Inbound Scanning**\
+Apply deny rules to block unauthorized lateral movement.
 
-1\. **Enable Just-In-Time (JIT) VM Access**: Prevent unauthorized scanning by restricting SSH/RDP access.
+✅ **Segment Networks with Subnets and Route Tables**\
+Limit visibility between resources using internal firewalls.
 
-2\. **Use Azure Sentinel to Detect Scanning**: Integrate with Azure Firewall to obtain detections for malicious port scanning activity.&#x20;
+✅**Log and Analyze NSG Flow Logs**\
+Monitor for internal scanning (e.g., connections to multiple IPs/ports).
 
-3. **Harden Network Security Groups (NSGs)**: Restrict SSH (22) and RDP (3389) to trusted IPs. Use least priviledge for port and IP usage.
+✅ **Detect Port Scans from Within the Network**\
+Alert on use of tools like `nmap` or behavior indicative of lateral scanning.
 
 ### **Network Sniffing (T1040)**
 
-If attackers compromise a VM, they may use packet sniffing tools.
+Adversaries may sniff traffic from compromised VMs.
 
-#### **Defensive Strategies for T1040**
+✅ **Use Encrypted Protocols**\
+Enforce TLS for internal and external services.
 
-1. **Disable Packet Capture on VMs**: Use NSGs to block promiscuous mode.
-2. **Deploy Microsoft Defender for Endpoint on VMs**: Detect tools like tcpdump and wireshark (may have authorized uses in some cases).&#x20;
-3. **Monitor for Unusual Network Traffic**: Review NetFlow and resource group logs for unusual traffic.
+✅ **Deploy Endpoint Detection & Response (EDR)**\
+Monitor for tools like `tcpdump` and unusual process execution.
+
+✅ **Log Process Creation Events in Azure VMs**\
+Enable Defender for Endpoint to track packet capture attempts.
+
+✅ **Quarantine VM with Evidence of Sniffing**\
+Isolate compromised VM and collect memory/process data for forensic review.
 
 ### **Password Policy Discovery (T1201)**
 
-Attackers try to discover password policies.
+Attackers seek password complexity rules for credential attacks.
 
-#### **Defensive Strategies for T1201**
+✅ **Avoid Legacy Auth Protocols (MSOL)**\
+Migrate to modern PowerShell (`Microsoft.Graph`) and disable legacy endpoints.
 
-1. **Use Azure Entra ID Password Protection**: Block common passwords and enable Smart Lockout.
-2. **Monitor for Password Policy Queries**: Detect whenever Get-MsolPasswordPolicy is called from unauthorized principals.
-3. **Enforce Strong Password Requirements**: Require 14+ character passwords with MFA.
+✅ **Enable Strong Password Policy**\
+Use Entra ID B2B policies or custom conditional access to enforce strong auth.
 
-### **Permission Groups Discovery (T1069.003)**
+✅  **Monitor Access to Policy Data**\
+Detect when users invoke `Get-MsolPasswordPolicy` or similar.
 
-Attackers enumerate Azure Entra ID Groups.
+✅  **Limit Access to Directory Configuration APIs**\
+Flag use of legacy tools to extract config data.
 
-#### **Defensive Strategies for T1069.003**
+***
 
-1. **Monitor Group Enumeration**: Check the Azure Activity logs for large group of list group calls.&#x20;
-2. **Use Privileged Identity Management (PIM)**: Require JIT activation for admin roles.
-3. **Restrict Group Enumeration Permissions**: Remove unnecessary Directory Readers permissions.
+### **Permission Groups Discovery (T1069.003 – Cloud Groups Discovery)**
 
-### **Software Discovery (T1518)**
+Adversaries enumerate roles and groups in Entra ID.
 
-Attackers investigate security software and system configurations.
+✅ **Restrict Group & Role Visibility**\
+Prevent non-admin users from listing group memberships.
 
-#### **Defensive Strategies for T1518**
+✅ **Limit Graph API Access**\
+Use App Consent Policies to limit exposure of group membership to apps.
 
-1. **Monitor for Security Software Enumeration**: Check logging for any signs of users attempting to enumerate existing software on their devices.&#x20;
-2. **Restrict API Access to Security Tools**: Limit az security setting list for providing any information to unauthorized principals.&#x20;
-3. **Use Defender for Cloud and Azure Activity Logs**: Detect attempts to disable security tools.
+✅  **Audit Use of `Get-EntraGroup`, `az role assignment list`**\
+Look for suspicious enumeration from unknown devices or service principals.
+
+✅  **Flag Sudden Enumeration from Dormant Accounts**\
+Detect and investigate idle accounts suddenly used for enumeration.
+
+### **Software Discovery (T1518 Subtechniques)**
+
+Adversaries explore installed software and system info.
+
+✅ **Restrict Local Admin Rights on Azure VMs**\
+Prevent the ability to run diagnostic or discovery tools locally.
+
+✅ **Harden VMs with Microsoft Defender for Endpoint**\
+Monitor and block tools like `netstat`, `wmic`, or other recon tools.
+
+✅ **Monitor for Discovery Commands**\
+Detect `az vm show`, `netstat`, `tcpdump`, `powershell Get-WmiObject`, etc.
+
+✅ **Alert on Execution of Recon Tools**\
+Correlate suspicious process execution with network traffic or privilege escalation.
+
+### **📌** Summary Table of Defensive Strategies
+
+| MITRE Technique                             | Prevention                            | Detection                          | Response                               |
+| ------------------------------------------- | ------------------------------------- | ---------------------------------- | -------------------------------------- |
+| **T1087.004** – Cloud Account Discovery     | Limit directory access, use PIM       | Monitor CLI/API user queries       | Investigate enumeration spikes         |
+| **T1580** – Cloud Infrastructure Discovery  | RBAC, Blueprint segmentation          | Monitor resource listings          | Flag unexpected readers                |
+| **T1590.001** – Cloud Dashboard Access      | MFA for portal, Sign-in risk policies | Log & audit portal sessions        | Revoke sessions, block IP              |
+| **T1526** – Cloud Service Discovery         | Limit CLI/API access                  | Detect metadata queries            | Review identity access logs            |
+| **T1613** – Cloud Storage Object Discovery  | Block public blob access              | Azure Policy, Defender for Storage | Alert on public access or exfiltration |
+| **T1005** – Log Enumeration                 | Restrict log reader roles             | Monitor `az monitor` usage         | Alert on unauthorized access           |
+| **T1046** – Network Service Discovery       | Block scans with NSG                  | Analyze NSG Flow Logs              | Alert on lateral scan activity         |
+| **T1040** – Network Sniffing                | Encrypt traffic, enable EDR           | Monitor packet capture tools       | Quarantine VM, review memory           |
+| **T1201** – Password Policy Discovery       | Disable MSOL, enforce strong policies | Log policy queries                 | Review tool usage                      |
+| **T1069.003** – Permission Groups Discovery | Limit role visibility                 | Detect enumeration cmdlets         | Investigate dormant account use        |
+| **T1518.x** – Software Discovery            | Restrict local admin                  | Detect recon command use           | Correlate with other activity          |
