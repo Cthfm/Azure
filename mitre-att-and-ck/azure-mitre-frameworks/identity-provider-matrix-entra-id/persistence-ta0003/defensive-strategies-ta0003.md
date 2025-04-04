@@ -1,65 +1,154 @@
 # Defensive Strategies: TA0003
 
-## **Defensive Strategies for TA0003 - Persistence**
+## **Defensive Strategies Against Persistence in Entra ID (Azure Identity Environments)**
 
-The persistence tactic involves attackers control and repeatedly access resources over extended periods. This is often done by exploiting identity and access management misconfigurations, creating new accounts, adding extra credentials to existing accounts, or modifying authentication processes. Provided below are strategies for defense.
+Persistence in Entra ID is subtle — often hiding in **accounts, roles, tokens, device registrations, or authentication flows**.\
+Defense focuses on **tight identity governance, monitoring sensitive changes**, and **detecting unauthorized persistence attempts early**.
 
-### 1. **Account Manipulation (T1098)**
+***
 
-Attackers often manipulate existing accounts to maintain or elevate their access, sometimes by adding credentials or roles or by modifying Intune policies.
+### 👥 Account Manipulation
 
-* **T1098.001 - Add Additional Credentials**
-  * **Defensive Strategy**:
-    * **Monitor for New Application Credentials**: Use Entra ID to sign-in and audit logs to track any creation of new credentials associated with applications. Monitor for unusual credential usage patterns.
-    * **Automated Alerts**: Configure Microsoft Sentinel or Entra ID Identity Protection to trigger alerts for the creation of new application credentials, especially with critical service principals.
-    * **Access Reviews**: Regularly review service principals and their credentials to ensure they are authorized and necessary.
-* **T1098.003 - Additional Cloud Roles**
-  * **Defensive Strategy**:
-    * **Role Assignment Monitoring**: Enable alerts in Microsoft Sentinel for any new role assignments, particularly for privileged roles like Contributor or Owner, assigned to accounts outside of expected patterns.
-    * **Conditional Access Policies**: Use Conditional Access to restrict privileged roles, ensuring only designated devices or IPs can make changes.
-    * **Privileged Identity Management (PIM)**: Use PIM to enforce just-in-time (JIT) access for sensitive roles, making it difficult for attackers to maintain persistent privileged access.
-* **T1098.005 - Registered Device**
-  * **Defensive Strategy**:
-    * **Monitor Device Registrations in Intune**: Configure Intune to alert on newly registered devices and any modifications to Intune policies.
-    * **Conditional Access Policies**: Require device compliance checks before access to sensitive resources.
-    * **Device Compliance Policy Reviews**: Regularly review Intune compliance policies for modifications that could allow rogue devices access.
+***
 
-### 2. **Create Account (T1136)**
+#### ➡️ Additional Cloud Credentials (T1098.001)
 
-Attackers may create new accounts within the tenant to ensure persistence.
+| Defensive Action                                                                       | Why It Matters                         |
+| -------------------------------------------------------------------------------------- | -------------------------------------- |
+| 🔒 Enforce credential expiration policies for service principals (short-lived secrets) | Prevent persistent credential abuse    |
+| 🚫 Rotate service principal secrets and certificates regularly                         | Invalidate stale/persisted credentials |
+| 📜 Enable Defender for Cloud Apps and audit service principal secret additions         | Detect rogue credential creations      |
+| 🛡️ Use Managed Identities where possible (no credentials to steal)                    | Reduce attack surface                  |
 
-* **T1136.003 - Cloud Account**
-  * **Defensive Strategy**:
-    * **Audit for New Accounts**: Use Entra ID Audit Logs to monitor for any new account creations, especially accounts with privileged roles or unusual naming patterns.
-    * **Automated Alerts**: Set alerts in Microsoft Sentinel for unusual account creation activity, particularly during off-hours or from unexpected IP addresses.
-    * **Conditional Access Policies**: Require MFA and location-based restrictions for all new accounts, especially for those with access to sensitive resources.
+✅ **Effect**: Attackers can’t add long-lived credentials quietly.
 
-### 3. **Modify Authentication Process (T1556)**
+***
 
-Attackers may modify authentication processes to bypass security controls, such as MFA.
+#### ➡️ Additional Cloud Roles (T1098.003)
 
-* **T1556.006 - Multifactor Authentication**
-  * **Defensive Strategy**:
-    * **MFA Configuration Monitoring**: Use audit logs to monitor any changes in MFA settings or Conditional Access policies and alert on modifications.
-    * **Enforce Strong MFA**: Require strong, phishing-resistant MFA options, such as FIDO2 tokens, for all privileged accounts.
-    * **Access Control Reviews**: Regularly review Conditional Access policies for modifications that could weaken MFA requirements.
-* **T1556.003 - Hybrid Identity**
-  * **Defensive Strategy**:
-    * **Monitor PTA Agent Activity**: Use Azure Entra ID Connect Health to monitor Pass-Through Authentication (PTA) agents for signs of tampering, such as DLL injections or unusual traffic.
-    * **AD FS Configuration Monitoring**: Regularly audit AD FS configurations and monitor for modifications in the Microsoft.IdentityServer.Servicehost.exe.config file.
-    * **SIEM Integration**: Use Microsoft Sentinel to correlate logs from PTA agents, AD FS, and Entra ID for suspicious modifications.
+| Defensive Action                                                | Why It Matters                                 |
+| --------------------------------------------------------------- | ---------------------------------------------- |
+| 🔒 Use Privileged Identity Management (PIM) for all admin roles | Only time-bound, approved privilege escalation |
+| 🚫 Require approval workflows and MFA for role activations      | Block unauthorized role assignments            |
+| 📜 Monitor Azure AD Audit Logs for role assignment events       | Detect privilege escalations immediately       |
 
-### 4. **Valid Accounts (T1078)**
+✅ **Effect**: Role persistence is caught and blocked fast.
 
-Attackers may leverage existing, valid accounts, sometimes using default credentials.
+***
 
-* **T1078.001 - Default Accounts**
-  * **Defensive Strategy**:
-    * **Disable Unused Default Accounts**: Disable default accounts where possible, especially for high-privilege accounts.
-    * **Password Policy Enforcement**: Enforce strong password policies for all accounts, especially service accounts, to prevent the use of default or weak credentials.
-    * **Audit Account Access**: Use Entra ID and Conditional Access policies to limit default account usage to specific conditions and locations.
-* **T1556.003 - Cloud Accounts**
-  * **Defensive Strategy**:
-    * **Monitor Failed Sign-Ins**: Use Azure AD Sign-In Logs to identify brute force or credential stuffing attempts, particularly from unusual IPs or countries.
-    * **Anomaly Detection**: Use Azure AD Identity Protection to detect risky sign-ins or atypical user behavior that could indicate compromised credentials.
-    * **Conditional Access Policies**: Enforce Conditional Access policies to require MFA and restrict access based on risk signals.
+#### ➡️ Device Registration (T1098.004)
+
+| Defensive Action                                                    | Why It Matters                      |
+| ------------------------------------------------------------------- | ----------------------------------- |
+| 🔒 Limit who can register devices in Entra ID (device settings)     | Prevent rogue device registrations  |
+| 🚫 Require device compliance checks for Conditional Access policies | Block non-compliant rogue devices   |
+| 📜 Monitor new device registrations, especially from unusual IPs    | Catch suspicious device enrollments |
+
+✅ **Effect**: Attackers can’t use fake trusted devices to persist access.
+
+***
+
+### ➕ Create Cloud Account (T1136.003)
+
+| Defensive Action                                         | Why It Matters                        |
+| -------------------------------------------------------- | ------------------------------------- |
+| 🔒 Restrict user creation rights to Identity Admins only | No random user creations              |
+| 🚫 Enforce MFA for all privileged operations             | Stop silent backdoor account creation |
+| 📜 Alert on new user creation events in Entra ID logs    | Detect persistence fast               |
+
+✅ **Effect**: Hidden user accounts are detected and blocked.
+
+***
+
+### 🔄 Modify Authentication Process
+
+***
+
+#### ➡️ Multi-Factor Authentication (T1556.006)
+
+| Defensive Action                                                                 | Why It Matters                   |
+| -------------------------------------------------------------------------------- | -------------------------------- |
+| 🔒 Require MFA re-registration approval (MFA Registration Policy)                | Stop silent MFA method takeovers |
+| 🚫 Lock MFA methods via Identity Protection policies (Trusted MFA Registrations) | Secure second factors tightly    |
+| 📜 Monitor MFA registration and reset events (Azure AD logs)                     | Detect suspicious MFA changes    |
+
+✅ **Effect**: Attackers can’t persist by hijacking MFA.
+
+***
+
+#### ➡️ Hybrid Identity (T1556.007)
+
+| Defensive Action                                                 | Why It Matters                     |
+| ---------------------------------------------------------------- | ---------------------------------- |
+| 🔒 Harden Azure AD Connect sync configurations (limited OU sync) | Control what flows into Entra ID   |
+| 🚫 Monitor synchronization changes and sync errors               | Detect unauthorized hybrid changes |
+| 📜 Regularly audit synced objects for unexpected users or groups | Spot hidden persistence routes     |
+
+✅ **Effect**: On-prem attacks can’t create cloud persistence easily.
+
+***
+
+#### ➡️ Conditional Access Policies (T1556.008)
+
+| Defensive Action                                                              | Why It Matters                              |
+| ----------------------------------------------------------------------------- | ------------------------------------------- |
+| 🔒 Lock down Conditional Access policy management (Global Admins only + PIM)  | Prevent CA tampering                        |
+| 🚫 Require approval for CA policy edits                                       | Force peer review of access changes         |
+| 📜 Monitor CA policy changes (Audit Logs) and alert on disables or exclusions | Detect weakening of protections immediately |
+
+✅ **Effect**: Attackers can’t modify policies to maintain stealthy access.
+
+***
+
+### 👤 Valid Accounts (Default Accounts and Cloud Accounts)
+
+***
+
+#### ➡️ Default Accounts (T1078.004)
+
+| Defensive Action                                                            | Why It Matters                  |
+| --------------------------------------------------------------------------- | ------------------------------- |
+| 🔒 Regularly review guest users, service principals, and managed identities | Remove stale accounts           |
+| 🚫 Apply least privilege to default and automation accounts                 | Minimize their impact if abused |
+| 📜 Enable risky account detection in Identity Protection                    | Catch compromised defaults fast |
+
+✅ **Effect**: Defaults are hardened and monitored constantly.
+
+***
+
+#### ➡️ Cloud Accounts (T1078.004)
+
+| Defensive Action                                                             | Why It Matters                        |
+| ---------------------------------------------------------------------------- | ------------------------------------- |
+| 🔒 Enforce MFA and compliant device policies for all cloud users             | Block simple stolen credential use    |
+| 🚫 Enable Conditional Access Risk Policies (block risky users automatically) | Cut off compromised users immediately |
+| 📜 Monitor impossible travel, unfamiliar sign-in anomalies                   | Detect stolen session reuse fast      |
+
+✅ **Effect**: Even stolen credentials don’t guarantee persistence.
+
+***
+
+## 📊 **Defensive Coverage Table (Persistence in Entra ID)**
+
+| Attack Vector                | Defensive Strategy                                 |
+| ---------------------------- | -------------------------------------------------- |
+| Additional Cloud Credentials | Rotate secrets, audit SPN credential changes       |
+| Additional Cloud Roles       | Use PIM, alert on role assignments                 |
+| Device Registration          | Restrict device registration, monitor new devices  |
+| Create Cloud Account         | Lock user creation, alert on new users             |
+| Modify MFA                   | Secure MFA registration/reset, monitor MFA changes |
+| Modify Hybrid Identity       | Harden Azure AD Connect, monitor hybrid changes    |
+| Modify Conditional Access    | Lock CA editing rights, alert on policy changes    |
+| Default Accounts             | Review and harden guest/SPN accounts               |
+| Cloud Accounts               | Enforce MFA, detect risky sign-ins                 |
+
+***
+
+## 🎯 Final Summary
+
+Defending against persistence in Entra ID focuses on:
+
+* **Locking down identity lifecycle management (creation, credential changes, device enrollments)**
+* **Hardening authentication flows (MFA, CA policies)**
+* **Monitoring privileged operations (role assignments, policy edits)**
+* **Detecting stale or risky accounts early**

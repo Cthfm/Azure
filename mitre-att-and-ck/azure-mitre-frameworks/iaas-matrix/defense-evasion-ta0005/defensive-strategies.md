@@ -1,167 +1,144 @@
 # Defensive Strategies
 
-### **Overview:**
+## **Defensive Strategies Against Defense Evasion in Azure Environments**
 
-Defensive strategies within the Defense Evasion (TA0005) requires enforcing strong identity controls, network segmentation, data protection, and threat detection. Compliance and security baselines are maintained via Azure Policy, logging, and automated patching, creating a layered defense-in-depth approach to cloud security. This section goes over defensive strategies for each tactic and sub technique.&#x20;
+In Azure, defending against Defense Evasion means **locking down configuration changes**, **monitoring credential usage**, **protecting logging and monitoring**, and **detecting manipulation of authentication paths**.\
+If you stop evasion, you expose attackers **early**.
 
-### **1. Abuse Elevation Control Mechanism (T1548)**
+***
 
-#### **Temporary Elevated Cloud Access (T1548.005)**
+### ⬆️ Abuse Elevation Control Mechanism → Temporary Elevated Cloud Access (T1548)
 
-**Mitigation:**
+| Defensive Action                                                                   | Why It Matters                      |
+| ---------------------------------------------------------------------------------- | ----------------------------------- |
+| 🔒 Require multi-party approval for PIM JIT activations (Azure PIM)                | Attackers can’t easily self-elevate |
+| 🚫 Monitor PIM role activation logs using Azure Monitor                            | Detect unusual elevation attempts   |
+| 📜 Use Conditional Access with strict device compliance and MFA for JIT activation | Force secure context for elevation  |
 
-* Require Justification & Approval: Enforce approval workflows in Azure Privileged Identity Management (PIM) to ensure elevated access is properly reviewed.
-* Shorten Activation Time: Limit Global Admin and other privileged role activations to the minimum necessary duration.
-* Enable PIM Alerts & Logging: Monitor PIM role activations and create alerts for unexpected admin promotions.
-* Review PIM Logs Regularly: Analyze PIM logs in Azure Monitor and Microsoft Sentinel for abnormal privilege escalation activity.
+✅ **Effect**: Lock down temporary escalations used to bypass protections.
 
-### **2. Exploitation for Defense Evasion (T1211)**
+***
 
-#### **Exploitation of Vulnerabilities**
+### ⚡ Exploitation for Defense Evasion (T1211)
 
-**Mitigation:**
+| Defensive Action                                                                              | Why It Matters                         |
+| --------------------------------------------------------------------------------------------- | -------------------------------------- |
+| 🛡️ Enable Defender for Cloud recommendations and remediate all critical misconfigurations    | Close holes that allow silent bypasses |
+| 📜 Regularly scan Azure environment with Defender and external CSPM tools (e.g., Wiz, Prisma) | Surface hidden misconfigurations early |
+| 🔍 Monitor for "atypical permissions granted" via Azure Activity Logs                         | Detect exploit chains early            |
 
-* Keep Cloud Services Updated: Regularly review and apply security patches for Azure services when you are responsible for upgrades.
-* Enable Threat Detection: Use Microsoft Defender for Cloud to detect exploits targeting Azure services.
-* Limit Jupyter Notebook Access: For CosmosDB and Azure ML, restrict Jupyter Notebook access and require authentication.
-* Use Microsoft Defender for Storage: Enable anomaly detection to flag unauthorized access to storage accounts.
+✅ **Effect**: No easy exploitation paths left for attackers.
 
-### **3. Impair Defenses (T1562)**
+***
 
-#### **Disable or Modify Security Tools (T1562.001)**
+### 🛡️ Impair Defenses (Disable or Modify Tools / Firewall / Logs)
 
-**Mitigation:**
+| Defensive Action                                                                                              | Why It Matters                            |
+| ------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| 🔒 Apply Azure Policy to **enforce** monitoring agent presence (Defender agents, Log Analytics)               | Mandatory security tooling                |
+| 🚫 Block role assignment for disabling Defender settings to only security administrators                      | Attackers can’t easily disable monitoring |
+| 📜 Use Azure Activity Log alerts for security settings changes (e.g., WAF config updates, NSG rule deletions) | Catch firewall and tooling tampering fast |
+| 🔍 Monitor Diagnostic Settings deletions and alert immediately                                                | Broken log pipelines = immediate red flag |
 
-* Prevent Defender Disabling: Set an Azure Policy to prevent users from modifying Defender settings.
-* Monitor Defender Logs: Create alerts in Microsoft Sentinel logs for services being disabled. &#x20;
-* Restrict Privileges: Ensure that Defender for Endpoint settings can only be modified by security admins.
+✅ **Effect**: Attackers can't turn off your eyes and ears.
 
-#### **Disable or Modify Cloud Firewall (T1562.007)**
+***
 
-**Mitigation:**
+### 🔒 Modify Authentication Process (MFA / Hybrid Identity / Conditional Access Policies)
 
-* Enforce NSG Rules via Azure Policy: Prevent unauthorized changes to Network Security Groups (NSGs).
-* Enable NSG Flow Logs: Continuously log and monitor traffic flow using Azure NSG Flow Logs.
-* Set NSG Modification Alerts: Create alerts in Microsoft Defender for Cloud to detect changes in firewall configurations.
+| Defensive Action                                                                        | Why It Matters                                   |
+| --------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| 🔒 Require MFA and device compliance for **every** privileged user (Conditional Access) | Prevent silent login manipulation                |
+| 🚫 Protect Azure AD Connect sync servers with network and privileged access controls    | Hybrid identity protected                        |
+| 📜 Enable audit logging for Conditional Access policy changes                           | Detect tampering with authentication protections |
+| 🔍 Monitor for new trusted locations/IP ranges added to Conditional Access policies     | Silent bypasses caught fast                      |
 
-#### **Disable or Modify Cloud Logs (T1562.008)**
+✅ **Effect**: Identity flows stay hardened even if attackers try to erode protections.
 
-**Mitigation:**
+***
 
-* Use Azure Policy: Enforce diagnostic logging across all resources.
-* Monitor Logging Changes: Track changes in diagnostic settings, activity logs, and Entra ID logs.&#x20;
-* Enable Log Analytics: Forward all logs to a log analytics workspace, storage account, or event hub for storage and retention.
+### 🖥️ Modify Cloud Compute Infrastructure (Snapshots, Cloning, Deletion, Revert)
 
-### **4. Modify Authentication Process (T1556)**
+| Defensive Action                                                                             | Why It Matters                       |
+| -------------------------------------------------------------------------------------------- | ------------------------------------ |
+| 🔒 Apply Azure Policies to control who can create, attach, or revert snapshots               | No rogue clones                      |
+| 🚫 Require approvals for VM deletions (Azure Blueprints, Policy + Approval gates)            | Prevent evidence destruction         |
+| 📜 Monitor snapshot creation, attachment, and deletion events                                | Alert on stealth snapshot activities |
+| 🔍 Enable Defender for Cloud file integrity monitoring (Azure Monitor Agent) on critical VMs | Catch unauthorized revert operations |
 
-#### **MFA Bypass (T1556.006)**
+✅ **Effect**: Compute manipulations for hiding activities are detected immediately.
 
-**Mitigation:**
+***
 
-* Use Conditional Access Policies: Require MFA for all high-privilege users, even in trusted locations.
-* Monitor Session Tokens: Enable Continuous Access Evaluation (CAE) to invalidate stolen session tokens.
-* Implement Identity protection for risky sign-ins.&#x20;
+### 🏢 Modify Cloud Resource Hierarchy
 
-#### **Hybrid Identity Manipulation (T1556.007)**
+| Defensive Action                                                                                                   | Why It Matters                      |
+| ------------------------------------------------------------------------------------------------------------------ | ----------------------------------- |
+| 🔒 Lock down who can modify Azure Management Groups and Subscription hierarchy (Management Group Contributor only) | No hidden management group creation |
+| 📜 Monitor management group changes via Azure Activity Logs                                                        | Alert when hierarchy changes occur  |
 
-**Mitigation:**
+✅ **Effect**: Attackers can't hide infrastructure changes under your nose.
 
-* Secure AD FS Servers: Use Azure Entra ID Password Protection and ensure AD FS servers have security monitoring enabled.
-* Monitor Federation Changes: Track AD FS claims rule modifications in Azure Sentinel.
+***
 
-#### **Conditional Access Policy Manipulation (T1556.009)**
+### 🌎 Unused/Unsupported Cloud Regions
 
-**Mitigation:**
+| Defensive Action                                                      | Why It Matters                    |
+| --------------------------------------------------------------------- | --------------------------------- |
+| 🔒 Restrict deployments to approved Azure regions via Azure Policy    | No deployments in obscure regions |
+| 📜 Monitor deployments in unsupported regions with Defender for Cloud | Catch out-of-bound region usage   |
 
-* Require Approval for Policy Changes: Use Privileged Identity Management (PIM) to require admin approval before modifying Conditional Access policies.
-* Monitor Conditional Access Logs: Set up alerts in Sentinel or a third party SIEM for unexpected policy changes.
+✅ **Effect**: Force attackers to operate where you're watching.
 
-### **5. Modify Cloud Compute Infrastructure (T1578)**
+***
 
-#### **Create Snapshot (T1578.001)**
+### 🛡️ Use Alternate Authentication Material (Tokens, Cookies)
 
-**Mitigation:**
+| Defensive Action                                                                                                   | Why It Matters                    |
+| ------------------------------------------------------------------------------------------------------------------ | --------------------------------- |
+| 🔒 Rotate service principal secrets regularly and minimize token lifetimes (Workload Identity, short-lived tokens) | Tokens can't stay valid forever   |
+| 🚫 Restrict token access in workloads by setting `automountServiceAccountToken: false` in Kubernetes               | Harder to steal tokens at runtime |
+| 📜 Enable Defender for Cloud to monitor suspicious access token use                                                | Detect token theft                |
+| 🔍 Monitor abnormal session cookie usage (via Azure AD Sign-In Logs)                                               | Detect console hijacks            |
 
-* Restrict Snapshot Creation: Use Azure RBAC to limit who can create snapshots.
-* Monitor Snapshot Activity: Enable alerts in Microsoft Sentinel for snapshot creation events.
+✅ **Effect**: Even if tokens are stolen, detection and invalidation are rapid.
 
-#### **Create Cloud Instance (T1578.002)**
+***
 
-**Mitigation:**
+### 👥 Valid Accounts (Default Accounts / Cloud Accounts)
 
-* Limit VM Creation: Use Azure Policy to restrict VM creation to approved users.
-* Monitor New VM Deployments: Set alerts for unexpected VM deployments in Microsoft Defender for Cloud.
+| Defensive Action                                                                                   | Why It Matters                                 |
+| -------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| 🔒 Identify, monitor, and rotate credentials for default service principals and managed identities | No "free" persistence                          |
+| 🚫 Apply Identity Protection Risk Policies (auto-disable risky accounts)                           | Stolen cloud accounts can’t be reused silently |
+| 📜 Require Privileged Identity Management (PIM) for high-privileged cloud accounts                 | Temporary roles, no standing privilege         |
 
-#### **Delete Cloud Instance (T1578.003)**
+✅ **Effect**: Cloud accounts can't be abused for hiding operations.
 
-**Mitigation:**
+***
 
-* Enable Soft Delete for VMs: Use Azure Soft Delete to prevent accidental or malicious VM deletions.
-* Monitor VM Deletion Activity: Set up alerts for VM deletions using Azure Activity Logs.
+## 📊 **Defensive Coverage Table (Defense Evasion in Azure)**
 
-#### **Revert Cloud Instance (T1578.004)**
+| Attack Vector                                                | Defensive Strategy                                              |
+| ------------------------------------------------------------ | --------------------------------------------------------------- |
+| Temporary Elevated Cloud Access                              | PIM approvals, role monitoring, CA enforcement                  |
+| Exploitation for Defense Evasion                             | Defender for Cloud misconfig scanning, Azure Policy enforcement |
+| Disable or Modify Tools/Firewall/Logs                        | Monitor config changes, mandatory agents, activity alerts       |
+| Modify Authentication (MFA, CA, Hybrid)                      | Harden CA policies, audit logs, secure hybrid identity          |
+| Modify Compute Infrastructure (Snapshots, Cloning, Deletion) | Approvals for snapshot use, deletion monitoring                 |
+| Modify Cloud Resource Hierarchy                              | Lock hierarchy changes, monitor management group updates        |
+| Deploy in Unsupported Regions                                | Azure Policy restrictions, Defender for Cloud alerts            |
+| Use Alternate Authentication Material                        | Token rotation, session cookie monitoring                       |
+| Abuse Default/Cloud Accounts                                 | Identity Protection Risk Policies, PIM enforcement              |
 
-**Mitigation:**
+***
 
-* Restrict VM Restore Permissions: Use Azure RBAC to limit who can revert VMs to previous snapshots.
-* Monitor VM Reversions: Track restore operations using Azure Monitor.
+## 🎯 Final Summary
 
-#### **Modify Cloud Compute Configurations (T1578.005)**
+Defending against Defense Evasion in Azure focuses on:
 
-**Mitigation:**
-
-* Enforce Configuration Baselines: Use Azure Policy to prevent unauthorized changes to VM diagnostic settings.
-* Monitor Configuration Changes: Set up Azure Change Tracking to detect unexpected modifications.
-
-### **6. Modify Cloud Resource Hierarchy (T1666)**
-
-**Mitigation:**
-
-* Restrict Subscription Movement: Use Azure Management Groups and RBAC to prevent unauthorized subscription transfers.
-* Monitor Subscription Activity: Set up alerts in Azure Sentinel for unexpected subscription modifications.
-
-### **7. Unused/Unsupported Cloud Regions (T1535)**
-
-**Mitigation:**
-
-* Block Unauthorized Regions: Use Azure Policy to restrict deployments to specific approved regions.
-* Monitor Resource Deployments: Set up Azure Monitor alerts for deployments in unused regions.
-
-### **8. Use Alternate Authentication Material (T1550)**
-
-#### **Application Access Token (T1550.001)**
-
-**Mitigation:**
-
-* Use Managed Identities: Avoid service principal secrets and use Managed Identities instead.
-* Monitor Token Usage: Set up Azure Sentinel alerts for anomalous API requests.
-
-#### **Web Session Cookie (T1550.004)**
-
-**Mitigation:**
-
-* Use Conditional Access: Require re-authentication for high-risk activities.
-* Monitor Cookie Theft Techniques: Enable Microsoft Defender for Endpoint to detect pass-the-cookie attacks.
-
-### **9. Valid Accounts (T1078)**
-
-#### **Default Accounts (T1078.001)**
-
-**Mitigation:**
-
-* Disable Default Credentials: Rotate Storage Account keys regularly and enforce the use of Azure Managed Identities.
-* Monitor Storage Access: Enable Azure Storage Analytics to track unauthorized access.
-
-#### **Cloud Accounts (T1078.004)**
-
-**Mitigation:**
-
-* Use Azure Entra ID Identity Protection: Detect leaked credentials and enforce risk-based conditional access.
-* Monitor Credential Exposure: Continuously scan for exposed Azure credentials using Microsoft Defender for Identity.
-
-### **General Recommendations:**
-
-* Enable Microsoft Defender for Cloud: Provides built-in detection for many of these attacks.
-* Implement Zero Trust: Limit access based on least privilege and enforce strong authentication.
-* Use Azure Sentinel or a third party SIEM for Detection: Build detection rules for suspicious privilege escalation, log tampering, and configuration changes.
-* Regularly Review Activity Logs: Use Azure Activity Logs, Microsoft Defender for Cloud Apps, and Azure Monitor to track anomalies.
+* **Locking down privilege escalation paths and security setting changes**
+* **Protecting logs, monitoring agents, and detection infrastructure**
+* **Hardening authentication flows against tampering**
+* **Detecting token, cookie, and credential theft early**
+* **Restricting deployments to known and monitored regions**

@@ -1,117 +1,177 @@
 # Defense Evasion: TA0005
 
-### Overview
+## **Defense Evasion Techniques in Entra ID (Azure Identity Environments)**
 
-The Defense Evasion tactic focuses on hiding malicious activities to avoid detection by security tools and analysts. In Azure environments, attackers use a variety of techniques, such as disabling logging, bypassing multi-factor authentication, manipulating policies, and abusing trusted tools to stay under the radar. Below are the key concepts with associated techniques, sub-techniques, and Azure-specific examples
+In Microsoft Entra ID (Azure AD), adversaries use Defense Evasion to **hide activities**, **bypass security controls**, **modify policies**, and **abuse trusted authentication artifacts** (tokens, credentials).
 
-### **1. Disabling or Modifying Security Controls**
+Defense evasion allows attackers to **remain stealthy**, **retain access**, and **outmaneuver detection and response**.
 
-**Technique:** T1562 - Impair Defenses\
-Attackers disable logging, security alerts, or monitoring tools to avoid detection.
+***
 
-*   **T1562.001 - Disable or Modify Tools**\
-    Azure Example: Disable Azure Defender alerts to evade monitoring.
+#### 🛡️ Abuse Elevation Control Mechanism → Temporary Elevated Cloud Access
 
-    ```bash
-    az security pricing create --name VirtualMachines --tier 'Free'
-    ```
-* **T1562.004 - Disable Event Logging**\
-  Azure Example: Use PowerShell to stop or clear Azure AD audit logs.
+\| MITRE ID | **T1548.001** |
 
-### **2. Bypassing Authentication or Conditional Access**
+**Description**:\
+Temporarily elevate privileges through PIM (Privileged Identity Management) or Conditional Access exceptions, then remove traces by deactivating or hiding activation artifacts.
 
-**Technique:** T1556 - Modify Authentication Process\
-Attackers **alter or bypass authentication flows**, such as MFA, to gain persistent access.
+**Entra ID Example**:
 
-*   **T1556.004 - Add MFA Bypass Rule**\
-    **Azure Example:** Modify **conditional access policies** to exclude specific IPs from MFA requirements.
+* Activate Global Admin via PIM briefly, modify settings or exfiltrate data, then deactivate role.
 
-    ```powershell
-    Set-AzureADPolicy -Id <PolicyID> -Definition "{... MFA Exclusion Config...}"
-    ```
+```bash
+bashCopyEditaz role assignment create --assignee compromised_user --role "Global Administrator"
+# Privilege removed after use
+```
 
-### **3. Exploiting Trusted Tools for Evasion**
+✅ **Result**: Privilege appears unused after attacker finishes operations.
 
-**Technique:** T1218 - Signed Binary Proxy Execution\
-Attackers use **legitimate signed tools** to execute malicious commands, bypassing security.
+***
 
-*   **Azure Example:** Use **MSBuild.exe** on a Windows VM to launch payloads while avoiding security alerts.
+#### 🏢 Domain or Tenant Policy Modification → Trust Modification
 
-    ```xml
-    <Project>
-      <Target Name="RunPayload">
-        <Exec Command="cmd.exe /c calc.exe" />
-      </Target>
-    </Project>
-    ```
+\| MITRE ID | **T1484.002** |
 
-### **4. Obfuscating Command Execution**
+**Description**:\
+Modify external identity settings, B2B collaboration trusts, or federated domains to mask adversary-controlled access.
 
-**Technique:** T1055 - Process Injection\
-Attackers hide malicious code within legitimate processes to evade detection.
+**Entra ID Example**:
 
-* **Azure Example:** Inject malicious code into a PowerShell process running on a compromised Azure VM to blend into normal operations.
+* Alter B2B external collaboration policies to allow anonymous guest invites.
+* Add rogue Identity Providers.
 
-### **5. Deleting or Modifying Logs to Cover Tracks**
+```bash
+bashCopyEditaz ad external-identity create --display-name "AttackerIdP"
+```
 
-**Technique:** T1070 - Indicator Removal on Host\
-Attackers remove logs and other traces to prevent forensic investigations.
+✅ **Result**: Open backdoors while blending into trusted configurations.
 
-* **T1070.004 - File Deletion**\
-  **Azure Example:** Delete Azure Activity Logs that contain evidence of privilege escalation.
+***
 
-### **6. Abusing Policies and Configuration Settings for Evasion**
+#### 💥 Impair Defenses → Disable or Modify Cloud Logs
 
-**Technique:** T1564 - Hide Artifacts\
-Attackers manipulate policies or settings to hide their activities or artifacts.
+\| MITRE ID | **T1562.008** |
 
-* **T1564.003 - Hidden Window**\
-  **Azure Example:** Run malicious code in the background using hidden processes within Automation Accounts to avoid user detection.
+**Description**:\
+Disable logging (e.g., Azure AD sign-in logs, audit logs) or tamper with diagnostics settings to blind monitoring tools like Sentinel or Defender for Cloud Apps.
 
-### **7. Exploiting Trusted Relationships to Evade Monitoring**
+**Entra ID Example**:
 
-**Technique:** T1199 - Trusted Relationship\
-Attackers abuse multi-tenant or federated relationships to avoid detection.
+* Modify Diagnostic Settings to stop sending logs to Log Analytics.
 
-* **Azure Example:** Use a trusted tenant's permissions to access sensitive resources without triggering alerts in the victim’s environment.
+```bash
+bashCopyEditaz monitor diagnostic-settings delete --name EntraIDLogs
+```
 
-### **8. Encrypting or Encoding Payloads to Avoid Detection**
+✅ **Result**: Security operations center (SOC) loses visibility.
 
-**Technique:** T1027 - Obfuscated Files or Information\
-Attackers use encryption or encoding to make their payloads less detectable by security tools.
+***
 
-*   **Azure Example:** Deliver Base64-encoded PowerShell scripts that bypass antivirus scanning.
+#### 🔄 Modify Authentication Process
 
-    ```powershell
-    powershell.exe -EncodedCommand <Base64Payload>
-    ```
+***
 
-### **9. Disguising Malicious Code as Normal Services or Accounts**
+**➡️ Multi-Factor Authentication (T1556.006)**
 
-**Technique:** T1036 - Masquerading\
-Attackers disguise malicious code or processes as legitimate services.
+**Description**:\
+Remove, reconfigure, or weaken MFA methods for accounts to bypass strong authentication requirements.
 
-* **T1036.005 - Match Legitimate Name or Location**\
-  **Azure Example:** Deploy a malicious automation task named “Microsoft-Update” to blend in with legitimate tasks.
+**Entra ID Example**:
 
-### **10. Abusing Service Principals and Automation Accounts for Evasion**
+* Register a new Authenticator app device or change MFA number for a compromised user.
 
-**Technique:** T1098 - Account Manipulation\
-Attackers manipulate service principals or automation accounts to evade detection.
+✅ **Result**: Evasion of second-factor protections.
 
-* **Azure Example:** Add extra credentials to a service principal, allowing hidden access to resources.
+***
 
-### **Summary of Key Concepts with Techniques for TA0005**
+**➡️ Hybrid Identity (T1556.007)**
 
-| **Key Concept**               | **Technique**                           | **Azure Example**                                          |
-| ----------------------------- | --------------------------------------- | ---------------------------------------------------------- |
-| Disable Security Controls     | T1562 - Impair Defenses                 | Disable Azure Defender alerts to evade monitoring          |
-| Bypass Authentication         | T1556 - Modify Authentication Process   | Modify conditional access policies to bypass MFA           |
-| Use Trusted Tools for Evasion | T1218 - Signed Binary Proxy Execution   | Use MSBuild.exe to execute malicious code undetected       |
-| Obfuscate Command Execution   | T1055 - Process Injection               | Inject malicious code into legitimate PowerShell processes |
-| Delete or Modify Logs         | T1070 - Indicator Removal on Host       | Delete Azure Activity Logs to cover privilege escalation   |
-| Hide Artifacts via Policies   | T1564 - Hide Artifacts                  | Run hidden tasks in Automation Accounts                    |
-| Exploit Trusted Relationships | T1199 - Trusted Relationship            | Use tenant trust to access resources without detection     |
-| Encode or Encrypt Payloads    | T1027 - Obfuscated Files or Information | Use Base64-encoded scripts to evade antivirus scanning     |
-| Masquerade Malicious Code     | T1036 - Masquerading                    | Deploy malicious tasks named after legitimate services     |
-| Abuse Service Principals      | T1098 - Account Manipulation            | Add hidden credentials to a service principal              |
+**Description**:\
+Tamper with hybrid sync configurations (Azure AD Connect) to sync malicious on-prem users or hide rogue accounts.
+
+**Entra ID Example**:
+
+* Modify on-premises AD objects that sync automatically and gain cloud access without detection.
+
+✅ **Result**: Bypass cloud-only security controls through on-prem manipulation.
+
+***
+
+**➡️ Conditional Access Policies (T1556.008)**
+
+**Description**:\
+Alter or disable Conditional Access (CA) policies to weaken enforcement (e.g., remove MFA requirements, exclude attacker-controlled accounts).
+
+**Entra ID Example**:
+
+```bash
+bashCopyEditaz ad conditional-access policy update --id <policy-id> --state disabled
+```
+
+✅ **Result**: Evade authentication protections or restrict enforcement.
+
+***
+
+#### 🔑 Use Alternate Authentication Material → Application Access Token
+
+\| MITRE ID | **T1550.001** |
+
+**Description**:\
+Steal and reuse OAuth tokens, Managed Identity tokens, or refresh tokens to impersonate users or services without needing credentials.
+
+**Entra ID Example**:
+
+```bash
+bashCopyEditcurl -H Metadata:true "http://169.254.169.254/metadata/identity/oauth2/token"
+```
+
+✅ **Result**: Authenticate invisibly using stolen tokens.
+
+***
+
+#### 👤 Valid Accounts
+
+***
+
+**➡️ Default Accounts (T1078.004)**
+
+**Description**:\
+Abuse existing default or automation accounts that are overlooked or excluded from monitoring.
+
+✅ **Result**: Hide in plain sight using under-monitored accounts.
+
+***
+
+**➡️ Cloud Accounts (T1078.004)**
+
+**Description**:\
+Use legitimate but compromised user accounts, avoiding abnormal login detections by mimicking normal user behavior.
+
+✅ **Result**: Blend into everyday legitimate traffic.
+
+***
+
+## 📊 **Defense Evasion Techniques in Entra ID (MITRE Mapped)**
+
+| Technique/Subtechnique             | MITRE ID  | Entra ID Example                                       |
+| ---------------------------------- | --------- | ------------------------------------------------------ |
+| Temporary Elevated Cloud Access    | T1548.001 | Abuse PIM to escalate and deactivate privilege         |
+| Trust Modification                 | T1484.002 | Modify external identity trusts or federation settings |
+| Disable or Modify Cloud Logs       | T1562.008 | Turn off Entra ID log diagnostics                      |
+| Modify MFA                         | T1556.006 | Register or alter MFA method silently                  |
+| Modify Hybrid Identity             | T1556.007 | Abuse AD Connect to sync rogue accounts                |
+| Modify Conditional Access Policies | T1556.008 | Disable or weaken CA protections                       |
+| Application Access Token           | T1550.001 | Use stolen OAuth tokens to authenticate                |
+| Default Accounts                   | T1078.004 | Abuse unmonitored guest/SPNs                           |
+| Cloud Accounts                     | T1078.004 | Hide using stolen but legitimate user accounts         |
+
+***
+
+## 🎯 Final Summary
+
+Defending against Defense Evasion in Entra ID focuses on:
+
+* **Enforcing strict control and monitoring over roles, MFA, CA policies, and trust settings**
+* **Locking down token access and monitoring API usage**
+* **Securing and monitoring logging infrastructure**
+* **Hardening hybrid identity configurations**

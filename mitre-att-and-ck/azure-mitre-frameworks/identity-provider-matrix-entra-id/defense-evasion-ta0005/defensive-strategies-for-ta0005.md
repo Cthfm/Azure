@@ -1,120 +1,140 @@
 # Defensive Strategies for TA0005
 
-## **Defensive Strategies for TA0005 - Defense Evasion**
+## **Defensive Strategies Against Defense Evasion in Entra ID**
 
-Defending against Defense Evasion (TA0005) requires continuous monitoring, strict access controls, auditing of logs, and detection of obfuscation techniques. Attackers aim to disable security controls, manipulate authentication processes, delete logs, or use trusted tools to stay hidden. Below are key defensive strategies mapped to relevant techniques, with Azure-specific solutions to mitigate evasion attempts.
+Defense evasion in Entra ID is about **silencing logging**, **hiding identity changes**, **abusing token-based authentication**, and **weakening security enforcement**.
 
-### **1. Monitor and Enforce Security Controls**
+Your defense:\
+➡️ **Lock critical paths** (logging, Conditional Access, MFA)\
+➡️ **Detect trust manipulation and API token abuse early**\
+➡️ **Control who can change security configurations**
 
-**Mitigates:** T1562 - Impair Defenses
+***
 
-* **Action:** Continuously monitor the status of security tools and alerts to ensure they remain enabled.
-* **Defensive Strategies:**
-  * Use Azure Policy to enforce that Azure Defender remains enabled across all resources.
-  * Set Azure Monitor alerts to notify administrators when security settings are modified.
-  * Enable tamper protection to prevent disabling of Defender agents on VMs.
+### 🚀 Temporary Elevated Cloud Access (T1548.001)
 
-### **2. Detect Suspicious Authentication Behavior**
+| Defensive Action                                                                                    | Why It Matters                         |
+| --------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| 🔒 Require Privileged Identity Management (PIM) for all privileged role activations                 | Time-bound, approved access            |
+| 🚫 Enforce MFA + Approval + Justification for PIM activations                                       | Harder to hide privilege usage         |
+| 📜 Monitor and alert on all PIM activations, especially Global Admin or Privileged Auth Admin roles | Detect suspicious privilege boosts     |
+| 🛡️ Enable Access Reviews for all eligible PIM roles                                                | Periodically validate role assignments |
 
-**Mitigates:** T1556 - Modify Authentication Process
+✅ **Effect**: Temporary privilege use is tightly watched.
 
-* **Action:** Monitor for changes to MFA settings or Conditional Access Policies.
-* **Defensive Strategies:**
-  * Use Azure AD Identity Protection to detect MFA bypass attempts.
-  * Monitor changes to Conditional Access Policies using Azure Sentinel and Audit Logs.
-  * Configure just-in-time (JIT) access to limit administrative actions.
+***
 
-### **3. Prevent Misuse of Legitimate Tools**
+### 🏢 Trust Modification (T1484.002)
 
-**Mitigates:** T1218 - Signed Binary Proxy Execution
+| Defensive Action                                                                                              | Why It Matters                          |
+| ------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| 🔒 Restrict modifications to external identity and B2B settings to a few trusted Global Admins (PIM enforced) | Limit who can alter trust relationships |
+| 🚫 Require explicit approval for new federations or external domain trusts                                    | No automatic B2B acceptance             |
+| 📜 Monitor changes to external identities and federation settings in Audit Logs                               | Catch unauthorized trust changes        |
 
-* **Action:** Restrict the use of **legitimate binaries**, such as MSBuild, that can be used for malicious purposes.
-* **Defensive Strategies:**
-  * Use AppLocker or Windows Defender Application Control (WDAC) to block unauthorized tools.
-  * Monitor for execution of trusted tools like MSBuild via Azure Sentinel.
-  * Use Microsoft Defender for Endpoint to detect and block misuse of signed binaries.
+✅ **Effect**: Federation and B2B abuse becomes visible.
 
-### **4. Detect and Block Obfuscation Techniques**
+***
 
-**Mitigates:** T1027 - Obfuscated Files or Information
+### 💥 Disable or Modify Cloud Logs (T1562.008)
 
-* **Action:** Monitor for encoded or encrypted payloads, such as Base64-encoded PowerShell commands.
-* **Defensive Strategies:**
-  * Use Microsoft Defender for Endpoint to detect encoded or obfuscated scripts.
-  * Set alerts in Azure Sentinel to flag the use of Base64-encoded commands in PowerShell logs.
-  * Enable PowerShell logging and Script Block Logging on VMs.
+| Defensive Action                                                                     | Why It Matters                      |
+| ------------------------------------------------------------------------------------ | ----------------------------------- |
+| 🔒 Enforce Diagnostic Settings at the subscription level via Azure Policy            | Ensure logging can’t be disabled    |
+| 🚫 Apply Resource Locks to logging resources (e.g., Log Analytics, Storage Accounts) | Prevent tampering with logs         |
+| 📜 Alert on changes to Diagnostic Settings or Log Analytics configurations           | Detect log deletion or modification |
+| 🛡️ Enable Immutable Logging (Microsoft Purview, Azure Monitor)                      | Create a tamper-proof audit trail   |
 
-### **5. Enable Logging and Monitor for Log Tampering**
+✅ **Effect**: Logs stay intact even if attackers try to disable them.
 
-**Mitigates:** T1070 - Indicator Removal on Host
+***
 
-* **Action:** Ensure **logs cannot be modified or deleted** by attackers.
-* **Defensive Strategies:**
-  * Use Azure Monitor and Activity Logs to track changes to logging configurations.
-  * Enable Immutable Blob Storage to prevent log deletions.
-  * Use Azure Sentinel to detect gaps in logging that may indicate tampering.
+### 🔄 Modify Authentication Process
 
-### **6. Monitor and Secure Automation Accounts**
+***
 
-**Mitigates:** T1564 - Hide Artifacts
+#### ➡️ Multi-Factor Authentication (T1556.006)
 
-* **Action:** Track changes to automation tasks and runbooks to detect hidden malicious tasks.
-* **Defensive Strategies:**
-  * Use Azure Monitor to detect modifications to Automation Accounts and runbooks.
-  * Implement role-based access control (RBAC) to restrict who can modify automation settings.
-  * Regularly review automation logs for unauthorized changes or suspicious jobs.
+| Defensive Action                                                                                | Why It Matters                        |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------- |
+| 🔒 Enforce strong MFA registration and recovery policies (Trusted MFA methods only)             | Protect MFA enrollment from attackers |
+| 🚫 Require reauthentication for MFA device changes                                              | Make MFA modification noisy           |
+| 📜 Monitor and alert on new MFA device registrations or resets                                  | Detect MFA evasion fast               |
+| 🛡️ Enable Authentication Strength policies (Require FIDO2 or certificate-based MFA for admins) | Harden second-factor authentication   |
 
-### **7. Restrict the Use of Remote Services and JIT Access**
+✅ **Effect**: MFA stays strong and hard to bypass.
 
-**Mitigates:** T1569 - Service Execution
+***
 
-* **Action:** Limit the use of remote services like SSH, RDP, and VM RunCommand to prevent hidden execution.
-* **Defensive Strategies:**
-  * Use JIT access to restrict RDP and SSH access to Azure VMs.
-  * Disable RunCommand on VMs unless explicitly required.
-  * Monitor Azure Bastion logs for suspicious access patterns.
+#### ➡️ Hybrid Identity (T1556.007)
 
-### **8. Detect and Respond to Rogue Service Principal Usage**
+| Defensive Action                                                       | Why It Matters                   |
+| ---------------------------------------------------------------------- | -------------------------------- |
+| 🔒 Restrict Azure AD Connect configuration changes to select admins    | Secure the hybrid trust boundary |
+| 🚫 Monitor and alert on unexpected Azure AD Connect sync modifications | Catch hybrid tampering           |
+| 📜 Regularly audit synced users, groups, and permissions               | Detect rogue object syncing      |
 
-**Mitigates:** T1098 - Account Manipulation
+✅ **Effect**: Hybrid identity can't be silently manipulated.
 
-* **Action:** Monitor for suspicious activity involving service principals and automation accounts.
-* **Azure Solution:**
-  * Use Azure Sentinel to detect unauthorized role assignments to service principals.
-  * Rotate service principal keys regularly using Azure Key Vault.
-  * Monitor for new credentials being added to service principals.
+***
 
-### **9. Block Legacy Authentication Protocols**
+#### ➡️ Conditional Access Policies (T1556.008)
 
-**Mitigates:** T1078.002 - Domain Accounts
+| Defensive Action                                                                     | Why It Matters                |
+| ------------------------------------------------------------------------------------ | ----------------------------- |
+| 🔒 Limit who can modify Conditional Access policies (Global Admin/PIM-enforced only) | Block unauthorized CA changes |
+| 🚫 Require approval workflow for CA policy creation or editing                       | Add friction to changes       |
+| 📜 Alert on any Conditional Access policy creation, modification, or deletion        | Detect policy weakening fast  |
 
-* **Action:** Disable legacy authentication protocols to prevent attackers from bypassing modern security features.
-* **Defensive Strategies:**
-  * Use Conditional Access Policies to block protocols like POP, IMAP, and SMTP.
-  * Enforce modern authentication across all resources.
-  * Monitor for login attempts using legacy protocols with Azure Sentinel.
+✅ **Effect**: Attackers can’t silently lower defenses.
 
-### **10. Automate Incident Response with Playbooks**
+***
 
-**Mitigates:** Multiple Techniques
+### 🔑 Application Access Token (T1550.001)
 
-* **Action:** Use automated playbooks to respond to defense evasion attempts.
-* **Defensive Strategies:**
-  * Use Azure Sentinel to trigger automated workflows when suspicious activities are detected (e.g., disabling compromised accounts).
-  * Integrate Microsoft Defender for Cloud with Sentinel for enhanced incident response.
-  * Configure playbooks to block malicious IPs, revoke OAuth tokens, or disable compromised service principals automatically.
+| Defensive Action                                                                                 | Why It Matters                         |
+| ------------------------------------------------------------------------------------------------ | -------------------------------------- |
+| 🔒 Implement short token lifetimes for OAuth refresh tokens                                      | Limit stolen token usability           |
+| 🚫 Use Conditional Access policies requiring compliant devices and MFA even when tokens are used | Block stolen tokens                    |
+| 📜 Monitor anomalous token reuse (same token, different IP/device)                               | Detect stolen token abuse              |
+| 🛡️ Enable Continuous Access Evaluation (CAE)                                                    | Kill stolen sessions in near real-time |
 
-### **Summary of Defensive Measures for TA0005**
+✅ **Effect**: Even if tokens are stolen, access becomes hard.
 
-| **Defensive Strategy**                   | **Mitigates**                           | **Azure Solution**                                         |
-| ---------------------------------------- | --------------------------------------- | ---------------------------------------------------------- |
-| Monitor and Enforce Security Controls    | T1562 - Impair Defenses                 | Use Azure Policy to enforce Defender settings              |
-| Detect Suspicious Authentication Changes | T1556 - Modify Authentication Process   | Monitor MFA and Conditional Access with Azure Sentinel     |
-| Block Misuse of Legitimate Tools         | T1218 - Signed Binary Proxy Execution   | Use AppLocker and Defender for Endpoint to block abuse     |
-| Detect Obfuscation Techniques            | T1027 - Obfuscated Files or Information | Monitor PowerShell for encoded commands                    |
-| Enable Logging and Monitor Tampering     | T1070 - Indicator Removal on Host       | Use Immutable Blob Storage to prevent log deletion         |
-| Secure Automation Tasks                  | T1564 - Hide Artifacts                  | Monitor runbooks with Azure Monitor and enforce RBAC       |
-| Restrict Remote Services                 | T1569 - Service Execution               | Use JIT access and disable RunCommand if unnecessary       |
-| Monitor Service Principal Usage          | T1098 - Account Manipulation            | Use Sentinel to track suspicious role assignments          |
-| Block Legacy Authentication Protocols    | T1078.002 - Domain Accounts             | Enforce modern authentication and block legacy protocols   |
-| Automate Incident Response               | Multiple Techniques                     | Use Azure Sentinel playbooks for automated threat response |
+***
+
+### 👤 Default Accounts and Cloud Accounts (T1078.004)
+
+| Defensive Action                                                                                        | Why It Matters               |
+| ------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| 🔒 Regularly review and clean up default accounts (guest users, service principals, managed identities) | Remove attack surfaces       |
+| 🚫 Apply Conditional Access to enforce MFA and compliant device checks for all accounts                 | Stop simple credential abuse |
+| 📜 Detect impossible travel, risky IP logins, and legacy protocol usage                                 | Catch credential misuse fast |
+
+✅ **Effect**: Accounts are hardened against stealth access.
+
+***
+
+## 📊 **Defensive Coverage Table (Defense Evasion in Entra ID)**
+
+| Attack Vector                      | Defensive Strategy                                       |
+| ---------------------------------- | -------------------------------------------------------- |
+| Temporary Elevated Cloud Access    | PIM enforcement, audit activations                       |
+| Trust Modification                 | Lock trust settings, audit external changes              |
+| Disable or Modify Cloud Logs       | Enforce diagnostic settings, alert on changes            |
+| Modify MFA                         | Secure MFA changes, monitor registrations                |
+| Modify Hybrid Identity             | Lock hybrid config, audit synced objects                 |
+| Modify Conditional Access Policies | Restrict and monitor CA changes                          |
+| Application Access Token           | Short token lifetimes, Conditional Access on token usage |
+| Default/Cloud Accounts             | Review defaults, enforce MFA and device compliance       |
+
+***
+
+## 🎯 Final Summary
+
+Defending against Defense Evasion in Entra ID focuses on:
+
+* **Securing privileged configurations (PIM, CA, B2B trust)**
+* **Hardening token-based authentication paths**
+* **Protecting logging infrastructure from tampering**
+* **Monitoring all sensitive identity and authentication changes**

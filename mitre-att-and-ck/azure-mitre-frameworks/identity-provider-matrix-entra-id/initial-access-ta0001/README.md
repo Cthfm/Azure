@@ -1,81 +1,152 @@
 # Initial Access: TA0001
 
-## **Overview**
+## **Initial Access Techniques in Entra ID (Azure Identity Environments)**
 
-The Initial Access phase in the MITRE ATT\&CK framework refers to how attackers gain an initial foothold in a target environment. In Azure, this often involves abusing identity, exploiting public-facing applications, or leveraging compromised credentials to infiltrate the cloud infrastructure. Below are the core concepts of TA0001.
+In Microsoft Entra ID (Azure Active Directory), adversaries use Initial Access techniques to gain a **foothold into the cloud identity plane**.\
+This includes phishing users, abusing trusted federations (B2B collaboration, cross-tenant access), or exploiting weak/default cloud identities.
 
-### **1. Exploiting Public-Facing Applications**
+Identity is the **entry point** for most cloud breaches — protecting Entra ID is your first line of defense.
 
-**Technique: T1190 - Exploit Public-Facing Application**\
-Attackers target vulnerabilities in exposed services to gain unauthorized access.
+***
 
-* &#x20;Exploit a vulnerable web app hosted on Azure App Service to **uplo**ad a malicious web shell and gain control over the backend server.
+#### 🎯 Drive-by Compromise
 
-### **2. Leveraging Stolen Credentials (Valid Accounts)**
+\| MITRE ID | **T1189** |
 
-**Technique: T1078 - Valid Accounts**\
-Attackers use compromised or weak credentials to log into systems without triggering alarms.
+**Description**:\
+An adversary compromises a user’s device by tricking them into visiting a malicious website that silently exploits vulnerabilities or drops malware (e.g., token stealers, session hijackers).
 
-* **T1078.004 - Cloud Accounts:**\
-  Use stolen Entra ID tokens to access resources without MFA, such as Key Vault secrets and Blob storage.
+**Entra ID Example**:
 
-### **3. Phishing for Credentials or Token Hijacking**
+* Victim visits a malicious site that injects a rogue OAuth application consent prompt ("Consent phishing").
+* The user unknowingly grants the malicious app access to their Microsoft 365 or Azure resources.
 
-**Technique: T1566 - Phishing**\
-Attackers use social engineering to trick users into revealing credentials or approving malicious OAuth apps.
+```bash
+bashCopyEdit# Rogue app request
+https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=<malicious-app-id>&response_type=code&scope=openid+profile+user.read+mail.read
+```
 
-* **T1566.001 - Spearphishing Attachment:**\
-  &#x20;Send a **malicious Excel file** with embedded macros to exfiltrate tokens from a victim’s device.
-* **T1566.002 - Spearphishing Link:**\
-  Direct the target to a **malicious OAuth consent page**, granting the attacker access to Microsoft 365 resources.
+✅ **Result**: Adversary gains OAuth token access to Entra ID-protected resources without needing credentials.
 
-### **4. Abusing Remote Services**
+***
 
-**Technique: T1133 - External Remote Services**\
-Adversaries gain access by exploiting exposed remote services like **RDP, SSH, or Azure Bastion**.
+#### 🎣 Phishing
 
-* Use weak or stolen credentials to access a VM to gain a foothold in the environment.
+***
 
-### **5. Supply Chain Compromise**
+**➡️ Spearphishing Link**
 
-**Technique: T1195 - Supply Chain Compromise**\
-Attackers compromise a third-party component to infiltrate the target environment.
+\| MITRE ID | **T1566.002** |
 
-* **T1195.002 - Compromise Software Supply Chain:**\
-  An attacker injects malicious code into a **third-party library** that is integrated into an Azure DevOps CI/CD pipeline.
+**Description**:\
+Send a targeted email containing a malicious link that steals Entra ID credentials, MFA codes, or session cookies when clicked.
 
-### **6. Abusing Trusted Relationships**
+**Entra ID Example**:
 
-**Technique: T1199 - Trusted Relationship**\
-Attackers exploit inter-organizational trust relationships to gain access to resources.
+* Victim receives a phishing email mimicking Microsoft login.
+* Link redirects to an Azure-like phishing page (`login.microsoftonline.com.fake.site`) capturing credentials.
 
-* **Azure Example:** Leverage a **misconfigured tenant-to-tenant trust** to access sensitive data in another Azure subscription.
+✅ **Result**: Adversary harvests credentials and possibly MFA tokens, gaining Entra ID access.
 
-### **7. Exploiting Default or Weak Credentials**
+***
 
-**Technique: T1078.001 - Default Accounts**\
-Attackers target resources configured with default or weak credentials.
+**➡️ Spearphishing Voice (Vishing)**
 
-* **Azure Example:** A newly deployed **Azure VM** is left with default admin credentials, allowing the attacker to gain access.
+\| MITRE ID | **T1566.004** |
 
-### **8. Using Exploited Hardware or IoT Devices**
+**Description**:\
+Call targeted users pretending to be Microsoft support or IT helpdesk and trick them into revealing credentials, MFA codes, or approving MFA push notifications.
 
-**Technique: T1195.003 - Compromise Hardware Supply Chain**\
-Adversaries tamper with hardware to introduce malicious code or backdoors.
+**Entra ID Example**:
 
-* **Azure Example:** Attackers compromise firmware in **IoT devices** connected to **Azure IoT Hub**, gaining access to the cloud environment.
+* Victim receives a call instructing them to "verify" their MFA code or approve an MFA prompt.
+* Attacker simultaneously attempts login and tricks victim into approving.
 
-### **Summary of Key Concepts with Techniques for TA0001**
+✅ **Result**: Adversary bypasses MFA and gains account access.
 
-| **Key Concept**                       | **Technique**                                | **Azure Example**                                                       |
-| ------------------------------------- | -------------------------------------------- | ----------------------------------------------------------------------- |
-| Exploiting Public-Facing Applications | T1190 - Exploit Public-Facing Application    | Exploit an Azure App Service to upload a web shell                      |
-| Stolen Credentials (Valid Accounts)   | T1078 - Valid Accounts                       | Use stolen Azure AD tokens to access resources                          |
-| Phishing and Social Engineering       | T1566 - Phishing                             | Trick user into granting OAuth consent                                  |
-| Abusing Remote Services               | T1133 - External Remote Services             | Use weak credentials via Azure Bastion to access a VM                   |
-| Supply Chain Compromise               | T1195 - Supply Chain Compromise              | Inject malicious code into an Azure DevOps CI/CD pipeline               |
-| Trusted Relationship Exploitation     | T1199 - Trusted Relationship                 | Abuse tenant-to-tenant trust to gain access                             |
-| Exploiting Default Credentials        | T1078.001 - Default Accounts                 | Gain access via default admin credentials on a VM                       |
-| Compromised Hardware or IoT Devices   | T1195.003 - Compromise Hardware Supply Chain | Gain access through compromised IoT firmware connected to Azure IoT Hub |
+***
+
+#### 🔗 Trusted Relationship
+
+\| MITRE ID | **T1199** |
+
+**Description**:\
+Abuse federated identities, cross-tenant B2B access, or delegated admin privileges to gain access to Entra ID resources.
+
+**Entra ID Example**:
+
+* Attacker compromises an account from a trusted external tenant (Azure B2B collaboration).
+* Uses trust relationship to access internal Entra ID groups, apps, or resources.
+
+```bash
+bashCopyEdit# External user login
+az login --username compromised_user@trustedtenant.com
+az ad user list
+```
+
+✅ **Result**: Access internal resources without needing direct exploitation.
+
+***
+
+#### 👤 Valid Accounts
+
+***
+
+**➡️ Default Accounts**
+
+\| MITRE ID | **T1078.004** |
+
+**Description**:\
+Abuse default service principals, automation accounts, managed identities, or misconfigured guest accounts in Entra ID.
+
+**Entra ID Example**:
+
+* An attacker finds a default Entra ID guest account that still has "Contributor" role assigned in Azure subscriptions.
+
+✅ **Result**: Immediate access using poorly configured identities.
+
+***
+
+**➡️ Cloud Accounts**
+
+\| MITRE ID | **T1078.004** |
+
+**Description**:\
+Use stolen or leaked Entra ID cloud user accounts (standard users, admins, service principals) to authenticate directly.
+
+**Entra ID Example**:
+
+* Attacker phishes a standard Entra ID user or recovers leaked Office 365 credentials.
+* Logs into Azure and enumerates environment.
+
+```bash
+bashCopyEditaz login --username phisheduser@victimdomain.com
+```
+
+✅ **Result**: Legitimate-looking session inside Entra ID and Azure.
+
+***
+
+## 📊 **Initial Access Techniques in Entra ID (MITRE Mapped)**
+
+| Technique/Subtechnique        | MITRE ID  | Entra ID Example                                       |
+| ----------------------------- | --------- | ------------------------------------------------------ |
+| Drive-by Compromise           | T1189     | OAuth app consent phishing via rogue site              |
+| Spearphishing Link            | T1566.002 | Email phishing with Azure login clone                  |
+| Spearphishing Voice (Vishing) | T1566.004 | Fake IT support call to capture MFA code               |
+| Trusted Relationship          | T1199     | Abuse external Azure AD B2B tenant trust               |
+| Default Accounts              | T1078.004 | Misconfigured guest/service principal usage            |
+| Cloud Accounts                | T1078.004 | Use stolen cloud user or service principal credentials |
+
+***
+
+## 🎯 Final Summary
+
+Defending against Initial Access in Entra ID focuses on:
+
+* **Hardening user authentication flows (MFA, CA policies, phishing-resistant auth)**
+* **Securing and monitoring trusted relationships**
+* **Reducing the blast radius of default, guest, and service principal accounts**
+* **Detecting credential phishing attempts early**
 
 ###

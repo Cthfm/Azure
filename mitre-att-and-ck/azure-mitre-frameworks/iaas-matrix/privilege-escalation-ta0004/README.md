@@ -1,41 +1,162 @@
 # Privilege Escalation TA0004
 
-## Overview Privilege Escalation TA0004
+## 🛡️ **Privilege Escalation Techniques in Azure Environments**
 
-Privilege Escalation (TA0004) involves adversaries seeking to gain higher-level permissions on a system or network to execute unauthorized actions. In Azure, this tactic often exploits misconfigurations in Role-Based Access Control (RBAC), Azure Entra, or mismanaged secrets like keys and tokens. Attackers might abuse excessive privileges, escalate roles through service principals, or compromise automation tools and managed identities to gain unauthorized access or perform privileged actions across Azure subscriptions and services. These vectors highlight the critical need for stringent access controls, continuous monitoring, and secure configuration practices within Azure environments. Let's look at the specific techniques and sub techniques provided in the IAAS Matrix.&#x20;
+In Microsoft Azure, adversaries use Privilege Escalation techniques to move from low-privileged users or workloads to highly privileged control over subscriptions, resource groups, or management planes. This can involve abusing Azure identity features, role manipulation, event-driven escalations, or default cloud accounts.
 
-### **T1548 - Abuse Elevation Control Mechanism**
+Escalation often blends Azure-native behavior with stealthy, automated privilege growth if defenders aren't watching.
 
-This technique involves exploiting legitimate mechanisms to gain elevated privileges within a system or environment. Attackers use misconfigurations, insecure practices, or poorly implemented security controls to escalate their access.
+***
 
-**Temporary Elevated Cloud Access (T1548.005)**
+#### ⬆️ Abuse Elevation Control Mechanism → **T1548**
 
-* **Example**: An attacker compromises a Managed Identity token on an Azure Virtual Machine (VM). They use the token to temporarily elevate privileges, allowing them to interact with Azure Resource Manager (ARM) APIs to modify resource configurations.
+***
 
-### **T1098 - Account Manipulation**
+**➡️ Temporary Elevated Cloud Access**
 
-This technique involves modifying user accounts or access credentials to gain or maintain unauthorized access. Attackers manipulate accounts to escalate privileges, establish persistence, or evade detection.
+**Description**:\
+Adversaries abuse Azure features like Privileged Identity Management (PIM) to request or activate Just-in-Time (JIT) privileged roles, sometimes automatically or stealthily, to escalate privileges when needed.
 
-#### **Additional Cloud Credentials T1098.001**
+**Azure Example**:\
+Use Azure PIM to elevate privileges for a limited time without standing permissions:
 
-* **Example**: An attacker gains access to a service principal and uses the Azure CLI to generate new application secrets, effectively creating additional credentials for persistent access to the tenant.
+```bash
+bashCopyEditaz role assignment create --assignee compromised-user --role Owner --scope /subscriptions/<sub-id>
+```
 
-#### **Additional Cloud Roles T1098.003**
+_(after activating JIT assignment via PIM)_
 
-* **Example**: By exploiting an existing compromised Azure Active Directory (AAD) user account, the attacker assigns themselves the **Owner** role on a subscription or resource group, escalating their privileges over critical resources.
+✅ **Mapping**:\
+**MITRE ID**: T1548 – _Abuse Elevation Control Mechanism_\
+(Subtechnique customized for Azure JIT access, not yet separately listed in MITRE, so we map at T1548)
 
-#### **SSH Authorized Keys**
+***
 
-* **Example**: After compromising an Azure VM, the attacker modifies the \~/.ssh/authorized\_keys file of the VM’s admin account via an extension deployment script, enabling persistent SSH access without requiring credentials.
+#### 👤 Account Manipulation → **T1098**
 
-### **T1546 - Event Triggered Execution**
+***
 
-This technique involves configuring events or conditions that automatically execute malicious code when triggered. Attackers leverage misconfigured or maliciously modified event-driven processes to escalate privileges or maintain persistence.
+**➡️ T1098.001 – Additional Cloud Credentials**
 
-#### **Event-Triggered Execution (T1546.001)**
+**Description**:\
+Adversaries add new client secrets or certificates to Azure Service Principals or Managed Identities to silently escalate access without alerting credential rotation.
 
-* **Example**: An attacker modifies an Azure Function App to execute malicious payloads whenever a queue message is processed. For instance, they set up triggers to activate their code when blob storage changes occur in the subscription.
+**Azure Example**:
 
-#### **Account Manipulation (T1546.004)**
+```bash
+bashCopyEditaz ad sp credential reset --name <service-principal-id> --append --password <new-password>
+```
 
-* **Example**: The attacker exploits a compromised user or service principal to modify an **Azure Automation Runbook**, allowing their custom scripts to execute automatically on defined triggers like VM creation events.
+✅ **Mapping**:\
+**MITRE ID**: T1098.001 – _Account Manipulation: Additional Cloud Credentials_
+
+***
+
+**➡️ T1098.003 – Additional Cloud Roles**
+
+**Description**:\
+Assign higher Azure RBAC roles (e.g., Contributor, Owner) to compromised identities to gain elevated privileges.
+
+**Azure Example**:
+
+```bash
+bashCopyEditaz role assignment create --assignee compromised-spn --role Owner --scope /subscriptions/<sub-id>
+```
+
+✅ **Mapping**:\
+**MITRE ID**: T1098.003 – _Account Manipulation: Additional Cloud Roles_
+
+***
+
+**➡️ T1098.004 – SSH Authorized Keys**
+
+**Description**:\
+Modify SSH authorized keys on Azure VMs to establish privileged shell access, bypassing standard authentication.
+
+**Azure Example**:
+
+```bash
+bashCopyEditaz vm extension set --publisher Microsoft.OSTCExtensions --name VMAccessForLinux --resource-group victim-rg --vm-name target-vm --protected-settings '{"username":"root","ssh_key":"ssh-rsa AAAAB3..."}'
+```
+
+✅ **Mapping**:\
+**MITRE ID**: T1098.004 – _Account Manipulation: SSH Authorized Keys_
+
+***
+
+#### 📅 Event Triggered Execution → **T1546**
+
+**Description**:\
+Use Azure Event Grid, Logic Apps, or Functions to escalate privileges automatically when specific cloud events happen (e.g., when a privileged resource is created).
+
+**Azure Example**:\
+Auto-trigger a function that escalates privileges when a new VM is deployed:
+
+```bash
+bashCopyEditaz logic workflow create --resource-group victim-rg --name privilege-esc-logicapp --definition @privilegeworkflow.json
+```
+
+✅ **Mapping**:\
+**MITRE ID**: T1546 – _Event Triggered Execution_
+
+***
+
+#### 👥 Valid Accounts → **T1078**
+
+***
+
+**➡️ T1078.004 – Default Accounts**
+
+**Description**:\
+Use default Azure service principals, managed identities, or platform accounts that are over-permissioned to escalate privileges silently.
+
+**Azure Example**:\
+Abuse leftover "Monitoring Agent" service principal with high privileges.
+
+✅ **Mapping**:\
+**MITRE ID**: T1078.004 – _Valid Accounts: Default Accounts_
+
+***
+
+**➡️ T1078.004 – Cloud Accounts**
+
+**Description**:\
+Use compromised Azure AD user or service principal accounts that have standing privileged roles (e.g., Contributor, Owner).
+
+**Azure Example**:
+
+```bash
+bashCopyEditaz login --username privilegeduser@victimdomain.com
+az role assignment list --all
+```
+
+✅ **Mapping**:\
+**MITRE ID**: T1078.004 – _Valid Accounts: Cloud Accounts_
+
+***
+
+## 📊 **Privilege Escalation Techniques in Azure (MITRE Mapped)**
+
+| Technique/Subtechnique            | MITRE ID      | Azure Example                                               |
+| --------------------------------- | ------------- | ----------------------------------------------------------- |
+| Temporary Elevated Cloud Access   | **T1548**     | Abuse Azure PIM JIT elevation                               |
+| Additional Cloud Credentials      | **T1098.001** | Add client secrets to Service Principals                    |
+| Additional Cloud Roles            | **T1098.003** | Assign Contributor/Owner roles                              |
+| SSH Authorized Keys               | **T1098.004** | Insert privileged SSH keys into Azure VMs                   |
+| Event Triggered Execution         | **T1546**     | Deploy Logic Apps or Functions triggered by events          |
+| Valid Accounts → Default Accounts | **T1078.004** | Abuse leftover Azure service principals                     |
+| Valid Accounts → Cloud Accounts   | **T1078.004** | Use compromised Azure AD user/service principal credentials |
+
+***
+
+## 🎯 Final Summary
+
+Defending against Privilege Escalation in Azure focuses on:
+
+* **Hardening and monitoring role assignments** (PIM, RBAC lockdown)
+* **Controlling service principal and managed identity permissions**
+* **Securing VMs against unauthorized SSH key insertion**
+* **Restricting and auditing serverless automation (Logic Apps, Event Grid)**
+* **Monitoring account behavior, login anomalies, and sudden privilege changes**
+
+> **Privilege escalation is the pivot point. Block it = stop the blast radius.** 🛡️✅

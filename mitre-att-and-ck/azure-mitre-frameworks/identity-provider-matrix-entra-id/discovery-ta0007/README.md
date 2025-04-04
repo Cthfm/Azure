@@ -1,61 +1,122 @@
 # Discovery: TA0007
 
-## Overview
+## **Discovery Techniques in Entra ID (Azure Identity Environments)**
 
-The Discovery tactic focuses on how attackers gather information about the target environment after gaining access. In Azure environments, discovery enables attackers to understand network topologies, permissions, services, and accounts, helping them plan lateral movement, privilege escalation, or exfiltration. Below is a breakdown of key concepts, techniques, and Azure-specific procedures for TA0007.
+In Microsoft Entra ID (Azure Active Directory), adversaries use Discovery techniques to **enumerate identities, permissions, policies, and services** to plan lateral movement, privilege escalation, or targeting.
 
-### 1. **Account Discovery (T1087)**
+Discovery is the **reconnaissance phase** in cloud attacks — understanding the environment is key before action.
 
-* **Cloud Account Discovery (T1087.004):** Attackers enumerate Entra ID accounts to identify potential targets.
-  *   **Example:** Using Entra PowerShell to list all users in the directory:
+***
 
-      ```powershell
-      Get-AzADUser
-      ```
+#### 🔍 Account Discovery → Cloud Account
 
-      Can be utilized to get specific user accounts within Azure
+\| MITRE ID | **T1087.004** |
 
-### **2. Cloud Service Dashboard (**&#x54;153&#x38;**)**
+**Description**:\
+Enumerate Entra ID users, service principals, or managed identities to identify potential targets for phishing, credential theft, or escalation.
 
-* Attackers compromise credentials to access the Azure Portal and explore services.
-  * **Example:** Logging into the Azure Portal using stolen credentials to navigate through subscriptions and resources, such as Virtual Machines or App Services.
+**Entra ID Example**:
 
-### **3. Cloud Service Discovery:** **(T**152&#x36;**)**
+```bash
+bashCopyEditaz ad user list
+az ad sp list
+az ad signed-in-user show
+```
 
-* Attackers use CLI commands or APIs to discover active Azure services.
-  *   **Example:** Using Azure CLI:
+✅ **Result**: Full directory listing of users, apps, service principals.
 
-      ```bash
-      az resource list --query "[].{name:name, type:type}" --output table
-      ```
+***
 
-      This lists all resources and their types within a subscription​​.
+#### 🖥️ Cloud Service Dashboard
 
-### 4. **Password Policy Discovery**
+\| MITRE ID | **T1087.004 (extension)** |
 
-* Attackers discover password policies in Entra ID to refine brute-force or credential attacks.
-  *   **Example:** Using Entra PowerShell to retrieve the directory's password policy:
+**Description**:\
+Access Azure Portal or use APIs to discover what services are deployed across subscriptions (e.g., VMs, Storage, App Services, Key Vaults).
 
-      ```powershell
-      Get-MsolPasswordPolicy
-      ```
+**Entra ID Example**:
 
-      This reveals information about password complexity and expiration settings​​.
+```bash
+bashCopyEditaz account list
+az resource list
+az vm list
+```
 
-### 5. **Permission Groups Discovery (T1069)**
+✅ **Result**: Broad visibility into active cloud services.
 
-* **Cloud Groups:** Attackers enumerate Entra ID groups and their members to locate privileged roles.
-  *   **Example:** Using Azure CLI to list groups:
+***
 
-      ```bash
-      az ad group list --query "[].{Name:displayName, ID:id}" --output table
-      ```
+#### ☁️ Cloud Service Discovery
 
-      This lists all groups within Entra ID.
-  *   To enumerate group members:
+\| MITRE ID | **T1087.004 (extension)** |
 
-      ```bash
-      az ad group member list --group "GroupName" --query "[].{Name:displayName, UserPrincipalName:userPrincipalName}" --output table
-      ```
+**Description**:\
+Query cloud APIs or dashboards to discover deployed services, configurations, and environments (e.g., Azure Resource Manager enumeration).
 
-      This retrieves the members of a specific Entra ID group​​.
+**Entra ID Example**:
+
+```bash
+bashCopyEditaz resource list --resource-type Microsoft.Compute/virtualMachines
+az aks list
+az keyvault list
+```
+
+✅ **Result**: Full service inventory for planning further attacks.
+
+***
+
+#### 🔑 Password Policy Discovery
+
+\| MITRE ID | **T1201** |
+
+**Description**:\
+Query password policy settings to assess password complexity requirements, lockout thresholds, and MFA enforcement.
+
+**Entra ID Example**:
+
+* Review **Azure AD Password Protection** policies.
+* Query Azure Active Directory password policies via Microsoft Graph (requires privilege).
+
+✅ **Result**: Understand how easy password attacks might be.
+
+***
+
+#### 👥 Permission Groups Discovery → Cloud Groups
+
+\| MITRE ID | **T1069.003** |
+
+**Description**:\
+Enumerate Entra ID groups to identify high-privilege groups like Global Admins, Application Admins, or owners of critical resources.
+
+**Entra ID Example**:
+
+```bash
+bashCopyEditaz ad group list
+az ad group member list --group <Group-Name>
+```
+
+✅ **Result**: Map out administrative control structures.
+
+***
+
+## 📊 **Discovery Techniques in Entra ID (MITRE Mapped)**
+
+| Technique/Subtechnique    | MITRE ID              | Entra ID Example                           |
+| ------------------------- | --------------------- | ------------------------------------------ |
+| Cloud Account Discovery   | T1087.004             | Enumerate users, service principals        |
+| Cloud Service Dashboard   | T1087.004 (extension) | Azure Portal or CLI resource discovery     |
+| Cloud Service Discovery   | T1087.004 (extension) | List deployed services (VMs, storage, AKS) |
+| Password Policy Discovery | T1201                 | Assess password and lockout settings       |
+| Cloud Groups Discovery    | T1069.003             | Enumerate Entra ID groups and memberships  |
+
+***
+
+## 🎯 Final Summary
+
+Defending against Discovery in Entra ID focuses on:
+
+* **Restricting who can enumerate users, groups, and services**
+* **Limiting exposure of sensitive service metadata**
+* **Monitoring unusual enumeration patterns (e.g., mass user listing, group membership pulls)**
+
+> **Discovery is the enemy’s map. Deny mapping = deny maneuvering.** 🛡️✅

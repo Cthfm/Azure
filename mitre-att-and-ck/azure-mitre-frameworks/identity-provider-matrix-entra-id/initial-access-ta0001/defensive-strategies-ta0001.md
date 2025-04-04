@@ -1,132 +1,117 @@
 # Defensive Strategies: TA0001
 
-## **Defensive Strategies for TA0001 - Initial Access**
+## **Defensive Strategies Against Initial Access in Entra ID (Azure Identity Environments)**
 
-The Initial Access (TA0001) phase involves attackers gaining entry into a target environment, often through phishing, exploiting vulnerabilities, abusing remote services, or using stolen credentials. In Azure environments, it’s critical to block unauthorized access early through secure configurations, identity protection, and attack detection. Below are defensive strategies mapped to the techniques and sub-techniques of TA0001.
+Defending against Initial Access in Entra ID means **blocking credential theft**, **securing authentication processes**, **harden trust relationships**, and **detecting abuse early**.
 
-### **1. Secure Public-Facing Applications and Services**
+Identity is the first battlefield — **no foothold, no breach**.
 
-**Mitigates:** T1190 - Exploit Public-Facing Application
+***
 
-* **Action:** Identify and patch vulnerabilities in public-facing Azure services and web apps.
-* **Azure Solution:**
-  * Use **Azure Web Application Firewall (WAF)** to block attacks targeting Azure-hosted applications.
-  * Enable **Azure Defender for App Service** to detect vulnerabilities and monitor for suspicious activity.
-  * Implement **Azure Security Center** recommendations to harden configurations.
+### 🎯 Drive-by Compromise (T1189)
 
-### **2. Enforce Multi-Factor Authentication (MFA)**
+| Defensive Action                                                                | Why It Matters                                                  |
+| ------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| 🔒 Enable OAuth Consent Governance in Entra ID                                  | Require admin approval for app consent to sensitive permissions |
+| 🚫 Restrict user consent to verified publishers only (Consent Settings)         | Block rogue app consent phishing                                |
+| 📜 Monitor risky OAuth applications in Microsoft Defender for Cloud Apps (MCAS) | Detect and investigate unauthorized app grants                  |
+| 🛡️ Apply Conditional Access policies requiring MFA before app consent          | Add friction to consent phishing attacks                        |
 
-**Mitigates:** T1078 - Valid Accounts (Cloud Accounts)
+✅ **Effect**: Stops drive-by OAuth attacks before they can steal tokens.
 
-* **Action:** Ensure **MFA is enforced** for all accounts, especially privileged ones.
-* **Azure Solution:**
-  * Use **Conditional Access Policies** to require MFA for user logins.
-  * Apply **Azure AD Identity Protection** to detect and block risky sign-ins.
-  * Monitor token re-use to prevent attackers from abusing compromised tokens for initial access.
+***
 
-### **3. Harden Remote Services**
+### 🎣 Phishing (Spearphishing Link, Spearphishing Voice)
 
-**Mitigates:** T1133 - External Remote Services
+***
 
-* **Action:** Restrict access to **RDP, SSH, and Azure Bastion** services.
-* **Azure Solution:**
-  * Use **Just-in-Time (JIT) VM access** to limit remote access windows.
-  * Monitor **Azure Bastion logs** to detect suspicious activity.
-  * Apply **NSG (Network Security Group) rules** to restrict access from unauthorized IPs.
+#### ➡️ **Spearphishing Link (T1566.002)**
 
-### **4. Detect and Mitigate Phishing Attempts**
+| Defensive Action                                                                     | Why It Matters                                             |
+| ------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| 🔒 Enforce phishing-resistant MFA (FIDO2, Certificate-based Authentication)          | Credentials alone are not enough                           |
+| 🚫 Enable Azure AD Identity Protection risky sign-in policies                        | Auto-block logins from unfamiliar IPs or sign-in anomalies |
+| 📜 Deploy Defender for Office 365 anti-phishing and Safe Links protection            | Detect and rewrite malicious links in emails               |
+| 🛡️ Enable Conditional Access policies to block sign-ins from risky or anonymous IPs | Cut off sessions coming from suspicious sources            |
 
-**Mitigates:** T1566 - Phishing (Spearphishing Link, Spearphishing Attachment)
+✅ **Effect**: Email and credential phishing becomes far less effective.
 
-* **Action:** Block phishing emails and prevent OAuth consent phishing.
-* **Azure Solution:**
-  * Use **Microsoft Defender for Office 365** to block malicious emails and attachments.
-  * Monitor for **unusual OAuth consent requests** with **Azure AD Identity Protection**.
-  * Train users to recognize phishing attempts and report suspicious emails.
+***
 
-### **5. Monitor OAuth and Consent Grants to Applications**
+#### ➡️ **Spearphishing Voice (Vishing) (T1566.004)**
 
-**Mitigates:** T1199 - Trusted Relationship
+| Defensive Action                                                                                 | Why It Matters                                  |
+| ------------------------------------------------------------------------------------------------ | ----------------------------------------------- |
+| 🔒 Implement Number Matching for Microsoft Authenticator MFA requests                            | Prevent users from approving random MFA prompts |
+| 🚫 Train users on MFA fatigue/vishing attacks regularly (user awareness)                         | Lower success rate of social engineering        |
+| 📜 Monitor multiple MFA prompt failures via Azure AD Sign-In Logs                                | Detect MFA fatigue attacks in real-time         |
+| 🛡️ Apply high-risk sign-in Conditional Access policies (challenge or block risky MFA approvals) | Auto-block suspicious authentication attempts   |
 
-* **Action:** Prevent attackers from abusing **application consents** to gain access.
-* **Azure Solution:**
-  * Use **Azure AD Conditional Access Policies** to limit which apps can access sensitive resources.
-  * Enable alerts in **Azure Sentinel** for new OAuth permissions being granted.
-  * Regularly review **third-party app permissions** to detect unauthorized grants.
+✅ **Effect**: Vishing attacks fail because MFA approvals are user-verified.
 
-### **6. Regularly Rotate and Monitor Credentials**
+***
 
-**Mitigates:** T1078 - Valid Accounts (Default Accounts)
+### 🔗 Trusted Relationship (T1199)
 
-* **Action:** Rotate **service principal keys** and **API tokens** regularly to limit abuse.
-* **Azure Solution:**
-  * Use **Azure Key Vault** to store and rotate secrets.
-  * Monitor for new keys being added to service principals with **Azure Security Center**.
-  * Disable **default or unused accounts** in VMs and services to reduce attack surface.
+| Defensive Action                                                                                     | Why It Matters                        |
+| ---------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| 🔒 Limit external collaboration settings (only invited, verified domains)                            | Restrict who can join your tenant     |
+| 🚫 Enforce guest user access reviews and time-bound access                                           | Remove stale external accounts        |
+| 📜 Monitor B2B user activities and risky sign-ins via Entra ID logs and Identity Protection          | Detect external account abuse         |
+| 🛡️ Apply Conditional Access policies enforcing stricter rules on external users (e.g., require MFA) | Secure external identities separately |
 
-### **7. Apply Conditional Access Policies for Trusted Devices and Networks**
+✅ **Effect**: Cross-tenant abuse becomes difficult without detection.
 
-**Mitigates:** T1199 - Trusted Relationship
+***
 
-* **Action:** Limit access to Azure resources from only **trusted devices and IP addresses**.
-* **Azure Solution:**
-  * Configure **Conditional Access Policies** to restrict access based on device compliance.
-  * Use **Azure Identity Protection** to detect and block suspicious sign-ins from unknown devices.
-  * Monitor for tenant-to-tenant attacks, especially in multi-tenant environments.
+### 👤 Valid Accounts (Default Accounts, Cloud Accounts)
 
-### **8. Secure DevOps Pipelines from Supply Chain Attacks**
+***
 
-**Mitigates:** T1195 - Supply Chain Compromise (Software Dependencies and Tools)
+#### ➡️ **Default Accounts (T1078.004)**
 
-* **Action:** Harden DevOps tools and scan for vulnerabilities in pipelines.
-* **Azure Solution:**
-  * Use **Azure DevOps Security Scanning** to detect vulnerable libraries in CI/CD pipelines.
-  * Monitor Azure pipelines for unauthorized changes to configurations and jobs.
-  * Store build secrets securely in **Azure Key Vault**.
+| Defensive Action                                                                                 | Why It Matters             |
+| ------------------------------------------------------------------------------------------------ | -------------------------- |
+| 🔒 Regularly audit and disable unused guest, service principal, and managed identity accounts    | Shrink attack surface      |
+| 🚫 Apply least privilege to service principals and automation accounts                           | Minimize blast radius      |
+| 📜 Enable Identity Protection policies to auto-disable risky accounts (e.g., leaked credentials) | Stop compromised defaults  |
+| 🛡️ Rotate credentials for service principals regularly, use Managed Identity whenever possible  | Eliminate credential leaks |
 
-### **9. Block Legacy Authentication Protocols**
+✅ **Effect**: Default identities aren't low-hanging fruit anymore.
 
-**Mitigates:** T1078.002 - Domain Accounts
+***
 
-* **Action:** Disable **legacy authentication protocols** that don’t support MFA (e.g., POP, IMAP).
-* **Azure Solution:**
-  * Use **Azure Security Center** to detect and disable legacy protocols.
-  * Enforce **modern authentication** via **Conditional Access Policies**.
-  * Monitor for logins using **basic authentication protocols** and block them.
+#### ➡️ **Cloud Accounts (T1078.004)**
 
-### **10. Automate Detection and Response with Azure Sentinel**
+| Defensive Action                                                                                    | Why It Matters                 |
+| --------------------------------------------------------------------------------------------------- | ------------------------------ |
+| 🔒 Apply Conditional Access policies enforcing MFA and compliant devices for all users              | Block unauthorized logins      |
+| 🚫 Use risk-based Conditional Access to block high-risk users automatically                         | Stop compromised accounts      |
+| 📜 Monitor sign-ins by geolocation, impossible travel, and risky IP detection (Identity Protection) | Catch credential theft fast    |
+| 🛡️ Enable continuous access evaluation (CAE) to kill stolen sessions immediately                   | Real-time session invalidation |
 
-**Mitigates:** T1133 - External Remote Services, T1078 - Valid Accounts
+✅ **Effect**: Stolen cloud credentials are useless without a trusted device or secondary authentication.
 
-* **Action:** Use **Azure Sentinel** to detect and respond to initial access attempts.
-* **Azure Solution:**
-  * Configure **Azure Sentinel playbooks** to disable accounts or revoke access tokens upon suspicious logins.
-  * Monitor **activity logs** for signs of brute force or unauthorized access attempts.
-  * Integrate **Defender for Cloud** with Sentinel to enhance visibility and response capabilities.
+***
 
-### **11. Ensure Tenant Access Has Least Privilege Access**
+## 📊 **Defensive Coverage Table (Initial Access in Entra ID)**
 
-**Mitigates:** Technique: T1199 - Trusted Relationship
+| Attack Vector                 | Defensive Strategy                                                                  |
+| ----------------------------- | ----------------------------------------------------------------------------------- |
+| Drive-by Compromise           | Consent Governance, Safe App Consent, risky OAuth app monitoring                    |
+| Spearphishing Link            | Phishing-resistant MFA, Defender for Office 365 Safe Links, risky sign-in detection |
+| Spearphishing Voice (Vishing) | Number Matching MFA, user training, risky MFA prompt detection                      |
+| Trusted Relationship          | Limit external collaboration, enforce guest reviews, CA policies on guests          |
+| Default Accounts              | Audit and clean up defaults, least privilege for SPNs, risky account protection     |
+| Cloud Accounts                | MFA, device compliance, Identity Protection, CAE enforcement                        |
 
-* **Action:** Review Tenant Access Policies
-* **Azure Solution:**
-  * Configure access policies with least privilege.
-  * Monitor Sign-In logs for signs of brute force or unauthorized access attempts
-  * Integrate Defender for Identity to detect suspicious behavior.&#x20;
-  * Review Activity logs for any suspicious behavior by '#EXT' users
+***
 
-### **Summary of Defensive Measures for TA0001**
+## 🎯 Final Summary
 
-| **Defensive Strategy**                | **Mitigates**                             | **Azure Solution**                                                    |
-| ------------------------------------- | ----------------------------------------- | --------------------------------------------------------------------- |
-| Secure Public-Facing Applications     | T1190 - Exploit Public-Facing Application | Use WAF and Defender for App Services                                 |
-| Enforce Multi-Factor Authentication   | T1078 - Valid Accounts                    | Use Conditional Access and Identity Protection                        |
-| Harden Remote Services                | T1133 - External Remote Services          | Apply JIT access and restrict Bastion access                          |
-| Detect and Block Phishing             | T1566 - Phishing                          | Use Defender for O365 to block phishing emails                        |
-| Monitor OAuth Grants and Permissions  | T1199 - Trusted Relationship              | Use Azure Activity logs to detect OAuth consent phishing              |
-| Rotate and Monitor Credentials        | T1078 - Valid Accounts                    | Use Key Vault for secret management and rotation                      |
-| Apply Conditional Access Policies     | T1199 - Trusted Relationship              | Block access from untrusted devices and networks                      |
-| Secure DevOps Pipelines               | T1195 - Supply Chain Compromise           | Use Azure DevOps to scan images and Key Vault for secrets management. |
-| Block Legacy Authentication Protocols | T1078.002 - Domain Accounts               | Disable basic authentication protocols                                |
-| Automate Detection and Response       | T1133 - External Remote Services          | Use Sentinel playbooks for automated incident response                |
-| Tenant Access Policies                | T1199 - Trusted Relationship              | Use Least Privilege and MFA                                           |
+Defending against Initial Access in Entra ID focuses on:
+
+* **Hardening user authentication paths (MFA, phishing-resistant auth)**
+* **Monitoring consent and OAuth app behaviors**
+* **Securing external identities and collaboration points**
+* **Detecting and responding to risky sign-ins and credential misuse early**

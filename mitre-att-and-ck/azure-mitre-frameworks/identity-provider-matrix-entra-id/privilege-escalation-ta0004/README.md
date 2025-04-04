@@ -1,71 +1,159 @@
 # Privilege Escalation: TA0004
 
-### **Overview**
+## **Privilege Escalation Techniques in Entra ID (Azure Identity Environments)**
 
-Privilege Escalation refers to how attackers gain higher-level permissions within a compromised system to execute critical tasks, access sensitive data, or disable security controls. In **Azure environments**, privilege escalation often involves abusing misconfigurations, identities, and role assignments.
+In Microsoft Entra ID (Azure Active Directory), adversaries escalate privileges by **abusing role assignments, modifying trust configurations, registering devices**, or **reusing valid but overprivileged accounts**.\
+Privilege escalation often moves an attacker from **standard user** to **Global Admin** or other high-value roles — a **critical turning point** in cloud attacks.
 
-### **1.** Abuse Elevation Control Mechanism
+***
 
-**Technique: T1548 - Abuse Elevation Control Mechanism**\
-Attackers circumvent systems that are designed to elevate a principal's access and gain higher privileges.
+#### 🚀 Abuse Elevation Control Mechanism → Temporary Elevated Cloud Access
 
-* **T1548.005 - Temporary Elevated Cloud Access**\
-  Attackers utilize the 'Automatic' Approval Mode within the JIT Configuration in order to obtain elevated privilege.&#x20;
+\| MITRE ID | **T1548.001** |
 
-### **2.** Account Manipulation
+**Description**:\
+Misuse Azure Privileged Identity Management (PIM) or Conditional Access exceptions to temporarily elevate privileges, gain Global Admin, or escalate rights.
 
-**Technique: T1098 - Account Manipulation**\
-Attackers may manipulate accounts to maintain or elevate access to victim systems. This may involve actions like modifying credentials or permission groups to retain control. Attackers might also subvert security policies, such as repeatedly updating passwords to bypass duration policies and extend compromised access.
+**Entra ID Example**:
 
-* **T1098.001 - Additional Cloud Credentials**\
-  Generating SAS tokens in order to maintain access to an organization's storage account data. Attackers can also add credentials to OAuth Application "App Registrations" in order to elevate privileges.
+* Attacker uses compromised credentials to activate eligible Global Admin roles through PIM without triggering alarms.
 
-{% code overflow="wrap" fullWidth="false" %}
 ```bash
-$sasToken = New-AzStorageContainerSASToken -Name $containerName -Context $context         -Permission rwdl -ExpiryTime (Get-Date).AddDays(900)
-```
-{% endcode %}
-
-* **T1098.003 - Additional Cloud Roles**\
-  Attacker creates additional roles with a compromised user
-
-```powershell
-$userId = (Get-AzADUser -UserPrincipalName "compromised_user@example.com").Id $roleDefinition = Get-AzRoleDefinition -Name "Contributor"
-$roleDefinition = Get-AzRoleDefinition -Name "Contributor"
-
-New-AzRoleAssignment -ObjectId $userId -RoleDefinitionName $roleDefinition.Name -Scope "/subscriptions/<SubscriptionID>/ResourceGroups/CompanySecrets"
+bashCopyEditaz role assignment create --assignee compromised_user --role "Global Administrator"
 ```
 
-* **T1098.005 - Registered Device**\
-  Attackers that already have initial access will modify existing Intune policies to register a rouge device.
+✅ **Result**: Temporary escalation to powerful roles without needing direct permanent assignment.
 
-### **3.** Domain or Tenant Policy Modification
+***
 
-**Technique: T1484 - Abuse Elevation Control Mechanism**\
-Attackers exploit privileged automation tools to run high-level tasks.
+#### 👥 Account Manipulation
 
-* **T1484.002- Trust Modification**\
-  Attackers can manipulate domain trust configurations to evade defenses or escalate privileges. By adding new domain trusts, modifying existing ones, or adjusting trust properties, they can redefine authentication and authorization flows between domains or tenants. These trust relationships, particularly for federated identities, govern access to shared resources and can include sensitive elements like accounts, credentials, and tokens applied across servers and domains.
+***
 
-### **4. Valid Accounts**
+**➡️ Additional Cloud Credentials**
 
-**Technique:** T1078 **- Valid Accounts**\
-Attackers may obtain and abuse credentials of existing accounts as a means of gaining
+\| MITRE ID | **T1098.001** |
 
-* **T1078.001 - Default Accounts**\
-  Attacker utilized default usernames and passwords in order to gain access to establish persistence.
-* **T1556.003 - Cloud Accounts**\
-  Attacker is able to compromise an account in order to get access. This can be done a myriad of ways that include phishing, brute forcing, and other mechanisms.&#x20;
+**Description**:\
+Add new client secrets, certificates, or credentials to privileged service principals or apps to silently elevate access.
 
-### **Summary of Key Concepts with Techniques for TA0004**
+**Entra ID Example**:
 
-| Key Concept                              | Technique                                     | Azure Example                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| ---------------------------------------- | --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Ab**use Elevation Control Mechanism**    | **T1548 - Abuse Elevation Control Mechanism** | <p><strong>T1548.005 - Temporary Elevated Cloud Access</strong><br>Attackers use 'Automatic' Approval Mode in JIT to obtain elevated privilege.</p>                                                                                                                                                                                                                                                                                                                   |
-| **Account Manipulation**                 | **T1098 - Account Manipulation**              | <p><strong>T1098.001 - Additional Cloud Credentials</strong><br>Generate SAS tokens to maintain storage account access.<br><code>$sasToken = New-AzStorageContainerSASToken -Name $containerName -Context $context -Permission rwdl -ExpiryTime (Get-Date).AddDays(900)</code></p>                                                                                                                                                                                    |
-| A**ccount Manipulation**                 | **T1098 - Account Manipulation**              | <p><strong>T1098.003 - Additional Cloud Roles</strong><br>Add roles to compromised user for elevated access:<br><code>$userId = (Get-AzADUser -UserPrincipalName "compromised_user@example.com").Id</code><br><code>$roleDefinition = Get-AzRoleDefinition -Name "Contributor"</code><br><code>New-AzRoleAssignment -ObjectId $userId -RoleDefinitionName $roleDefinition.Name -Scope "/subscriptions/&#x3C;SubscriptionID>/ResourceGroups/CompanySecrets"</code></p> |
-| A**ccount Manipulation**                 | **T1098 - Account Manipulation**              | <p><strong>T1098.005 - Registered Device</strong><br>Modify Intune policies to register rogue devices.</p>                                                                                                                                                                                                                                                                                                                                                            |
-| **Domain or Tenant Policy Modification** | **Domain or Tenant Policy Modification**      | <p><strong>T1484.002 - Trust Modification</strong><br>Manipulate domain trust configurations to evade defenses or escalate privileges by adding or modifying trusts. Trusted relationships for federated identities control access to shared resources, including accounts and tokens.</p>                                                                                                                                                                            |
-| **Valid Accounts**                       | **T1078 - Valid Accounts**                    | <p><strong>T1078.001 - Default Accounts</strong><br>Exploit default credentials for access and persistence.</p>                                                                                                                                                                                                                                                                                                                                                       |
-| **Valid Accounts**                       | **T1078 - Valid Accounts**                    | <p><strong>T1556.003 - Cloud Accounts</strong><br>Attacker is able to compromise an account in order to get access. This can be done a myriad of ways that include phishing, brute forcing, and other mechanisms. </p>                                                                                                                                                                                                                                                |
+```bash
+bashCopyEditaz ad sp credential reset --id <privileged-SPN-id> --password 'P@ssw0rd!'
+```
+
+✅ **Result**: Hidden credential-based escalation paths.
+
+***
+
+**➡️ Additional Cloud Roles**
+
+\| MITRE ID | **T1098.003** |
+
+**Description**:\
+Assign privileged Azure RBAC roles (e.g., Owner, Contributor) or Entra ID directory roles (e.g., Global Admin, Application Admin) to compromised or attacker-created accounts.
+
+**Entra ID Example**:
+
+```bash
+bashCopyEditaz role assignment create --assignee attacker@domain.com --role "Owner"
+```
+
+✅ **Result**: Elevates attacker-controlled identities to high privilege.
+
+***
+
+**➡️ Device Registration**
+
+\| MITRE ID | **T1098.004** |
+
+**Description**:\
+Register rogue devices to satisfy Conditional Access policies (e.g., compliant device requirements), indirectly escalating privilege by meeting CA criteria.
+
+**Entra ID Example**:
+
+* Register a device and use it to bypass high-privilege Conditional Access policies (e.g., login with trusted device condition).
+
+✅ **Result**: Escalate access through compliant device status.
+
+***
+
+#### 🏢 Domain or Tenant Policy Modification → Trust Modification
+
+\| MITRE ID | **T1484.002** |
+
+**Description**:\
+Modify domain federation settings (e.g., Azure B2B trust configurations, identity provider settings) to enable external accounts to gain privileged access.
+
+**Entra ID Example**:
+
+```bash
+bashCopyEditaz ad external-identity delete --id compromised-external-idp
+az ad external-identity create --display-name "AttackerIdP" --federation-settings @settings.json
+```
+
+✅ **Result**: Escalate privilege via rogue trusted external users or identity providers.
+
+***
+
+#### 👤 Valid Accounts
+
+***
+
+**➡️ Default Accounts**
+
+\| MITRE ID | **T1078.004** |
+
+**Description**:\
+Exploit overprivileged default accounts (guest users, automation accounts) that already have elevated roles in Entra ID.
+
+**Entra ID Example**:
+
+* Abusing a misconfigured Service Principal with Contributor or Owner rights.
+
+✅ **Result**: Instantly gain high-level access using forgotten accounts.
+
+***
+
+**➡️ Cloud Accounts**
+
+\| MITRE ID | **T1078.004** |
+
+**Description**:\
+Use stolen or compromised Entra ID user accounts that have direct or indirect high privileges (Global Admin, Application Admin, etc.).
+
+**Entra ID Example**:
+
+```bash
+bashCopyEditaz login --username compromisedadmin@domain.com
+az role assignment list
+```
+
+✅ **Result**: Immediate privilege escalation with no exploit required.
+
+***
+
+## 📊 **Privilege Escalation Techniques in Entra ID (MITRE Mapped)**
+
+| Technique/Subtechnique          | MITRE ID  | Entra ID Example                                    |
+| ------------------------------- | --------- | --------------------------------------------------- |
+| Temporary Elevated Cloud Access | T1548.001 | Abuse PIM activations or CA exceptions              |
+| Additional Cloud Credentials    | T1098.001 | Add secrets/certs to privileged SPNs                |
+| Additional Cloud Roles          | T1098.003 | Assign "Global Admin" or "Owner" roles              |
+| Device Registration             | T1098.004 | Register compliant rogue device                     |
+| Trust Modification              | T1484.002 | Modify domain trust settings (B2B federation abuse) |
+| Default Accounts                | T1078.004 | Abuse forgotten privileged default accounts         |
+| Cloud Accounts                  | T1078.004 | Use compromised privileged users or SPNs            |
+
+***
+
+## 🎯 Final Summary
+
+Defending against Privilege Escalation in Entra ID focuses on:
+
+* **Hardening and monitoring role assignments and PIM activations**
+* **Controlling device registrations and trust configurations**
+* **Detecting abnormal credential modifications or additions**
+* **Reducing the privilege footprint of default and cloud accounts**
 

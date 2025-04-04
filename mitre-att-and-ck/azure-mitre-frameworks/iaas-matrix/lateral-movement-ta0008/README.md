@@ -1,47 +1,116 @@
 # Lateral Movement TA0008
 
-## Overview
+## **Lateral Movement Techniques in Azure Environments**
 
-Lateral movement in Azure involves adversaries leveraging various techniques to move from one compromised system to another within the cloud environment.&#x20;
+In Microsoft Azure, adversaries use Lateral Movement techniques to move between cloud services, subscriptions, VMs, and management interfaces. This is how attackers **expand their access**, **gain new privileges**, and **position for impact**.
 
-### 1️⃣ **T1021 – Remote Services**&#x20;
+In the cloud, lateral movement is often **token-based**, **API-based**, or **remote session-based**, without needing traditional on-prem "pivoting."
 
-Adversaries may use legitimate remote services to access and control systems within an Azure environment.
+***
 
-#### 1️⃣ **Cloud Services (T1021.006)**
+#### 🔀 Remote Services
 
-* **Definition:** Attackers use cloud-based remote services, such as Azure Bastion, Jump Servers, or Azure Arc-enabled servers, to gain remote access to a compromised VM or service.
-* **Example in Azure:**
-  * An attacker compromises Azure Entra credentials with Virtual Machine Contributor or Virtual Machine Administrator Login permissions.
-  * They log in via Azure Bastion or RDP over the public internet using the compromised credentials.
-  * The attacker then pivots to other virtual machines or resources within the same virtual network.
+***
 
-#### 2️⃣ **Direct Cloud VM Connections (T1021.008)**
+**➡️ Cloud Services**
 
-* **Definition:** Adversaries remotely access a VM by connecting directly over RDP, SSH, or custom TCP ports without using Bastion or Jump Servers.
-* **Example in Azure:**
-  * An attacker exploits a publicly exposed VM with RDP (TCP 3389) or SSH (TCP 22).
-  * They brute-force Azure VM login credentials or use previously stolen credentials.
-  * Once inside, they execute commands and move laterally to other VMs via Azure Virtual Network Peering or Azure Arc connections.
+\| MITRE ID | **T1021.005** |
 
-### 3️⃣**T1550 – Use Alternate Authentication Material**
+**Description**:\
+Use authenticated access to Azure services like Azure Functions, AKS, Storage Accounts, App Services, Key Vaults, or Service Principals to move laterally across cloud resources.
 
-This technique allows attackers to bypass normal authentication mechanisms using stolen tokens, cookies, or other credentials.
+**Azure Example**:
 
-#### 1️⃣ **Application Access Token (T1550.001)**
+```bash
+bashCopyEditaz functionapp list
+az storage account keys list --account-name victimstorage
+az aks get-credentials --resource-group victim-rg --name victim-cluster
+```
 
-* **Definition:** Adversaries use OAuth tokens or Azure Managed Identity tokens to access cloud services without needing passwords.
-* **Example in Azure:**
-  * An attacker steals a managed identity token from a compromised Azure VM or Azure Function App.
-  * They use this token to authenticate against Azure Key Vault, Storage Accounts, or other Azure services.
-  * The token allows the attacker to extract secrets, sensitive files, or perform privileged operations.
+✅ **Result**: Move from one cloud service to another within the same tenant or across tenants.
 
-#### 2️⃣ **Web Session Cookie (T1550.004)**
+***
 
-* **Definition:** Attackers steal and reuse authentication cookies to bypass MFA and access Azure services as a legitimate user.
-*   **Example in Azure:**
+**➡️ Direct Cloud VM Connections**
 
-    * An attacker extracts an Azure Entra session cookie from a compromised user's browser.
-    * They replay the cookie to gain SSO access to Microsoft 365 (Exchange, SharePoint, etc.).
-    * Using the valid session, the attacker downloads sensitive emails, exfiltrates files from OneDrive, or escalates privileges.
+\| MITRE ID | **T1021.001** |
 
+**Description**:\
+SSH or RDP into Azure VMs using valid credentials, compromised tokens, or lateral spread accounts.
+
+**Azure Example**:
+
+```bash
+bashCopyEditssh azureuser@vm-public-ip
+```
+
+Or using Azure Bastion service if no public IP:
+
+```bash
+bashCopyEditaz network bastion ssh --name BastionHost --resource-group victim-rg --target-vm-name victim-vm
+```
+
+✅ **Result**: Move into virtual machines to harvest data or establish deeper persistence.
+
+***
+
+#### 🔑 Use Alternate Authentication Material
+
+***
+
+**➡️ Application Access Token**
+
+\| MITRE ID | **T1550.001** |
+
+**Description**:\
+Steal Azure Managed Identity tokens, OAuth tokens, or Kubernetes service account tokens to authenticate to new cloud services or APIs without needing passwords.
+
+**Azure Example**:
+
+```bash
+bashCopyEditcurl -H Metadata:true "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/"
+```
+
+✅ **Result**: Use stolen tokens to laterally authenticate across Azure APIs.
+
+***
+
+**➡️ Web Session Cookie**
+
+\| MITRE ID | **T1550.004** |
+
+**Description**:\
+Steal Azure Portal session cookies and reuse them to access new Azure resources without re-authenticating.
+
+**Azure Example**:
+
+Reuse a stolen cookie to pivot within Azure Portal:
+
+```bash
+bashCopyEdit# Reuse stolen cookie in browser DevTools or curl to access Azure management APIs
+```
+
+✅ **Result**: Move laterally across Azure Portal resources or subscriptions using session replay.
+
+***
+
+## 📊 **Lateral Movement Techniques in Azure (MITRE Mapped)**
+
+| Technique/Subtechnique      | MITRE ID  | Azure Example                                            |
+| --------------------------- | --------- | -------------------------------------------------------- |
+| Cloud Services              | T1021.005 | Move between Azure Functions, AKS, Storage, App Services |
+| Direct Cloud VM Connections | T1021.001 | SSH/RDP into Azure VMs directly or via Azure Bastion     |
+| Application Access Token    | T1550.001 | Steal and reuse Managed Identity/OAuth tokens            |
+| Web Session Cookie          | T1550.004 | Replay Azure Portal session cookies for access           |
+
+***
+
+## 🎯 Final Summary
+
+Defending against Lateral Movement in Azure focuses on:
+
+* **Controlling and monitoring token usage and session authentication**
+* **Restricting inter-service access via RBAC and network controls**
+* **Detecting unusual access patterns across subscriptions and services**
+* **Hardening VM access paths and Bastion exposure**
+*

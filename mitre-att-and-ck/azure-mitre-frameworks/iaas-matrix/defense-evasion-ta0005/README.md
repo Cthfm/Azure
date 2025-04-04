@@ -1,70 +1,345 @@
 # Defense Evasion TA0005
 
-## **Overview:**
+* **Hardening and monitoring identity, authentication, and access flows**
+* **Protecting security configurations from unauthorized modification**
+* **Watching for attacker-triggered changes in compute, network, and logging**
+* **Detecting the use of stolen tokens, cookies, and rogue accounts**
 
-In Azure, attackers use Defense Evasion (TA0005) techniques to bypass security controls, avoid detection, and maintain persistence within a compromised environment. Let's look at the different techniques and sub techniques of Defense Evasion (TA0005)
+Defending against Defense Evasion in Azure focuses on:
 
-### **Abuse Elevation Control Mechanism (T1548)**
+## 🎯 Final Summary
 
-This technique refers to techniques where attackers exploit privilege escalation features to gain higher permissions within a system or cloud environment.
+***
 
-**Temporary Elevated Cloud Access (T1548.005)**
+| Technique/Subtechnique              | MITRE ID  | Azure Example                                |
+| ----------------------------------- | --------- | -------------------------------------------- |
+| Temporary Elevated Cloud Access     | T1548     | JIT PIM elevation to disable controls        |
+| Exploitation for Defense Evasion    | T1211     | Exploit misconfigs to bypass defenses        |
+| Disable or Modify Tools             | T1562.001 | Disable Defender for Cloud settings          |
+| Disable or Modify Cloud Firewall    | T1562.007 | Delete or weaken NSG rules, WAF              |
+| Disable or Modify Cloud Logs        | T1562.008 | Remove Azure Diagnostic Settings             |
+| Modify MFA                          | T1556.006 | Disable Conditional Access enforcing MFA     |
+| Modify Hybrid Identity              | T1556.007 | Tamper with Azure AD Connect                 |
+| Modify Conditional Access Policies  | T1556.008 | Weaken or exclude CA protections             |
+| Create Snapshot                     | T1578.002 | Snapshot VMs silently                        |
+| Create Cloud Instance               | T1578.001 | Deploy hidden cloned VMs                     |
+| Delete Cloud Instance               | T1578.003 | Destroy forensic evidence                    |
+| Revert Cloud Instance               | T1578.004 | Revert VMs to clean snapshots                |
+| Modify Cloud Compute Configurations | T1578.005 | Remove monitoring, alter settings            |
+| Modify Cloud Resource Hierarchy     | T1578     | Alter Azure Management Groups/subscriptions  |
+| Unused/Unsupported Cloud Regions    | T1578     | Deploy to lesser-monitored regions           |
+| Application Access Token            | T1550.001 | Steal and reuse managed identity tokens      |
+| Web Session Cookie                  | T1550.004 | Steal and reuse Azure Portal session cookies |
+| Default Accounts                    | T1078.004 | Abuse Azure defaults (SPNs, identities)      |
+| Cloud Accounts                      | T1078.004 | Use stolen Azure AD identities               |
 
-* **Example:** An attacker gains access to an Azure account with low privileges and leverages Azure Privileged Identity Management (PIM) to elevate their access temporarily to a Global Admin role. They then perform actions before their access is revoked.
+## 📊 **Defense Evasion Techniques in Azure (MITRE Mapped)**
 
-### **Exploitation for Defense Evasion (**&#x54;1211)
+***
 
-Exploitation for Defense Evasion occurs when attackers leverage vulnerabilities in security tools or cloud services to bypass detection, disable monitoring, or escalate privileges without triggering alerts.
+✅ **Result**: Normal-looking access paths.
 
-* **Example:** ChaosDB (2021) exploited improper Jupyter Notebook permissions in Azure CosmosDB, allowing attackers to steal database primary keys and access other tenants’ data—breaking multi-tenant security boundaries.
+**Description**:\
+Use compromised Azure AD user or service principal accounts for operations without raising suspicion.
 
-### **Impair Defenses (T1562)**
+\| MITRE ID | **T1078.004** |
 
-Impair Defenses refers to techniques where attackers disable, modify, or evade security tools to avoid detection and maintain persistence.&#x20;
+**➡️ Cloud Accounts**
 
-**Disable or Modify Tools (T1562.001)**
+***
 
-* **Example:** An attacker disables Microsoft Defender for Endpoint in Azure Security Center via PowerShell (`Set-MpPreference -DisableRealtimeMonitoring $true`) to evade detection.
+✅ **Result**: Blend into legitimate account usage.
 
-**Disable or Modify Cloud Firewall (T1562.007)**
+**Description**:\
+Use Azure default service principals or managed identities to hide activities under legitimate accounts.
 
-* **Example:** An attacker modifies Azure Network Security Group (NSG) rules to allow external traffic to an internal resource, thereby bypassing firewall restrictions.
+\| MITRE ID | **T1078.004** |
 
-**Disable or Modify Cloud Logs (T1562.008)**
+**➡️ Default Accounts**
 
-*   **Example:** Using Azure CLI, an attacker disables diagnostic logging for Azure Key Vault or other resources to prevent activity tracking:
+***
 
-    ```powershell
-    az monitor diagnostic-settings delete --name "LogProfileName" --resource-group "ResourceGroupName"
-    ```
+#### 👥 Valid Accounts
 
-### **Modify Authentication Process (T1556)**
+***
 
-A technique where adversaries manipulate authentication mechanisms to bypass security controls, escalate privileges, or maintain persistence. By altering how authentication works, attackers can steal credentials, create backdoor access, or evade detection.
+✅ **Result**: No need to reauthenticate visibly.
 
-**Multi-Factor Authentication (MFA) Bypass (T1556.006)**
+**Description**:\
+Steal and replay Azure Portal web session cookies for console access.
 
-* **Example:** An attacker uses phishing to steal an Azure Entra ID admin’s session token and logs in without triggering MFA verification.
+\| MITRE ID | **T1550.004** |
 
-**Hybrid Identity Manipulation (T1556.007)**
+**➡️ Web Session Cookie**
 
-* **Example:** An attacker gains access to on-premises Active Directory Federation Services (AD FS) and modifies claims rules to grant themselves elevated Azure AD permissions.
+***
 
-**Conditional Access Policy Manipulation (T1556.009)**
+✅ **Result**: Pivot stealthily using existing session tokens.
 
-* **Example:** An attacker with admin access modifies Azure Conditional Access policies to remove MFA requirements for specific locations or IPs.
+```bash
+bashCopyEditcat /var/run/secrets/kubernetes.io/serviceaccount/token
+```
 
-#### **Modify Cloud Compute Infrastructure (T1578)**
+**Azure Example**:
 
-Refers to adversaries modifying cloud compute resources to gain persistence, escalate privileges, or disrupt services. This is a key tactic in cloud-focused red teaming, where attackers exploit misconfigurations, stolen credentials, or vulnerabilities to manipulate cloud infrastructure.
+**Description**:\
+Steal and reuse Azure service principal tokens or managed identity tokens to access resources without normal authentication.
 
-**Create Snapshot (T1578.001)**
+\| MITRE ID | **T1550.001** |
 
-*   **Example:** An attacker creates a snapshot of a critical Azure VM's disk to exfiltrate sensitive data:
+**➡️ Application Access Token**
 
-    ```
-    az snapshot create --resource-group MyResourceGroup --source MyOSDisk --name MySnapshot
-    ```
+***
+
+#### 🛡️ Use Alternate Authentication Material
+
+***
+
+✅ **Result**: Attack operations hidden geographically.
+
+**Description**:\
+Deploy resources into less-monitored Azure regions to avoid centralized detection (e.g., regions not covered by SIEM, Defender).
+
+\| MITRE ID | **T1578** (_customized Azure usage_) |
+
+#### 🌎 Unused/Unsupported Cloud Regions
+
+***
+
+✅ **Result**: Attackers hide activities under altered structures.
+
+**Description**:\
+Modify Azure Management Groups, Subscriptions, or Resource Group hierarchies to create hidden or isolated environments for attacker operations.
+
+\| MITRE ID | **T1578** |
+
+#### 🏢 Modify Cloud Resource Hierarchy
+
+***
+
+✅ **Result**: Remove defender visibility inside VMs.
+
+**Description**:\
+Modify VM extensions, networking, storage, or OS configurations to remove monitoring agents or restrict logging.
+
+\| MITRE ID | **T1578.005** |
+
+**➡️ Modify Cloud Compute Configurations**
+
+***
+
+✅ **Result**: Attack footprints wiped clean.
+
+**Description**:\
+Revert a VM to a previously known clean snapshot to erase traces of attacker activities.
+
+\| MITRE ID | **T1578.004** |
+
+**➡️ Revert Cloud Instance**
+
+***
+
+✅ **Result**: Erases forensic evidence.
+
+```bash
+bashCopyEditaz vm delete --resource-group victim-rg --name evidence-vm --yes
+```
+
+**Azure Example**:
+
+**Description**:\
+Delete VMs to destroy evidence or prevent forensic recovery.
+
+\| MITRE ID | **T1578.003** |
+
+**➡️ Delete Cloud Instance**
+
+***
+
+✅ **Result**: Hidden cloned VMs deployed.
+
+```bash
+bashCopyEditaz vm create --resource-group victim-rg --name cloned-vm --attach-os-disk stealth-snapshot
+```
+
+**Azure Example**:
+
+**Description**:\
+Clone or deploy new VMs from existing snapshots for persistence or staging C2.
+
+\| MITRE ID | **T1578.001** |
+
+**➡️ Create Cloud Instance**
+
+***
+
+✅ **Result**: Steal OS disks stealthily.
+
+```bash
+bashCopyEditaz snapshot create --resource-group victim-rg --source victim-vm --name stealth-snapshot
+```
+
+**Azure Example**:
+
+**Description**:\
+Create snapshots of Azure VMs to steal data or credentials without alerting on live systems.
+
+\| MITRE ID | **T1578.002** |
+
+**➡️ Create Snapshot**
+
+***
+
+#### 🖥️ Modify Cloud Compute Infrastructure
+
+***
+
+✅ **Result**: Easier reentry paths for attackers.
+
+```bash
+bashCopyEditaz ad conditional-access policy update --id <policy-id> --conditions '{"locations":["trusted-location-id"]}'
+```
+
+**Azure Example**:
+
+**Description**:\
+Modify Conditional Access (CA) policies to allow risky access locations, IPs, devices, or users.
+
+\| MITRE ID | **T1556.008** |
+
+**➡️ Conditional Access Policies**
+
+***
+
+✅ **Result**: Persist across both environments stealthily.
+
+**Description**:\
+Manipulate Azure AD Connect or hybrid synchronization settings to evade detection through on-premise-to-cloud identity links.
+
+\| MITRE ID | **T1556.007** |
+
+**➡️ Hybrid Identity**
+
+***
+
+✅ **Result**: MFA protection removed or bypassed.
+
+```bash
+bashCopyEditaz ad conditional-access policy update --id <policy-id> --state disabled
+```
+
+**Azure Example**:
+
+**Description**:\
+Tamper with or disable Azure Conditional Access policies enforcing MFA.
+
+\| MITRE ID | **T1556.006** |
+
+**➡️ Multi-Factor Authentication**
+
+***
+
+#### 🛡️ Modify Authentication Process
+
+***
+
+✅ **Result**: Logging pipelines are broken, delaying detection.
+
+```bash
+bashCopyEditaz monitor diagnostic-settings delete --name "diag-settings" --resource <resource-id>
+```
+
+**Azure Example**:
+
+**Description**:\
+Disable, delete, or modify Azure Activity Logs, Diagnostic Settings, or Log Analytics configurations to blind defenders.
+
+\| MITRE ID | **T1562.008** |
+
+**➡️ Disable or Modify Cloud Logs**
+
+***
+
+✅ **Result**: Traffic control barriers removed.
+
+```bash
+bashCopyEditaz network nsg rule delete --resource-group victim-rg --nsg-name victim-nsg --name AllowSSHInbound
+```
+
+**Azure Example**:
+
+**Description**:\
+Disable or modify Azure-native firewall protections such as Azure Firewall, NSGs, or Application Gateway WAFs to allow unrestricted lateral movement or C2 channels.
+
+\| MITRE ID | **T1562.007** |
+
+**➡️ Disable or Modify Cloud Firewall**
+
+***
+
+✅ **Result**: Monitoring agents or cloud-native security solutions are disabled.
+
+```bash
+bashCopyEditaz security setting update --name MCAS --setting-state Disabled
+```
+
+**Azure Example**:
+
+**Description**:\
+Disable or tamper with security monitoring tools like Microsoft Defender for Cloud, Azure Monitor agents, or threat protection settings.
+
+\| MITRE ID | **T1562.001** |
+
+**➡️ Disable or Modify Tools**
+
+***
+
+#### 🛡️ Impair Defenses
+
+***
+
+✅ **Result**: Security controls bypassed via misconfiguration exploitation.
+
+Exploit a misconfigured Azure Function or Logic App that allows privilege modification without audit logging enabled.
+
+**Azure Example**:
+
+**Description**:\
+Exploit misconfigurations or vulnerabilities in Azure services or workloads specifically to bypass defenses (e.g., disable Defender plans, misconfigure NSGs or Diagnostic Settings).
+
+\| MITRE ID | **T1211** |
+
+#### 🎭 Exploitation for Defense Evasion
+
+***
+
+✅ **Result**: Short-lived elevation helps evade long-term detection.
+
+```bash
+bashCopyEditaz role assignment create --assignee compromised-user --role Owner --scope /subscriptions/<sub-id>
+```
+
+**Azure Example**:
+
+**Description**:\
+Abuse Azure Privileged Identity Management (PIM) to temporarily elevate privileges to modify security settings, audit logs, or create backdoors without persistent standing privilege.
+
+| MITRE ID | **T1548** |
+| -------- | --------- |
+
+#### 🎭 Abuse Elevation Control Mechanism → Temporary Elevated Cloud Access
+
+***
+
+In Microsoft Azure, adversaries use Defense Evasion techniques to avoid detection, disable security tooling, modify authentication controls, and blend into legitimate cloud operations. Defense Evasion allows attackers to **persist longer**, **escalate stealthily**, and **prepare for impact or exfiltration**.
+
+## **Defense Evasion Techniques in Azure Environments**
+
+## ltrate sensitive data:
+
+* ```
+  az snapshot create --resource-group MyResourceGroup --source MyOSDisk --name MySnapshot
+  ```
 
 **Create Cloud Instance (T1578.002)**
 

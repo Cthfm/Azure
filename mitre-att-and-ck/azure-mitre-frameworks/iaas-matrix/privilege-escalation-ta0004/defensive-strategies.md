@@ -1,67 +1,105 @@
 # Defensive Strategies
 
-## Overview:
+## **Defensive Strategies Against Privilege Escalation in Azure Environments**
 
-Defending against privilege escalation in Azure involves enforcing least privilege with Role-Based Access Control (RBAC), using Privileged Identity Management (PIM) for just-in-time access, and regularly auditing permissions. Enable logging for role assignments and sign-ins and monitor activities with Azure Sentinel and Defender for Cloud to detect anomalies. Secure sensitive resources like Key Vault and Automation Accounts with managed identities, conditional access, and private endpoints. These measures, combined with automated threat detection and response, effectively mitigate privilege escalation risks. Let's take a look at defensive strategies for each technique.&#x20;
+In Azure, defending against Privilege Escalation requires **tight control over identities, role assignments, cloud automation**, and **real-time detection of privilege changes**.\
+If you lock down escalation paths, you limit the blast radius dramatically.
 
-### **T1548 - Abuse Elevation Control Mechanism**
+***
 
-1. **Defensive Strategies for Temporary Elevated Cloud Access**
+### ⬆️ Abuse Elevation Control Mechanism → Temporary Elevated Cloud Access (T1548)
 
-* Enforce Managed Identity Scopes: Restrict the permissions of Managed Identities to the minimum required for their operation by defining explicit scopes in Azure Role-Based Access Control (RBAC).
-* Enable Privileged Identity Management (PIM): Use Azure Entra PIM to enforce just-in-time (JIT) access for elevated roles, ensuring that temporary access is time-bound and auditable.
-* Monitor Token Usage: Use Azure Monitor and Microsoft Defender for Cloud to detect anomalous API calls or unexpected activity tied to Managed Identities.
+| Defensive Action                                                                                   | Why It Matters                                         |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| 🔒 Require approval workflows for PIM JIT activations (Azure PIM)                                  | Prevent attackers from silently elevating privileges   |
+| 🚫 Restrict privileged role assignment only to designated admins (Privileged Role Admin role only) | Control who can manage roles like Owner, Contributor   |
+| 📜 Monitor PIM activations via Azure AD Sign-In Logs and activate alerts                           | Detect unusual or unapproved JIT activations           |
+| 🛡️ Use Conditional Access policies requiring compliant devices or MFA for PIM activations         | Make elevation harder even if attacker has credentials |
 
-### **T1098 - Account Manipulation**
+✅ **Effect**: Attackers can’t easily abuse PIM or JIT to escalate unnoticed.
 
-1. **Defensive Strategies for Additional Cloud Credentials**
+***
 
-* Restrict Application Secret Lifetime: Use short-lived application secrets and regularly rotate them using Azure Key Vault's Managed Secret Rotation feature.
-* Monitor Service Principal Actions: Enable logging of Azure Entra ID service principal activities via Azure AD Audit Logs to identify unauthorized credential creation.
-* Leverage Conditional Access Policies: Restrict access to specific IP ranges, device compliance, or risk-based criteria for service principal logins.
+### 👤 Account Manipulation → Additional Cloud Credentials (T1098.001)
 
-2. **Defensive Strategies for Additional Cloud Roles**
+| Defensive Action                                                                                                                | Why It Matters                                    |
+| ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| 🔒 Limit who can create or modify Service Principal credentials (Application Administrator, Cloud App Administrator roles only) | Stop hidden credential additions                  |
+| 🚫 Use Azure Policy to block Service Principals without expiration on secrets                                                   | Force rotation and prevent stale keys             |
+| 📜 Alert on Service Principal credential changes via Defender for Identity                                                      | Real-time visibility into credential manipulation |
 
-* Enforce RBAC Least Privilege: Regularly review and restrict roles at the subscription, resource group, or resource level to only those absolutely necessary.
-* Enable Role Change Alerts: Configure Azure Monitor to trigger alerts on changes to high-privilege roles (e.g., assignments to the Owner or Contributor role).
+✅ **Effect**: Attackers can't add their own secrets easily to maintain access.
 
-3. **Defense Strategies for SSH Authorized Keys**
+***
 
-* Disable Password-Based Authentication: Use Azure Policy to enforce key-based authentication for all Linux VMs. Explore Azure Bastion.
-* Monitor VM Activity: Use Azure Monitor to audit deployments of VM extensions and configurations, which could be used to modify SSH keys.
+### 👤 Account Manipulation → Additional Cloud Roles (T1098.003)
 
-### **T1546 - Event-Triggered Execution**
+| Defensive Action                                                                                               | Why It Matters                              |
+| -------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| 🔒 Use Role-Based Access Control (RBAC) to restrict who can assign roles at subscription/resource group levels | Prevent mass privilege escalation           |
+| 🚫 Require privileged role assignments to go through PIM activation and approval                               | Control access creep dynamically            |
+| 📜 Alert on new role assignments, especially Contributor/Owner roles, using Azure Monitor or Sentinel          | Detect privilege escalations as they happen |
 
-1. **Defensive Strategies for Event-Triggered Execution**
+✅ **Effect**: Catch role escalation early before it’s weaponized.
 
-* Restrict Function Triggers: Use Azure Role Assignments and Policies to control which users or services can configure Azure Function triggers.
-* Monitor Automation Accounts: Enable logging for Azure Automation Runbooks via Azure Monitor and Log Analytics, and review all automation account actions regularly.
-* Implement Secure Deployment Pipelines: Use Azure DevOps or GitHub Actions with deployment gates to prevent unauthorized changes to Function Apps or Automation Runbooks.
+***
 
-### **T1078 - Valid Accounts**
+### 👤 Account Manipulation → SSH Authorized Keys (T1098.004)
 
-1. **Defensive Strategies for Valid Accounts**
+| Defensive Action                                                                          | Why It Matters                                |
+| ----------------------------------------------------------------------------------------- | --------------------------------------------- |
+| 🔒 Disable CustomScript and VMAccess extensions after deployment unless explicitly needed | Block external SSH key injection vectors      |
+| 🚫 Block privileged users from attaching SSH keys without strong audit                    | Limit ability to inject keys without tracking |
+| 📜 Monitor VM extension deployments and SSH key changes through Azure Activity Logs       | Detect key tampering attempts fast            |
 
-* Enable Azure Entra Identity Protection: Detect and respond to leaked credentials and suspicious login activity, such as logins from unexpected locations or devices.
-* Require Multi-Factor Authentication (MFA): Enforce MFA for all user accounts, including administrators, through Conditional Access policies.
-* Review Access Logs: Use Azure Entra Sign-In Logs to regularly review account activities and detect anomalies.
+✅ **Effect**: Prevent attackers from inserting SSH keys to VMs silently.
 
-2. **Defense Strategies for Default Accounts**
+***
 
-* Secure Default VM Accounts: Enforce strong password policies and disable default local admin accounts where possible. Use Azure Policy to audit and remediate insecure VM configurations.
-* Monitor VM Baseline Configurations: Use Azure Defender to detect deviations from expected configurations, such as enabling default credentials.
+### 📅 Event Triggered Execution (T1546)
 
-3. **Defensive Strategies for Cloud Accounts**
+| Defensive Action                                                                             | Why It Matters                          |
+| -------------------------------------------------------------------------------------------- | --------------------------------------- |
+| 🔒 Restrict who can create or modify Logic Apps, Functions, and Event Grid Subscriptions     | Reduce persistence and escalation risk  |
+| 🚫 Apply Azure Policies to control serverless deployments to trusted resource groups only    | No rogue serverless deployments allowed |
+| 📜 Alert on new serverless resource creations (Functions, Logic Apps) via Defender for Cloud | Detect malicious trigger setups         |
 
-* Review Service Principal Permissions: Regularly audit service principal permissions and remove unnecessary or high-privilege roles.
-* Enable Key Vault Logging: Use Azure Key Vault’s logging and monitoring capabilities to track access to secrets, certificates, and keys.
-* Implement Just-In-Time (JIT) Access: Restrict access to sensitive accounts and resources using Azure AD PIM with time-bound access approval workflows.
+✅ **Effect**: Attackers can’t silently set auto-privilege escalation triggers.
 
-### General Guidance Across Techniques
+***
 
-The following are the key takeaways that you can deploy within your environment into order to prevent and or detection this tactic being used within your environment.&#x20;
+### 👥 Valid Accounts → Default Accounts / Cloud Accounts (T1078.004)
 
-* Centralize Logging: Aggregate logs from Azure AD, Azure Monitor, and Log Analytics into a single workspace for real-time analysis.
-* Leverage Microsoft Defender for Cloud: Enable advanced threat detection and automated response for Azure resources.
-* Conduct Regular Security Reviews: Periodically review resource configurations, role assignments, and conditional access policies for gaps in security posture.
-* Simulate Attacks: Regularly perform red teaming and threat simulations using tools like Microsoft’s Security Stack or third-party solutions to validate defenses.
+| Defensive Action                                                                                     | Why It Matters                              |
+| ---------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| 🔒 Identify and disable unused Service Principals, managed identities, and default accounts          | Shrink attack surface                       |
+| 🚫 Apply Conditional Access policies requiring MFA for all privileged users                          | Stop stolen credentials from working easily |
+| 📜 Monitor login behavior for anomalies (impossible travel, new locations) using Identity Protection | Early credential abuse detection            |
+| 🛡️ Use Smart Lockout policies to block brute force or credential stuffing                           | Strengthen default defenses on accounts     |
+
+✅ **Effect**: Reduces cloud account abuse for privilege escalation.
+
+***
+
+## 📊 **Defensive Coverage Table (Privilege Escalation in Azure)**
+
+| Attack Vector                   | Defensive Strategy                                                       |
+| ------------------------------- | ------------------------------------------------------------------------ |
+| Temporary Elevated Cloud Access | PIM approvals, JIT monitoring, CA enforcement                            |
+| Additional Cloud Credentials    | SPN credential restrictions, expiration enforcement, Defender monitoring |
+| Additional Cloud Roles          | Restrict role assignment rights, monitor new privileged roles            |
+| SSH Authorized Keys             | Block/monitor VM extensions, disable unused access methods               |
+| Event Triggered Execution       | Control serverless creation, monitor new Logic Apps/Functions            |
+| Default/Cloud Accounts          | Disable defaults, require MFA, detect login anomalies                    |
+
+***
+
+## 🎯 Final Summary
+
+Defending against Privilege Escalation in Azure focuses on:
+
+* **Tightly controlling identity and role assignments** (PIM, RBAC lockdowns)
+* **Preventing unauthorized credential modifications** (SPN secret control)
+* **Monitoring and alerting on key privilege changes** (role assignments, function deployments)
+* **Hardening access methods and detecting credential misuse fast**
+

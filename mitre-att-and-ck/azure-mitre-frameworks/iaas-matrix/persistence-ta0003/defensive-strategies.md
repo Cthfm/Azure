@@ -1,80 +1,109 @@
 # Defensive Strategies
 
-## Overview
+## **Defensive Strategies Against Persistence in Azure Environments**
 
-The Persistence tactic in Azure IaaS enables adversaries to maintain access by exploiting credentials, creating accounts, modifying authentication, or deploying malicious configurations like custom VM images. Defenses include strict access controls, monitoring, and enforcing least privilege. This section goes over defensive strategies by each technique.&#x20;
+Persistence defense in Azure is about **locking down identity manipulation**, **protecting cloud infrastructure**, **hardening authentication pathways**, and **detecting unauthorized modifications**.
 
-### **Account Manipulation (T1098)**
+You want to **trap** attackers early, **restrict** persistence vectors, and **detect** any abnormal footholds quickly.
 
-1. **Additional Cloud Credentials**
-   * **Defensive Strategies:**
-     * Enforce strict access control for Azure Entra ID application management.
-     * Enable and monitor Azure Entra ID Audit Logs for changes to application credentials or certificates.
-     * Implement Conditional Access Policies to restrict access to sensitive Azure Entra operations.
-     * Use Azure Key Vault to securely manage application secrets and certificates.
-2. **Additional Cloud Roles**
-   * **Defensive Strategies:**
-     * Monitor role assignment changes using Azure Activity Logs and configure alerts for suspicious role escalations.
-     * Enforce the principle of least privilege (PoLP) and regularly review role assignments.
-     * Use Azure Policy to deny or restrict assignments of high-privilege roles to unnecessary users or groups.
-3. **SSH Authorized Keys**
-   * **Defensive Strategies:**
-     * Disable password-based SSH access and enforce SSH key management policies.
-     * Regularly audit and rotate SSH keys for Linux VMs in Azure.
-     * Use Azure Policy to enforce VM configurations, such as blocking unauthorized key updates.
-     * Explore Azure Bastion as it provides browser based SSH/RDP access without exposing resources to the public internet.
+***
 
-### **Create Account (T1136)**
+### 👤 Account Manipulation → Additional Cloud Credentials / Roles / SSH Authorized Keys
 
-1. **Cloud Account**
-   * **Defensive Strategies:**
-     * Restrict account creation privileges to a small group of administrators.
-     * Enable Azure Entra Audit Logging  to detect suspicious account creation activities.
-     * Use Conditional Access Policies to block sign-ins from newly created accounts until verified.
+| Defensive Action                                                                                                                                             | Why It Matters                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- |
+| 🔒 Enforce Privileged Identity Management (PIM) and JIT activation for all privileged roles                                                                  | No standing privilege = harder to escalate or persist |
+| 🚫 Disable permission to create additional credentials unless strictly necessary (Azure AD Role: Application Administrator, Cloud Application Administrator) | Stop hidden client secret additions                   |
+| 📜 Use Defender for Cloud Identity Protection to monitor and alert on new credential or secret creation                                                      | Immediate detection of credential abuse               |
+| 🛡️ Disable VM extensions after deployment (VMAccessForLinux, CustomScript) unless absolutely needed                                                         | Attackers can't plant SSH keys post-deployment        |
+| 🔍 Monitor Azure Activity Logs and Sign-In Logs for new role assignments or SSH key modifications                                                            | Visibility into role or access tampering              |
 
-## **Event Triggered Execution (**&#x54;1546)
+✅ **Effect**: Attackers can't silently manipulate credentials or roles for persistence.
 
-1. **Implant Internal Image**
-   * **Defensive Strategies:**
-     * Verify and restrict permissions for creating and sharing custom VM images in Azure Compute Gallery.
-     * Use Azure Policy to ensure only authorized images are used in deployments.
-     * Monitor Azure Activity Logs for suspicious image creation or modification activities.
+***
 
-### **Modify Authentication Process (T1556)**
+### 🛠️ Create Account → Cloud Account
 
-1. **Multi-Factor Authentication (MFA)**
-   * **Defensive Strategies:**
-     * Enforce MFA for all privileged accounts and sensitive resources.
-     * Use Azure AD Identity Protection to detect and respond to risky user sign ins.
-     * Monitor changes to MFA settings in Azure Entra ID and configure alerts for suspicious modifications.
-2. **Hybrid Identity**
-   * **Defensive Strategies:**
-     * Regularly review and audit Azure Entra Connect synchronization rules.
-     * Enable logging and monitoring for Azure Entra Connect to detect unusual sync activities.
-     * Restrict access to Azure Entra Connect configurations and enforce strong security practices for hybrid identity.
-3. **Conditional Access Policies**
-   * **Defensive Strategies:**
-     * Implement role-based access control (RBAC) to restrict who can modify Conditional Access Policies.
-     * Enable versioning and logging of Conditional Access Policies for auditing.
-     * Use Azure Security Center to monitor policy compliance and flag risky configurations.
+| Defensive Action                                                                                               | Why It Matters                                      |
+| -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| 📜 Enforce Access Reviews and entitlement management in Azure AD (Identity Governance)                         | Detect and remove rogue users or Service Principals |
+| 🛡️ Apply Conditional Access policies to force MFA and compliant devices for all new users                     | No easy login paths for attacker-created accounts   |
+| 🚫 Restrict who can create new users, SPNs, and B2B guest accounts using Azure RBAC                            | Only trusted admins can onboard identities          |
+| 🔍 Alert on new Service Principal or user creation via Azure Activity Logs, Defender for Identity, or Sentinel | Detect account creation fast                        |
 
-### **Valid Accounts (T1078)**
+✅ **Effect**: Attackers can’t hide by creating new cloud identities easily.
 
-1. **Default Accounts**
-   * **Defensive Strategies:**
-     * Disable or rename default administrative accounts in deployed VMs or other services.
-     * Regularly audit Azure environments for unused or default accounts.
-     * Implement just-in-time (JIT) access for administrative accounts via Azure Security Center.
-2. **Cloud Accounts**
-   * **Defensive Strategies:**
-     * Enable and enforce strong password policies for all Azure AD accounts.
-     * Monitor sign-ins from unusual locations or devices using Azure AD Identity Protection.
-     * Review and disable inactive or guest accounts regularly.
+***
 
-### **General Recommendations Across All Techniques**
+### 📅 Event Triggered Execution
 
-* **Enable Logging and Monitoring:** Use tools like Azure Monitor, Azure Sentinel, and Azure Activity Logs to detect anomalies. Defender XDR is also an option here.
-* **Automated Response:** Configure automated responses to specific triggers, such as disabling suspicious accounts or revoking roles.
-* **Least Privilege Access:** Enforce RBAC and restrict administrative privileges to minimize the impact of compromise.
-* **Continuous Training:** Educate administrators and users on recognizing phishing attempts, credential misuse, and policy abuse. Continue to train your blue teams by conducting regular exercises by internal or third-party red teams.
-* **Regular Audits:** Perform periodic security reviews and penetration tests to identify gaps in defenses.
+| Defensive Action                                                                                            | Why It Matters                                      |
+| ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| 🛡️ Apply Azure Policy to restrict who can create Logic Apps, Event Grid Subscriptions, and Azure Functions | No open event trigger deployments                   |
+| 📜 Use Defender for Cloud to monitor for new Logic Apps or Function App deployments                         | Event-driven triggers can't be planted silently     |
+| 🔍 Log and alert on Event Grid subscription creations and new function deployments                          | Watch for malicious event-driven persistence setups |
+
+✅ **Effect**: No silent, auto-triggered attack chains inside Azure services.
+
+***
+
+### 🧬 Implant Internal Image
+
+| Defensive Action                                                                           | Why It Matters                                |
+| ------------------------------------------------------------------------------------------ | --------------------------------------------- |
+| 📜 Enforce image signing policies (Azure Container Registry content trust, Cosign)         | Only signed, verified containers can run      |
+| 🛡️ Scan all pushed container images in Azure Container Registry (Defender for Containers) | Detect backdoors or malware early             |
+| 🚫 Restrict ACR push permissions with fine-grained Azure RBAC                              | Attackers can’t poison registries easily      |
+| 🔍 Monitor ACR Push/Deploy events for unknown sources                                      | Alert on suspicious or rogue image activities |
+
+✅ **Effect**: Malicious images can't be implanted into trusted registries and clusters.
+
+***
+
+### 🛡️ Modify Authentication Process → MFA, Hybrid Identity, Conditional Access
+
+| Defensive Action                                                                                                            | Why It Matters                          |
+| --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| 🔒 Require MFA for all Azure AD privileged accounts — enforced by Conditional Access                                        | Block silent disablement of MFA         |
+| 🚫 Lock down Azure AD Connect — allow access to AD Connect servers only from trusted admin workstations                     | Prevent hybrid identity persistence     |
+| 📜 Review and restrict who can modify Conditional Access Policies (Azure AD roles like Global Admin, Security Admin only)   | Protect the auth enforcement mechanisms |
+| 🔍 Audit Conditional Access Policy changes in Azure AD Logs and alert for risky modifications (e.g., exclusions, disabling) | Detect weakening of login protections   |
+
+✅ **Effect**: Attackers can’t tamper with MFA, CA policies, or hybrid identity without triggering alerts.
+
+***
+
+### 👥 Valid Accounts → Default Accounts and Cloud Accounts
+
+| Defensive Action                                                                                                        | Why It Matters                                 |
+| ----------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| 📜 Identify and disable unused or default accounts in Azure AD and subscriptions                                        | Reduce identity sprawl                         |
+| 🛡️ Apply Smart Lockout policies and monitor for login anomalies (impossible travel, unfamiliar sign-ins)               | Stop credential reuse silently                 |
+| 🚫 Use Conditional Access to restrict sign-ins to trusted devices/locations                                             | Further limit stolen account utility           |
+| 🔍 Enable Identity Protection Risk Policies to auto-respond to risky sign-ins (force password reset, MFA re-enrollment) | Auto-defense against cloud account persistence |
+
+✅ **Effect**: Stolen or leftover accounts become hard or impossible to persist with.
+
+***
+
+## 📊 Defensive Coverage Table (Persistence in Azure)
+
+| Attack Vector                                     | Defensive Strategy                                                  |
+| ------------------------------------------------- | ------------------------------------------------------------------- |
+| Credential or role manipulation                   | PIM, JIT, Activity Logs, Defender alerts                            |
+| Rogue cloud account creation                      | Access Reviews, restricted user creation rights                     |
+| Event-driven persistence (Logic Apps, Event Grid) | Policy + Defender monitoring on new event triggers                  |
+| Malicious container images                        | Content trust, image scanning, registry RBAC restrictions           |
+| MFA/Hybrid Identity tampering                     | Conditional Access lockdown, AD Connect hardening                   |
+| Abuse of default/cloud accounts                   | Disable defaults, enforce Smart Lockout, Identity Protection alerts |
+
+***
+
+## 🎯 Final Summary
+
+Defending against Persistence in Azure focuses on:
+
+* **Locking down identities and authentication systems** (MFA, CA Policies, Hybrid Identity)
+* **Controlling credential and role manipulation tightly** (PIM, Defender, Activity Logs)
+* **Hardening serverless and containerized platforms** (Image signing, restricted event triggers)
+* **Detecting unauthorized account creations and changes fast** (Sentinel, Defender, Azure Logs)

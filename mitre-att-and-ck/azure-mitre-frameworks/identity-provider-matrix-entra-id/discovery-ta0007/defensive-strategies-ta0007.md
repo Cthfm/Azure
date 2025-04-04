@@ -1,89 +1,80 @@
 # Defensive Strategies: TA0007
 
-## Defensive Strategies for TA0007 - Discovery
+## **Defensive Strategies Against Discovery in Entra ID (Azure Identity Environments)**
 
-The Discovery (TA0007) tactic involves attackers gathering critical information about accounts, resources, and configurations to plan subsequent moves. Defending against these activities in Entra ID environments requires monitoring, restricting permissions, and hardening configurations to limit exposure.
+Discovery is **pre-attack mapping** — adversaries try to learn your cloud identities, services, and permissions.\
+Defense focuses on **restricting enumeration**, **detecting reconnaissance**, and **minimizing unnecessary exposure**.
 
-### **1. Account Discovery**
+***
 
-**Mitigates:** T1087 - Account Discovery\
-**Action:** Prevent attackers from enumerating Entra ID accounts to identify potential targets.\
-**Azure Procedure:**
+### 🔍 Cloud Account Discovery (T1087.004)
 
-* Use **Role-Based Access Control (RBAC)** to restrict directory enumeration to least privilege.
-* Enable **audit logging** and set alerts for user enumeration attempts in **Entra ID audit logs**.
-* Apply **Conditional Access Policies** to enforce MFA and restrict access to sensitive APIs.
+| Defensive Action                                                                                              | Why It Matters                                    |
+| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| 🔒 Apply least privilege across users and service principals                                                  | Limit who can list or enumerate directory objects |
+| 🚫 Use Administrative Units (AU) in Entra ID to scope visibility                                              | Isolate sensitive users and groups                |
+| 📜 Enable Azure AD Sign-In and Audit Logging                                                                  | Detect suspicious enumeration queries             |
+| 🛡️ Monitor mass read operations on Entra ID users and service principals (e.g., high volume Graph API reads) | Catch reconnaissance patterns early               |
 
-### **2. Cloud Account Enumeration**
+✅ **Effect**: Mass user/service principal enumeration becomes visible and noisy.
 
-**Mitigates:** T1087.004 - Cloud Account\
-**Action:** Prevent attackers from locating valuable or privileged accounts in Entra ID.\
-**Azure Procedure:**
+***
 
-* Monitor for suspicious commands such as `Get-AzADUser`.
-* Restrict **API** and **CLI permissions** to authorized users only.
-* Enable **Azure Security Defaults** to enforce MFA for all users automatically.
+### 🖥️ Cloud Service Dashboard & Cloud Service Discovery (T1087.004 extension)
 
-### **3. Cloud Service Dashboard Access**
+| Defensive Action                                                                                      | Why It Matters                           |
+| ----------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| 🔒 Use Role-Based Access Control (RBAC) to restrict access to Azure resources and Azure Portal views  | Prevent unauthorized resource visibility |
+| 🚫 Apply **Reader** or **Monitoring Reader** roles only where needed                                  | No broad read access                     |
+| 📜 Monitor Azure Resource Graph queries and list operations (e.g., resource.list, VM.list)            | Spot discovery behavior                  |
+| 🛡️ Use Azure Activity Logs and Microsoft Defender for Cloud to detect unauthorized resource browsing |                                          |
 
-**Mitigates:** T1087 - Cloud Service Dashboard\
-**Action:** Block unauthorized access to the Azure Portal and prevent attackers from exploring services and configurations.\
-**Azure Procedure:**
+✅ **Effect**: Attackers can't "map" services silently.
 
-* Enforce **RBAC** to limit portal access to essential personnel.
-* Require the use of **privileged access workstations (PAWs)** for administrative tasks.
-* Conduct **regular access reviews** to identify and remove unnecessary access.
+***
 
-### **4. Cloud Service Discovery**
+### 🔑 Password Policy Discovery (T1201)
 
-**Mitigates:** T1526 - Cloud Service Discovery\
-**Action:** Prevent attackers from using CLI, APIs, or dashboards to list cloud services and resources.\
-**Azure Procedure:**
+| Defensive Action                                                                                      | Why It Matters                                          |
+| ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| 🔒 Enforce strong Entra ID Password Protection policies (global banned passwords, custom banned list) | Even if policies are discovered, attacks stay difficult |
+| 🚫 Prevent read access to sensitive tenant configurations unless required (Graph API access control)  | Hide password policy settings from regular users        |
+| 📜 Monitor Graph API calls that access password policy settings                                       | Detect policy reconnaissance attempts                   |
 
-* Disable unused Azure services to reduce the attack surface.
-*   Monitor and set alerts for commands like:
+✅ **Effect**: Even if discovered, password policies remain strong and resilient.
 
-    ```bash
-    az resource list --output table
-    ```
-* Implement service principal restrictions and enforce **least privilege** for API calls.
+***
 
-### **5. Password Policy Discovery**
+### 👥 Cloud Groups Discovery (T1069.003)
 
-**Mitigates:** T1201 - Password Policy Discovery\
-**Action:** Prevent attackers from querying Entra ID password policies to inform brute-force or credential stuffing attacks.\
-**Azure Procedure:**
+| Defensive Action                                                                                   | Why It Matters                                     |
+| -------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| 🔒 Limit who can list groups or enumerate group memberships (Graph API permissions hardening)      | Prevent broad group visibility                     |
+| 🚫 Use Administrative Units to segment group visibility by department, project, or function        | No tenant-wide group visibility                    |
+| 📜 Monitor for enumeration of sensitive groups (e.g., Global Admins, Privileged Role Admins)       | Detect when an attacker maps control groups        |
+| 🛡️ Enable risk-based Conditional Access requiring additional verification for admin group members | Protect privileged users/groups even if enumerated |
 
-* Enable strong password policies using **banned password lists**.
-* Monitor changes to password policies via **Entra audit logs** and set alerts.
-* Use **Smart Lockout** to block brute-force attempts based on behavior analysis.
+✅ **Effect**: Privilege structures stay hidden and protected.
 
-### **6. Permission Groups Discovery**
+***
 
-**Mitigates:** T1069 - Permission Groups Discovery\
-**Action:** Block unauthorized enumeration of groups to identify privileged or misconfigured group memberships.\
-**Azure Procedure:**
+## 📊 **Defensive Coverage Table (Discovery in Entra ID)**
 
-* Restrict group enumeration permissions to necessary roles only.
-* Implement **Privileged Identity Management (PIM)** for critical groups, such as Global Administrators.
-* Monitor group changes using **Azure Monitor** or **Microsoft Sentinel**.
+| Attack Vector                     | Defensive Strategy                                                   |
+| --------------------------------- | -------------------------------------------------------------------- |
+| Cloud Account Discovery           | Least privilege, Administrative Units, detect mass user enumeration  |
+| Cloud Service Dashboard/Discovery | RBAC enforcement, resource graph monitoring                          |
+| Password Policy Discovery         | Strong policies, prevent policy reads, monitor API access            |
+| Cloud Groups Discovery            | Limit group enumeration, segment groups via AUs, monitor group reads |
 
-### **7. Cloud Groups Enumeration**
+***
 
-**Mitigates:** T1069.003 - Cloud Groups\
-**Action:** Prevent attackers from enumerating Entra ID cloud groups to locate administrative or sensitive access roles.\
-**Azure Procedure:**
+## 🎯 Final Summary
 
-*   Monitor and restrict the use of commands such as:
+Defending against Discovery in Entra ID focuses on:
 
-    ```bash
-    az ad group list --output table
-    az ad group member list --output table
-    ```
-* Conduct regular access reviews of sensitive groups to detect unauthorized access.
-* Enforce **just-in-time (JIT)** access for administrative groups using **PIM**.
-
-### **Summary of Defensive Procedures for TA0007**
-
-<table data-header-hidden><thead><tr><th width="292"></th><th></th><th></th></tr></thead><tbody><tr><td><strong>Defensive Strategy</strong></td><td><strong>Mitigates</strong></td><td><strong>Azure Procedure</strong></td></tr><tr><td>Monitor and Restrict Account Discovery</td><td>T1087 - Account Discovery</td><td>- Use RBAC to restrict directory enumeration to least privilege.<br>- Enable audit logging and alerts for user enumeration.<br>- Apply Conditional Access Policies to enforce MFA and restrict access to sensitive APIs.</td></tr><tr><td>Monitor Cloud Account Enumeration</td><td>T1087.004 - Cloud Account</td><td>- Monitor for suspicious commands like <code>Get-AzADUser</code>.<br>- Restrict API and CLI permissions to authorized users.<br>- Enable Azure Security Defaults to enforce MFA for all users automatically.</td></tr><tr><td>Restrict Cloud Service Dashboard Access</td><td>T1087 - Cloud Service Dashboard</td><td>- Enforce RBAC to limit portal access.<br>- Require the use of privileged access workstations (PAWs) for administrative tasks.<br>- Conduct regular access reviews to remove unnecessary access.</td></tr><tr><td>Prevent Unauthorized Cloud Service Discovery</td><td>T1526 - Cloud Service Discovery</td><td>- Disable unused Azure services.<br>- Monitor and set alerts for commands like <code>az resource list --output table</code>.<br>- Implement service principal restrictions and enforce least privilege.</td></tr><tr><td>Monitor Password Policy Discovery Attempts</td><td>T1201 - Password Policy Discovery</td><td>- Enable strong password policies using banned password lists.<br>- Monitor changes to password policies via Entra audit logs and set alerts.<br>- Use Smart Lockout to block brute-force attempts.</td></tr><tr><td>Block Permission Groups Enumeration</td><td>T1069 - Permission Groups Discovery</td><td>- Restrict group enumeration permissions to necessary roles.<br>- Implement PIM for critical groups like Global Administrators.<br>- Monitor group changes using Azure Monitor or Microsoft Sentinel.</td></tr><tr><td>Detect Cloud Groups Enumeration Attempts</td><td>T1069.003 - Cloud Groups</td><td>- Monitor and restrict commands like <code>az ad group list</code> and <code>az ad group member list</code>.<br>- Conduct access reviews of sensitive groups.<br>- Enforce JIT access for administrative groups using PIM.</td></tr></tbody></table>
+* **Restricting visibility to only what’s necessary**
+* **Applying least privilege to identities and resources**
+* **Detecting mass enumeration attempts early**
+* **Segmenting and isolating sensitive information and identities**
 

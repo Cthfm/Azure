@@ -1,102 +1,84 @@
 # Defensive Strategies
 
-### **1.** Defending Against Automated Collection (T1119)
+## **Defensive Strategies Against Collection in Azure Environments**
 
-Attackers leverage Azure Automation Accounts, Runbooks, and Logic Apps to collect and exfiltrate data.
+In Azure, defending against **Collection** means **locking down storage, databases, secrets**, **monitoring access patterns**, and **detecting bulk data movement** before it stages for exfiltration.
 
-#### **Defensive Techniques:**
+The goal:\
+➡️ **Stop adversaries from gathering loot**\
+➡️ **Detect when mass collection starts**\
+➡️ **Shut down data staging paths**
 
-✅ **Monitor Automation Runbooks and Logic Apps Execution**
+***
 
-* Enable Azure Monitor Logs to track changes in Automation Accounts, Logic Apps, and Runbooks.
-* Use Microsoft Defender for Cloud to detect suspicious automation activity.
+### 📥 Automated Collection (T1119)
 
-✅ **Restrict Permissions on Automation Services**
+| Defensive Action                                                                                          | Why It Matters                                         |
+| --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| 🔒 Apply least privilege RBAC on Storage Accounts, App Services, Databases                                | Users/identities can only access what they _need_      |
+| 🚫 Enable soft delete and versioning on Storage Accounts                                                  | Prevent silent overwrites or deletes during mass pulls |
+| 📜 Monitor for unusual bulk download patterns (e.g., using Azure Monitor metrics on storage transactions) | Detect mass data pulls                                 |
+| 🛡️ Enable Defender for Storage (Defender for Cloud) to detect bulk extraction anomalies                  | Auto-detect large downloads, exfiltration behaviors    |
 
-* Apply least privilege access (e.g., restrict `Contributor` roles to only necessary users).
-* Use Privileged Identity Management (PIM) for just-in-time access control.
+✅ **Effect**: Mass data collection trips alerts and gets blocked early.
 
-✅ **Disable Unused Automation Accounts**
+***
 
-* Regularly audit unused Automation Accounts and disable or delete them.
+### ☁️ Data from Cloud Storage (T1530)
 
-✅ **Deploy Conditional Access Policies**
+| Defensive Action                                                                                    | Why It Matters                                |
+| --------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| 🔒 Enforce private endpoints and firewall rules on all Storage Accounts                             | Block public blob access                      |
+| 🚫 Rotate Storage Account keys regularly, use Azure Key Vault-backed access instead                 | Prevent attackers using stolen keys           |
+| 📜 Monitor Storage Account SAS (Shared Access Signature) token usage and alert on wide-scope tokens | Detect unauthorized sharing of storage access |
+| 🛡️ Require Storage Authentication via Azure AD (OAuth 2.0), not account keys                       | Stronger authentication prevents theft        |
 
-* Prevent automation execution from untrusted locations by enforcing MFA and device compliance policies.
+✅ **Effect**: Attackers can’t casually enumerate or pull from storage.
 
-### **2.** Defending Against Data from Cloud Storage (T1530)
+***
 
-Adversaries may target Azure Storage Accounts, Blobs, or File Shares to extract sensitive data.
+### 🗄️ Data from Information Repositories (T1213)
 
-#### **Defensive Techniques:**
+| Defensive Action                                                                                     | Why It Matters                               |
+| ---------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| 🔒 Secure Azure SQL and Cosmos DB with private endpoints, firewalls, and strict IAM                  | Protect databases from open queries          |
+| 🚫 Lock down Key Vault access policies and use Role-Based Access Control (RBAC) for Key Vault access | Prevent secrets from being listed easily     |
+| 📜 Monitor for excessive query operations (e.g., `SELECT *` across tables) and mass secret reads     | Alert on unusual DB or Vault access patterns |
+| 🛡️ Enable Defender for Key Vault and Defender for SQL to monitor and block anomalous accesses       | Auto-block malicious data enumeration        |
 
-✅ **Enforce Azure Storage Firewall Rules**
+✅ **Effect**: Structured data and secrets stay secure even if accounts are compromised.
 
-* Restrict Storage Account access to specific IP ranges or Virtual Networks.
-* Use Private Endpoints to limit exposure to public networks.
+***
 
-✅ **Rotate and Restrict Access to Storage Keys & SAS Tokens**
+### 🗃️ Remote Data Staging (T1074.002)
 
-* Disable account keys and enforce Azure Entra ID authentication for access.
-* Set short-lived SAS tokens and revoke old ones when no longer needed.
+| Defensive Action                                                                                                          | Why It Matters                                  |
+| ------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| 🔒 Apply Azure Policy to restrict who can create new Storage Accounts or Storage Containers                               | Block attackers from setting up staging targets |
+| 🚫 Monitor for abnormal outbound data transfers from Azure Storage Accounts or VMs (Azure Monitor, Defender for Storage)  | Detect data staging behaviors                   |
+| 📜 Set alerts on cross-subscription and cross-region data movements (especially between trusted and unknown environments) | Catch data leakage attempts early               |
+| 🛡️ Require encryption-in-transit and enforce logging on storage and network communications                               | Track staged data movement                      |
 
-✅ **Enable Azure Defender for Storage**
+✅ **Effect**: Data can’t be quietly staged for exfiltration without tripping alarms.
 
-* Detect unusual access patterns (e.g., sudden data access from a new location).
+***
 
-✅ **Enable Immutable Storage and Soft Deletes**
+## 📊 **Defensive Coverage Table (Collection in Azure)**
 
-* Prevent unauthorized data modifications or deletions by using Blob versioning and retention policies.
+| Attack Vector                      | Defensive Strategy                                                 |
+| ---------------------------------- | ------------------------------------------------------------------ |
+| Automated Collection               | Least privilege RBAC, Defender for Storage anomaly detection       |
+| Data from Cloud Storage            | Private endpoints, SAS token monitoring, Key Vault-backed access   |
+| Data from Information Repositories | SQL/Key Vault protection, query monitoring, Defender for Databases |
+| Remote Data Staging                | Restrict Storage creation, monitor outbound transfers, log staging |
 
-### **3.** Defending Against Data from Information Repositories (T1213)
+***
 
-Attackers target Azure DevOps, SQL Databases, and Table Storage for sensitive information.
+## 🎯 Final Summary
 
-#### **Defensive Techniques:**
+Defending against Collection in Azure focuses on:
 
-✅ **Audit & Harden Azure DevOps Repositories**
-
-* Use Azure DevOps Access Policies to enforce:
-  * MFA for all repository access
-  * Branch protection rules to prevent unauthorized code modifications
-  * Secret scanning tools (e.g., Microsoft Defender for DevOps).
-
-✅ **Monitor SQL Database Queries & Access**
-
-* Enable SQL Auditing and Threat Detection to log suspicious queries (e.g., `SELECT * FROM users`).
-* Restrict public network access and enforce Private Link connections.
-
-✅ **Enforce Role-Based Access Control (RBAC) on Storage Services**
-
-* Avoid using Owner or Contributor roles for general users.
-* Assign minimum necessary privileges (e.g., `Storage Blob Data Reader` instead of `Storage Account Contributor`).
-
-✅ **Enable Logging for Information Repositories**
-
-* Use Azure Monitor & Sentinel to detect access spikes or abnormal API calls.
-
-### **4.** Defending Against Data Staged & Remote Data Staging (T1074.002)
-
-Attackers may stage stolen data in temporary storage before exfiltrating it.
-
-#### **Defensive Techniques:**
-
-✅ **Monitor Data Transfers & Enable Anomaly Detection**
-
-* Use Azure Security Center to monitor bulk data movement.
-* Enable Azure Sentinel to alert on unusual storage access patterns.
-
-✅ **Prevent Unauthorized Cloud Sync & Third-Party Integrations**
-
-* Disable unauthorized data sync apps (e.g., Dropbox, Google Drive) via Microsoft Defender for Endpoint policies.
-* Restrict Azure DevOps Pipelines to trusted IP ranges.
-
-✅ **Audit & Restrict Data Transfer Permissions**
-
-* Enforce DLP (Data Loss Prevention) policies to block unauthorized file uploads.
-* Use Conditional Access policies to restrict high-risk data access.
-
-✅ **Block External Data Movement**
-
-* Disable public access to Azure Storage and File Shares.
-* Use Defender for Cloud Apps to detect shadow IT data transfers.
+* **Locking down storage, database, and secrets access tightly**
+* **Preventing mass download and data harvesting operations**
+* **Monitoring for abnormal data staging activities**
+* **Using Defender services to detect collection anomalies early**

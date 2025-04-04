@@ -1,114 +1,41 @@
 # Defensive Strategies: TA0002
 
-### **Defensive Strategies for TA0002 - Execution**
+## **Defensive Strategies Against Execution in Entra ID (Azure Identity Environments)**
 
-The Execution phase involves attackers running malicious code within a compromised environment to carry out their objectives, such as privilege escalation, lateral movement, or exfiltration. In Azure, attackers may abuse scripting tools, automation accounts, APIs, and remote commands to execute malicious actions. Below are key defensive strategies for TA0002 mapped to relevant techniques.
+Execution in Entra ID typically happens through API calls (Graph API, Azure Resource Manager API) rather than traditional shell commands. Defense focuses on restricting API access, monitoring sensitive API operations, and controlling privileged identities.
 
-### **1. Limit Scripting and Shell Access**
+***
 
-**Mitigates:** T1059 - Command and Scripting Interpreter (PowerShell, Unix Shell, Python)
+### 💻 Command and Scripting Interpreter → Cloud API (T1059.009)
 
-* **Action:** Restrict the use of **PowerShell, Bash, and other scripting tools** to reduce the attack surface.
-* **Azure Solution:**
-  * **Disable PowerShell remoting** unless explicitly required.
-  * Use **AppLocker** or **Windows Defender Application Control** to block unauthorized scripts.
-  * Monitor PowerShell and shell activities with **Azure Sentinel** and **Defender for Cloud**.
+| Defensive Action                                                                                                                                                                                     | Why It Matters                                                            |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| 🔒 Apply Least Privilege (Principle of Least Privilege - PoLP) to all users, service principals, and managed identities                                                                              | Limit who can call powerful APIs                                          |
+| 🚫 Use Privileged Identity Management (PIM) to make all privileged roles eligible and time-bound (no standing admin access)                                                                          | Prevent permanent exposure to Graph/ARM APIs                              |
+| 📜 Enable Microsoft Entra ID (Azure AD) Audit Logs and sign-ins, then monitor for sensitive operations (user creation, group owner assignment, role elevation)                                       | Detect API abuse quickly                                                  |
+| 🛡️ Require Administrative Unit (AU) scoping for admin accounts where possible                                                                                                                       | Limit what identities can manage via APIs                                 |
+| 📜 Enable alerts in Microsoft Defender for Identity and Sentinel for abnormal API behaviors (e.g., sudden burst of user creations)                                                                   | Catch automation-based execution abuse                                    |
+| 🚫 Restrict application permissions (delegated and app-only) in Entra ID App Registrations                                                                                                           | Prevent consented apps from misusing high-privilege Graph API permissions |
+| 🔒 Enable and enforce Consent Governance: Only allow user consent to known/verified apps and require admin consent for high-risk permissions (e.g., `Directory.ReadWrite.All`, `User.ReadWrite.All`) | Stop rogue apps from silently executing admin API actions                 |
+| 📜 Use Conditional Access policies to require compliant devices and/or MFA for all Graph API access to privileged resources                                                                          | Ensure trusted context even for API executions                            |
 
-### **2. Monitor and Secure Automation Accounts**
+✅ **Effect**: API-based execution becomes much harder without being detected or blocked.
 
-**Mitigates:** T1569.002 - Service Execution, T1574.007 - Service Hijacking
+***
 
-* **Action:** Ensure that **Automation Runbooks** and tasks are not modified to run malicious scripts.
-* **Azure Solution:**
-  * Use **Azure Monitor** to track changes to automation accounts and **runbooks**.
-  * Set alerts in **Azure Sentinel** for any unauthorized execution of automation tasks.
-  * Apply **least privilege** principles to automation accounts to limit the impact of abuse.
+## 📊 **Defensive Coverage Table (Execution in Entra ID)**
 
-### **3. Control Remote Command Execution**
+| Attack Vector                | Defensive Strategy                                                                                                      |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Cloud API Abuse (Graph, ARM) | Least privilege, PIM, Audit Logs, AU scoping, app permission hardening, Defender monitoring, Conditional Access on APIs |
 
-**Mitigates:** T1569 - System Services, T1546 - Event Triggered Execution
+***
 
-* **Action:** Monitor and restrict remote command execution on VMs using **VM RunCommand**.
-* **Azure Solution:**
-  * **Disable VM RunCommand** if not required, or restrict access using **RBAC**.
-  * Enable **Azure Defender for VMs** to detect suspicious script executions on virtual machines.
-  * Use **just-in-time (JIT) VM access** to limit remote command execution windows.
+## 🎯 Final Summary
 
-### **4. Monitor API Calls for Execution Activities**
+Defending against Execution in Entra ID focuses on:
 
-**Mitigates:** T1106 - Native API
-
-* **Action:** Track **API calls** that can create resources or trigger automation.
-* **Azure Solution:**
-  * Enable **Azure Monitor** and **Azure Sentinel** to track suspicious API calls, such as role assignments or VM creation.
-  * Use **activity logs** to detect unusual API activity patterns and respond to incidents.
-
-### **5. Detect Malicious User-Initiated Actions**
-
-**Mitigates:** T1204 - User Execution (Malicious Link, Malicious File)
-
-* **Action:** Monitor for **social engineering attacks** targeting users with malicious links or files.
-* **Azure Solution:**
-  * Use **Microsoft Defender for Office 365** to block phishing attempts and malicious attachments.
-  * Configure **Azure AD Conditional Access Policies** to limit risky user behavior.
-  * Enable **audit logging** to detect malicious file executions and access attempts.
-
-### **6. Disable or Restrict Sudo Access on Linux VMs**
-
-**Mitigates:** T1548 - Abuse Elevation Control Mechanism
-
-* **Action:** Limit **sudo privileges** on Linux VMs to prevent abuse.
-* **Azure Solution:**
-  * Enforce **key-based authentication** and disable password-based logins.
-  * Use **Azure Defender** to monitor for unauthorized privilege escalation attempts.
-
-### **7. Use Conditional Access Policies to Limit Execution Risk**
-
-**Mitigates:** T1078 - Valid Accounts
-
-* **Action:** Use **Conditional Access Policies** to restrict account usage based on context (e.g., IP, device compliance).
-* **Azure Solution:**
-  * Block risky sign-ins and apply **MFA** requirements for privileged users.
-  * Use **Azure Identity Protection** to detect suspicious logins and mitigate compromised accounts.
-
-### **8. Implement Application Whitelisting and Endpoint Protection**
-
-**Mitigates:** T1218 - Signed Binary Proxy Execution
-
-* **Action:** Restrict the execution of **legitimate but potentially abused binaries**, such as MSBuild.
-* **Azure Solution:**
-  * Use **Microsoft Defender for Endpoint** to monitor and block the execution of unauthorized processes.
-  * Implement **AppLocker** policies to restrict the use of binaries like `MSBuild.exe`.
-
-### **9. Harden VMs Against Reverse Shells and Backdoors**
-
-**Mitigates:** T1059.004 - Unix Shell
-
-* **Action:** Monitor Linux VMs for **reverse shells or malicious cron jobs**.
-* **Azure Solution:**
-  * Use **Azure Defender for Linux VMs** to detect and block threats including web shells.
-  * Set up alerts for modifications to **cron jobs** and `.bashrc` files.
-
-### **10. Respond to Execution Attempts Automatically**
-
-**Mitigates:** T1569 - System Services, T1106 - Native API
-
-* **Action:** Automate responses to **suspicious execution activities**.
-* **Azure Solution:**
-  * Use **Azure Sentinel** playbooks to disable accounts or stop VMs upon detecting suspicious activity.
-  * Integrate **Microsoft Defender for Cloud** with **Sentinel** to respond to execution alerts in real-time.
-
-### **Summary of Defensive Measures for TA0002**
-
-| **Defensive Strategy**                | **Mitigates**                             | **Azure Solution**                                           |
-| ------------------------------------- | ----------------------------------------- | ------------------------------------------------------------ |
-| Limit Scripting and Shell Access      | T1059 - Command and Scripting Interpreter | Block unauthorized scripts with AppLocker and monitoring     |
-| Secure Automation Tools               | T1569.002 - Service Execution             | Monitor runbooks with Azure Monitor and Sentinel             |
-| Control Remote Execution              | T1569 - System Services                   | Use JIT VM access and restrict RunCommand usage              |
-| Monitor API Calls                     | T1106 - Native API                        | Use Azure Sentinel to detect suspicious API activity         |
-| Detect User-Initiated Execution       | T1204 - User Execution                    | Use Defender for O365 to block malicious links and files     |
-| Restrict Sudo and Privileges          | T1548 - Abuse Elevation Control Mechanism | Monitor sudo usage with Azure Defender                       |
-| Apply Conditional Access Policies     | T1078 - Valid Accounts                    | Enforce MFA and apply risk-based conditional access policies |
-| Implement App Whitelisting            | T1218 - Signed Binary Proxy Execution     | Use AppLocker to block unauthorized binaries                 |
-| Harden VMs Against Reverse Shells     | T1059.004 - Unix Shell                    | Monitor for cron jobs and reverse shells with Defender       |
-| Automate Response to Execution Events | T1569 - System Services                   | Use Sentinel playbooks for automated response                |
+* **Restricting who can run sensitive API operations** (limit create/modify actions)
+* **Auditing and alerting on Graph API and ARM API calls**
+* **Protecting privileged roles with PIM, CA policies, and device trust enforcement**
+* **Blocking excessive application permissions and user consent risks**

@@ -1,164 +1,289 @@
 # Discovery TA00007
 
-## Overview:
+## **Discovery Techniques in Azure Environments**
 
-In Microsoft Azure Infrastructure-as-a-Service (IaaS), adversaries use discovery techniques (TA0007) to identify cloud resources and services that can be leveraged for further exploitation. These techniques help attackers enumerate virtual machines, networking components, storage accounts, and identity-related configurations to understand the environment. Often, reconnaissance efforts blend with legitimate administrative activities, making detection challenging. Implementing continuous monitoring, anomaly detection, and least-privilege access models is essential to mitigate these risks.
+In Microsoft Azure, adversaries use Discovery techniques to learn about cloud resources, accounts, network configurations, logging systems, and security tools. This knowledge helps them plan **lateral movement, privilege escalation, and impact** operations.
 
-### **Account Discovery (T1087)**
+Cloud environments expose **rich metadata** if discovery isn't controlled — making early visibility critical.
 
-Attackers attempt to enumerate users, groups, and permissions to understand the access hierarchy in an Azure environment.
+***
 
-#### **T1087.004 – Cloud Account Discovery**
+#### 🔍 Account Discovery → **T1087**
 
-* **Example Attack:**
-  *   Using **Azure CLI** to list user accounts:
+***
 
-      ```powershell
-      az ad user list --query "[].{Name:displayName, UserPrincipalName:userPrincipalName}"
-      ```
+**➡️ Cloud Account**
 
-### **Cloud Infrastructure Discovery (T1580)**
+\| MITRE ID | **T1087.004** |
 
-Attackers attempt to identify virtual machines, databases, and cloud resources in an Azure subscription.
+**Description**:\
+List Azure AD users, service principals, managed identities, and other accounts.
 
-* **Example Attack:**
-  *   Using Azure CLI to list resources within a given tenant:
+**Azure Example**:
 
-      <pre class="language-powershell"><code class="lang-powershell"><strong>az resource list --query "[].{Name:name, Type:type}
-      </strong></code></pre>
+```bash
+bashCopyEditaz ad user list
+az ad sp list
+```
 
-### **Cloud Service Dashboard (T1590.001)**
+✅ **Result**: Full view of available identities for targeting.
 
-Attackers may log into the Azure portal portal.azure.com to manually browse resources.
+***
 
-* **Example Attack:**
-  * Login with stolen credentials and browse Resource Explorer.
+#### 🌩️ Cloud Infrastructure Discovery
 
-### **Cloud Service Discovery (T1526)**
+\| MITRE ID | **T1580** |
 
-Attackers enumerate available Azure services and regions.
+**Description**:\
+Enumerate Azure subscriptions, resource groups, VMs, Kubernetes clusters, and networking components.
 
-* **Example Attack:**
-  *   Identifying cloud regions:
+**Azure Example**:
 
-      ```powershell
-      az account list-locations --query "[].{Region:name}"
-      ```
+```bash
+bashCopyEditaz resource list
+az aks list
+az vm list
+```
 
-### **Cloud Storage Object Discovery (T1613)**
+✅ **Result**: Inventory of available cloud assets.
 
-Attackers scan for publicly accessible storage blobs.
+***
 
-* **Example Attack:**
-  *   Listing storage containers:
+#### 📊 Cloud Service Dashboard
 
-      ```powershell
-      az storage blob list --container-name mycontainer --account-name mystorage
-      ```
+\| MITRE ID | **T1538** |
 
-### **Log Enumeration (T1005)**
+**Description**:\
+Access Azure Portal or dashboards to manually discover available services, configurations, and security postures.
 
-Attackers attempt to access Azure logs to gather intel on security events.
+**Azure Example**:
 
-* **Example Attack:**
-  *   Retrieving logs from Azure Monitor:
+Login to `portal.azure.com` and browse **Resource Groups**, **App Services**, **Key Vaults**.
 
-      ```powershell
-      az monitor activity-log list --max-items 10
-      ```
+✅ **Result**: GUI-based resource discovery.
 
-### **Network Service Discovery (T1046)**
+***
 
-Attackers scan Azure virtual networks (VNets) and Network Security Groups (NSGs).
+#### ☁️ Cloud Service Discovery
 
-* **Example Attack:**
-  *   Checking network security rules:
+\| MITRE ID | **T1526** |
 
-      ```powershell
-      az network nsg rule list --resource-group MyResourceGroup --nsg-name MyNSG
-      ```
-  *   Performing internal network scanning:
+**Description**:\
+Programmatically query Azure APIs to find cloud services like Storage, App Services, Databases, etc.
 
-      ```bash
-      nmap -p- -Pn -T4 <Target-IP>
-      ```
+**Azure Example**:
 
-### **Network Sniffing (T1040)**
+```bash
+bashCopyEditaz storage account list
+az sql server list
+```
 
-If an attacker gains control of a compromised Azure VM, they might attempt packet sniffing.
+✅ **Result**: API-level enumeration of services.
 
-* **Example Attack:**
-  *   Running `tcpdump` to capture traffic:
+***
 
-      ```bash
-      tcpdump -i eth0 -w capture.pcap
-      ```
+#### 📂 Cloud Storage Object Discovery
 
-### **Password Policy Discovery (T1201)**
+\| MITRE ID | **T1619** |
 
-Attackers query password policies to plan credential attacks.
+**Description**:\
+List blobs, files, and shares inside Azure Storage Accounts.
 
-* **Example Attack:**
-  *   Retrieving Azure Entra ID password policy:
+**Azure Example**:
 
-      ```powershell
-      # Connect to Microsoft Graph
-      Connect-MgGraph -Scopes "Policy.Read.All", "Directory.Read.All"
+```bash
+bashCopyEditaz storage blob list --account-name victimstorage --container-name secrets
+```
 
-      # Get password policy info
-      Get-MgPolicyAuthenticationMethodsPolicy
-      ```
+✅ **Result**: Discovery of exposed or misconfigured storage objects.
 
-### **Permission Groups Discovery (T1069)**
+***
 
-Attackers enumerate **Azure Entra ID groups** to identify privileged accounts.
+#### 📜 Log Enumeration
 
-#### **T1069.003 – Cloud Groups Discovery**
+\| MITRE ID | **T1560** (closest match: Data from Local System) |
 
-* **Example Attack:**
-  *   Listing Entra ID groups:
+**Description**:\
+Enumerate Azure Activity Logs, Diagnostic Logs, or SIEM logs to learn about operations and incidents.
 
-      ```powershell
-      Get-EntraGroup 
-      ```
-  *   Checking role assignments:
+**Azure Example**:
 
-      ```powershell
-      az role assignment list --query "[].{Role:roleDefinitionName, User:principalName}"
-      ```
+```bash
+bashCopyEditaz monitor activity-log list
+az monitor diagnostic-settings list
+```
 
-### **Software Discovery (T1518)**
+✅ **Result**: Discovery of logging practices and audit trails.
 
-Attackers investigate security software and system configurations.
+***
 
-#### **T1518.001 – Security Software Discovery**
+#### 🌐 Network Service Discovery
 
-* **Example Attack:**
-  * Check for installed security solutions:
+\| MITRE ID | **T1046** |
 
-**T1518.002 – System Information Discovery**
+**Description**:\
+Identify networked services like exposed VM public IPs, load balancers, Kubernetes API servers, App Gateways.
 
-* **Example Attack:**
-  *   Gathering system details:
+**Azure Example**:
 
-      ```powershell
-      az vm show --name myVM --resource-group myRG
-      ```
+```bash
+bashCopyEditaz network public-ip list
+az network lb list
+```
 
-#### **T1518.003 – System Location Discovery**
+✅ **Result**: Map cloud network surfaces.
 
-* **Example Attack:**
-  *   Identifying VM locations:
+***
 
-      ```powershell
-      az account list-locations
-      ```
+#### 🌐 Network Sniffing
 
-&#x20;**T1518.004 – System Network Connections Discovery**
+\| MITRE ID | **T1040** |
 
-* **Example Attack:**
-  *   Checking active network connections:
+**Description**:\
+Capture Azure VNET traffic to identify active services, open ports, and network protocols.
 
-      ```powershell
-      netstat -ano
-      ```
+**Azure Example**:
+
+Deploy a packet capture agent on a VM or use NSG flow logs.
+
+✅ **Result**: Dynamic network mapping.
+
+***
+
+#### 🛡️ Password Policy Discovery
+
+\| MITRE ID | **T1201** |
+
+**Description**:\
+Query Azure AD password policies to understand complexity, rotation, and lockout settings.
+
+**Azure Example**:
+
+```bash
+bashCopyEditaz ad policy password list
+```
+
+✅ **Result**: Assess credential hardening posture.
+
+***
+
+#### 🛡️ Permission Groups Discovery → **Cloud Groups**
+
+\| MITRE ID | **T1069.003** |
+
+**Description**:\
+List Azure AD security groups, M365 groups, and their members.
+
+**Azure Example**:
+
+```bash
+bashCopyEditaz ad group list
+az ad group member list --group <group-name>
+```
+
+✅ **Result**: Discover access control groupings.
+
+***
+
+#### 🖥️ Software Discovery → Security Software Discovery
+
+\| MITRE ID | **T1518.001** |
+
+**Description**:\
+Identify what security agents, endpoint detection systems, or monitoring solutions are deployed in Azure.
+
+**Azure Example**:
+
+Query installed extensions or Defender coverage:
+
+```bash
+bashCopyEditaz vm extension list
+az security pricing list
+```
+
+✅ **Result**: Visibility into deployed security tooling.
+
+***
+
+#### 🖥️ System Information Discovery
+
+\| MITRE ID | **T1082** |
+
+**Description**:\
+Collect detailed information about Azure VMs, OS versions, and instance metadata.
+
+**Azure Example**:
+
+```bash
+bashCopyEditaz vm show --name <vm-name> --resource-group <rg>
+```
+
+✅ **Result**: Target system profiling.
+
+***
+
+#### 📍 System Location Discovery
+
+\| MITRE ID | **T1614.001** |
+
+**Description**:\
+Determine the Azure regions where resources are deployed.
+
+**Azure Example**:
+
+```bash
+bashCopyEditaz account list-locations
+az resource list --query '[].location'
+```
+
+✅ **Result**: Understand physical cloud footprint.
+
+***
+
+#### 🌐 System Network Connections Discovery
+
+\| MITRE ID | **T1049** |
+
+**Description**:\
+Discover Azure VMs’ network connections, public IP mappings, and peering relationships.
+
+**Azure Example**:
+
+```bash
+bashCopyEditaz network nic list
+az network vnet peering list
+```
+
+✅ **Result**: Network relationship mapping.
+
+***
+
+## 📊 **Discovery Techniques in Azure (MITRE Mapped)**
+
+| Technique/Subtechnique               | MITRE ID              | Azure Example                        |
+| ------------------------------------ | --------------------- | ------------------------------------ |
+| Cloud Account                        | T1087.004             | List Azure AD users, SPNs            |
+| Cloud Infrastructure Discovery       | T1580                 | List Azure subscriptions, AKS, VMs   |
+| Cloud Service Dashboard              | T1538                 | Browse Azure Portal for resources    |
+| Cloud Service Discovery              | T1526                 | API enumeration of cloud services    |
+| Cloud Storage Object Discovery       | T1619                 | List blobs/files in Azure Storage    |
+| Log Enumeration                      | T1560 (closest match) | Query Activity Logs, Diagnostics     |
+| Network Service Discovery            | T1046                 | List public IPs, Load Balancers      |
+| Network Sniffing                     | T1040                 | Capture VNET traffic                 |
+| Password Policy Discovery            | T1201                 | Read Azure AD password policies      |
+| Cloud Groups                         | T1069.003             | Enumerate Azure AD groups            |
+| Security Software Discovery          | T1518.001             | Identify Defender agents, extensions |
+| System Information Discovery         | T1082                 | VM OS and instance metadata          |
+| System Location Discovery            | T1614.001             | Azure region discovery               |
+| System Network Connections Discovery | T1049                 | NICs, peerings, network mappings     |
+
+***
+
+## 🎯 Final Summary
+
+Defending against Discovery in Azure focuses on:
+
+* **Hardening identity and API access controls**
+* **Restricting who can list resources and services (least privilege RBAC)**
+* **Securing logs, secrets, and storage configurations**
+* **Detecting enumeration and unauthorized reconnaissance activity**

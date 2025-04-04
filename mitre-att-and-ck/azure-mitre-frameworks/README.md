@@ -1,4 +1,8 @@
-# Azure MITRE Based Threat Hunting
+---
+hidden: true
+---
+
+# Azure MITRE Frameworks
 
 ### Overview
 

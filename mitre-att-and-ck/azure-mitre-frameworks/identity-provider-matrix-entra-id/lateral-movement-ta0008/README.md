@@ -1,19 +1,55 @@
 # Lateral Movement TA0008
 
-## Overview
+## **Lateral Movement Techniques in Entra ID (Azure Identity Environments)**
 
-Lateral Movement in Entra ID (formerly Azure AD) refers to techniques attackers employ to traverse and gain access to resources within an organization's identity and access management (IAM) environment. Adversaries often exploit compromised credentials, abused refresh or access tokens, or misconfigured role assignments to escalate privileges and expand their control. The goal is to navigate through interconnected services, groups, or identities to identify and access high-value targets. Attackers might abuse legitimate Entra ID tools such as PowerShell modules (e.g., AzureAD, MSOnline), Entra Graph API, or third-party management scripts to maintain stealth. Techniques include abusing service principals, leveraging excessive permissions in privileged roles, token impersonation, and exploiting conditional access gaps or trust relationships between tenants. Such activities may also target hybrid setups where on-premises Active Directory is synced to Entra ID, enabling deeper network infiltration.
+In Microsoft Entra ID (Azure Active Directory), **Lateral Movement** happens when attackers move across accounts, services, tenants, or cloud APIs after initial access.\
+Instead of pivoting through networks like traditional attacks, cloud lateral movement is **token-based, session-based, or API-based**.
 
-For the scope of this section, we will primarily focus on compromising credentials.&#x20;
+***
 
-### **1. Stealing Authentication Tokens**
+#### 🔀 Use Alternate Authentication Material → Application Access Token
 
-**Technique:** T1550 - Use Alternate Authentication Material\
-Attackers search for **a**ccess tokens or secrets left unprotected in memory, files, or logs. Attackers can also intercept them.
+\| MITRE ID | **T1550.001** |
 
-*   **T1550.001: Application Access Token**
+**Description**:\
+Steal or forge **Azure OAuth access tokens** or **Managed Identity tokens** to authenticate to other Azure services or Entra ID resources without needing passwords.
 
-    Adversaries use tokens such as access, refresh, PRT tokens, or other bearer tokens to authenticate directly with services or applications. In Azure Entra ID, these tokens are commonly issued to apps and can be abused if compromised.
+**Entra ID Example**:
+
+* Attacker compromises an Azure VM or Function App.
+* Extracts a Managed Identity token from the Azure Instance Metadata Service (IMDS).
+* Uses the token to access Azure APIs (e.g., Key Vaults, Storage Accounts, Kubernetes clusters, privileged management APIs).
+
+```bash
+bashCopyEdit# Retrieve Managed Identity token
+curl -H Metadata:true "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/"
+
+# Use token to query Azure Management APIs
+curl -X GET https://management.azure.com/subscriptions/<sub-id>/resourceGroups?api-version=2020-06-01 \
+-H "Authorization: Bearer <stolen_token>"
+```
+
+✅ **Result**:\
+Attacker moves across Azure resources, authenticating with the stolen token invisibly — without triggering password-based detections.
+
+***
+
+## 📊 **Lateral Movement Techniques in Entra ID (MITRE Mapped)**
+
+| Technique/Subtechnique   | MITRE ID  | Entra ID Example                                                          |
+| ------------------------ | --------- | ------------------------------------------------------------------------- |
+| Application Access Token | T1550.001 | Steal and reuse OAuth or Managed Identity tokens to access cloud services |
+
+***
+
+## 🎯 Final Summary
+
+Defending against Lateral Movement in Entra ID focuses on:
+
+* **Securing tokens and sessions from theft**
+* **Restricting token permissions to the minimum necessary (least privilege)**
+* **Monitoring token usage for anomalous patterns (e.g., reuse across IPs, geographies)**
+* **Revoking tokens quickly when compromise is detected**
 
 
 

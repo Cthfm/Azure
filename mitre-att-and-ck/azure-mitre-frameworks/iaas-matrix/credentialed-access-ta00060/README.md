@@ -1,144 +1,266 @@
 # Credentialed Access TA00060
 
-## Overview:
+**Credential Access Techniques in Azure Environments**
 
-Attackers targeting Azure often aim to harvest or forge credentials to escalate privileges, move laterally, or maintain persistence. Below are key techniques and Azure-specific examples aligned with the MITRE ATT\&CK framework.
-
-### Brute Force (T1110)
-
-**Description:** Repeatedly attempt authentication using password-based methods.
-
-**Password Guessing (T1110.001)**
-
-**Azure Example:**\
-Attempt login using a known username (`admin@tenant.onmicrosoft.com`) with common passwords via the Azure AD sign-in endpoint.
-
-Use automated tools like Hydra or AADInternals to perform low-volume guessing to evade detection.
-
-**Password Spraying (T1110.003)**
-
-**Azure Example:**\
-Spray a list of common passwords (e.g., `Winter2024!`) across many Azure AD accounts using `Invoke-AADIntSpray` (AADInternals).
-
-Bypass account lockouts with low-and-slow attempts from rotating IPs.
-
-**Credential Stuffing (T1110.004)**
-
-**Azure Example:**\
-Use previously leaked credentials from breaches to access Azure services like Outlook, Azure Portal, or Graph API.
-
-Leverage tools like `MicroBurst`, `ROADtools`, or `FireProx` to automate login attempts while rotating IP addresses.
-
-#### Credentials from Password Stores (T1555.006)
-
-**Cloud Secrets Management Stores**\
-**Description:** Access credentials stored in platforms like Azure Key Vault.
-
-**Azure Example:**\
-Exploit a misconfigured Function App or Automation Account to retrieve secrets from Key Vault using `DefaultAzureCredential()`:
-
-```python
-from azure.keyvault.secrets import SecretClient
-secret_client = SecretClient(vault_url="https://myvault.vault.azure.net", credential=DefaultAzureCredential())
-secret = secret_client.get_secret("sql-password")
-```
-
-
-
-### Forge Web Credentials (T1606)
-
-**Description:** Forge authentication artifacts such as tokens or cookies.
-
-**Web Cookies (T1606.001)**
-
-**Azure Example:**\
-Use a stolen Azure Portal session cookie (e.g., `x-ms-cpim-trans`) to impersonate a logged-in user.
-
-Replay the session in a browser or through custom HTTP tooling (e.g., Burp, Fiddler).
-
-**SAML Tokens (T1606.002)**
-
-**Azure Example:**\
-Forge or manipulate a SAML token used in Azure AD federated login flows (e.g., exploiting misconfigured ADFS).
+In Microsoft Azure, adversaries use Credential Access techniques to steal, forge, or brute-force credentials. Successful credential access allows lateral movement, privilege escalation, and persistence inside cloud environments.\
+Credential attacks often focus on **passwords, cloud tokens, API secrets, or metadata services**.
 
 ***
 
-### Modify Authentication Process (T1556)
+#### 🔑 Brute Force → **T1110**
 
-**Description:** Alter authentication mechanisms to weaken or bypass identity protections.
+***
 
-**Multi-Factor Authentication (T1556.006)**
+**➡️ Password Guessing**
 
-**Azure Example:**\
-Exploit MFA fatigue by sending repeated push notifications using `MSGraphNotifications` or `AADInternals` until the user accepts.
+\| MITRE ID | **T1110.001** |
 
-**Hybrid Identity (T1556.007)**
+**Description**:\
+Systematically guess Azure user passwords to gain unauthorized access.
 
-**Azure Example:**\
-Compromise on-prem AD, then sync forged identities into Azure Entra via Azure Entra Connect.
-
-Abuse unsynced password changes or misconfigured sync scopes to inject malicious accounts.
-
-**Conditional Access Policies (T1556.008)**
-
-**Azure Example:**\
-Use a privileged identity to modify Conditional Access policies, excluding attacker IPs or device types from MFA or location checks:
+**Azure Example**:\
+Attempt to log in using common passwords across Azure AD accounts:
 
 ```bash
-az rest --method PATCH --uri https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies/{policy-id}
+bashCopyEditaz login --username victim@domain.com --password "Password123!"
 ```
 
-### Network Sniffing (T1040)
+✅ **Result**: Simple guessing against Azure AD accounts.
 
-**Description:** Capture network traffic from within a compromised Azure VM to steal credentials.
+***
 
-**Azure Example:**\
-Use `tcpdump` or `Wireshark` on a Linux VM to capture unencrypted HTTP Basic Auth or LDAP traffic.
+**➡️ Password Spraying**
 
-Capture authentication headers from misconfigured internal services or during a phishing C2 callback.
+\| MITRE ID | **T1110.003** |
+
+**Description**:\
+Attempt a few commonly used passwords across many Azure AD users to avoid account lockouts.
+
+**Azure Example**:\
+Spray "Welcome123!" against hundreds of Azure AD user accounts.
+
+✅ **Result**: Mass guessing without triggering lockouts.
+
+***
+
+**➡️ Credential Stuffing**
+
+\| MITRE ID | **T1110.004** |
+
+**Description**:\
+Use credential dumps (usernames/passwords from breaches) to try logging into Azure cloud services.
+
+**Azure Example**:\
+Replay stolen Office 365 credentials against Azure AD.
+
+✅ **Result**: Takeover if reused passwords are still valid.
+
+***
+
+#### 🔐 Credentials from Password Stores → **Cloud Secrets Management Stores**
+
+\| MITRE ID | **T1555.004** |
+
+**Description**:\
+Steal secrets directly from Azure Key Vault or AWS Secrets Manager equivalents.
+
+**Azure Example**:\
+Access Azure Key Vault if Service Principal is compromised:
 
 ```bash
-tcpdump -i eth0 port 80 or port 443 -w creds.pcap
+bashCopyEditaz keyvault secret list --vault-name victim-vault
 ```
 
-### Steal Application Access Token (T1528)
+✅ **Result**: Immediate access to API keys, database credentials, etc.
 
-**Description:** Use a stolen access token to impersonate a user or service.
+***
 
-**Azure Example:**\
-Extract Bearer token from browser DevTools or logs and use it to call Microsoft Graph:
+#### 🛠️ Forge Web Credentials
 
-```http
-GET https://graph.microsoft.com/v1.0/me
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJh...
-```
+***
 
-Leverage this token to access email, files, calendars, or administrative APIs depending on token scope.
+**➡️ Web Cookies**
 
-### Unsecured Credentials (T1552)
+\| MITRE ID | **T1606.003** |
 
-**Description:** Steal credentials stored insecurely in files or metadata.
+**Description**:\
+Steal or forge Azure Portal web session cookies for access without authentication.
 
-**Credentials in Files (T1552.001)**
+**Azure Example**:\
+Use stolen session cookie to access Azure Portal directly without needing credentials.
 
-**Azure Example:**\
-Search deployed Function Apps, DevOps pipelines, or containers for hardcoded secrets in:
+✅ **Result**: Hijack authenticated sessions.
 
-* `local.settings.json`
-* `.env`
-* `web.config`
+***
+
+**➡️ SAML Tokens**
+
+\| MITRE ID | **T1606.002** |
+
+**Description**:\
+Forge or steal SAML tokens to impersonate Azure users in federated SSO environments.
+
+**Azure Example**:\
+Use Golden SAML attack to impersonate an Azure AD user.
+
+✅ **Result**: Complete federation bypass, invisible logins.
+
+***
+
+#### 🛡️ Modify Authentication Process
+
+***
+
+**➡️ Multi-Factor Authentication**
+
+\| MITRE ID | **T1556.006** |
+
+**Description**:\
+Disable or weaken MFA settings in Azure Conditional Access to bypass additional verification.
+
+**Azure Example**:
 
 ```bash
-grep -i 'password\|key\|secret' -R .
+bashCopyEditaz ad conditional-access policy update --id <policy-id> --state disabled
 ```
 
-**🔹 Cloud Instance Metadata API (T1552.006)**
+✅ **Result**: Easier reentry and credential use.
 
-**Azure Example:**\
-Query the Azure Instance Metadata Service (IMDS) from a compromised VM to extract a token:
+***
+
+**➡️ Hybrid Identity**
+
+\| MITRE ID | **T1556.007** |
+
+**Description**:\
+Abuse Azure AD Connect synchronization to forge or hijack credentials between on-premises and cloud.
+
+✅ **Result**: Stealthy cross-domain persistence.
+
+***
+
+**➡️ Conditional Access Policies**
+
+\| MITRE ID | **T1556.008** |
+
+**Description**:\
+Modify CA policies to remove login restrictions (device compliance, IP restrictions).
+
+✅ **Result**: Bypass Azure AD protections.
+
+***
+
+**➡️ Multi-Factor Authentication Request Generation**
+
+\| MITRE ID | **T1111** |
+
+**Description**:\
+Flood users with fake MFA push notifications ("MFA fatigue attacks") to get accidental approval.
+
+**Azure Example**:\
+Send repeated push notifications via Azure MFA until user accepts.
+
+✅ **Result**: MFA bypass via user exhaustion.
+
+***
+
+#### 🌐 Network Sniffing
+
+\| MITRE ID | **T1040** |
+
+**Description**:\
+Capture network traffic inside Azure Virtual Networks to steal session cookies, tokens, or credentials.
+
+**Azure Example**:\
+Use packet capture on Azure VM NICs if NSG rules are misconfigured.
+
+✅ **Result**: Harvest session tokens or cleartext credentials.
+
+***
+
+#### 🛡️ Steal Application Access Token
+
+\| MITRE ID | **T1528** |
+
+**Description**:\
+Steal Azure Managed Identity tokens, Kubernetes service account tokens, or OAuth tokens from applications.
+
+**Azure Example**:\
+Steal Managed Identity token from Azure VM metadata service:
 
 ```bash
-curl -H Metadata:true "http://169.254.169.254/metadata/identity/oauth2/token?resource=https://management.azure.com&api-version=2018-02-01"
+bashCopyEditcurl -H Metadata:true "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/"
 ```
 
-Use token to impersonate the VM’s managed identity and access other Azure resources (e.g., Key Vault, Storage).
+✅ **Result**: Pivot into Azure services using stolen tokens.
+
+***
+
+#### 🔓 Unsecured Credentials
+
+***
+
+**➡️ Credentials In Files**
+
+\| MITRE ID | **T1552.001** |
+
+**Description**:\
+Harvest credentials from code repositories, container images, storage blobs, or VM disks.
+
+**Azure Example**:\
+Find hardcoded secrets in Azure Blob Storage or GitHub repositories.
+
+✅ **Result**: Immediate access to hardcoded keys.
+
+***
+
+**➡️ Cloud Instance Metadata API**
+
+\| MITRE ID | **T1552.005** |
+
+**Description**:\
+Access Azure Instance Metadata Service (IMDS) to steal OAuth tokens and identity credentials.
+
+**Azure Example**:\
+Curl Azure IMDS endpoint from a compromised VM:
+
+```bash
+bashCopyEditcurl -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2021-02-01"
+```
+
+✅ **Result**: Exfiltrate sensitive identity info without needing passwords.
+
+***
+
+## 📊 **Credential Access Techniques in Azure (MITRE Mapped)**
+
+| Technique/Subtechnique             | MITRE ID  | Azure Example                                |
+| ---------------------------------- | --------- | -------------------------------------------- |
+| Password Guessing                  | T1110.001 | Guess Azure AD passwords manually            |
+| Password Spraying                  | T1110.003 | Spray common passwords across accounts       |
+| Credential Stuffing                | T1110.004 | Replay breached passwords                    |
+| Credentials from Password Stores   | T1555.004 | Steal secrets from Azure Key Vault           |
+| Web Cookies                        | T1606.003 | Steal Azure Portal session cookies           |
+| SAML Tokens                        | T1606.002 | Forge Golden SAML tokens for Azure SSO       |
+| Modify MFA                         | T1556.006 | Disable MFA via Conditional Access tampering |
+| Modify Hybrid Identity             | T1556.007 | Abuse Azure AD Connect sync                  |
+| Modify Conditional Access Policies | T1556.008 | Weaken Conditional Access policies           |
+| MFA Request Generation             | T1111     | MFA fatigue attacks to exhaust users         |
+| Network Sniffing                   | T1040     | Capture Azure VNET traffic                   |
+| Steal Application Access Token     | T1528     | Harvest Managed Identity tokens              |
+| Credentials In Files               | T1552.001 | Hardcoded secrets in storage/repos           |
+| Cloud Instance Metadata API        | T1552.005 | Steal tokens from Azure VM metadata          |
+
+***
+
+## 🎯 Final Summary
+
+Defending against Credential Access in Azure focuses on:
+
+* **Hardening authentication flows (MFA, Conditional Access, Identity Protection)**
+* **Securing secrets (Key Vault, Metadata Services, storage)**
+* **Monitoring for brute-force and credential stuffing patterns**
+* **Protecting applications and instances from token theft**
+* **Detecting credential harvesting early**
+
+##

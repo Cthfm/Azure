@@ -1,57 +1,211 @@
 # Persistence: TA0003
 
-## **Overview of TA0003: Persistence**&#x20;
+hniques to maintain continuous access across reboots, credential rotations, and administrative clean-ups. Persistence is achieved by manipulating cloud identities, implanting malicious workloads, altering authentication processes, or leveraging trusted defaults.
 
-The **Persistence** tactic (TA0003) in the MITRE ATT\&CK framework focuses on techniques adversaries use to maintain access to systems and environments even after interruptions, such as credential changes or system reboots. In the context of **Azure Infrastructure-as-a-Service (IaaS)**, persistence techniques are adapted to exploit the unique features of Azure's cloud infrastructure.
+***
 
-### **Closer Review: Persistence in Azure IaaS**
+#### 👤 Account Manipulation → **T1098 – Account Manipulation**
 
-Azure IaaS provides virtualized computing resources, including virtual machines (VMs), virtual networks, and storage. These resources offer flexibility but also introduce potential avenues for attackers to establish and maintain persistence. Below are key elements and techniques associated with persistence in Azure IaaS:
+***
 
-### **Account Manipulation (T1098)**
+**➡️ T1098.001 – Additional Cloud Credentials**
 
-This technique involves altering accounts or credentials to maintain unauthorized access. In Azure, this includes modifying roles, adding secrets, or creating backdoors in accounts to ensure persistence. Let's look at each sub-technique in greater detail below.&#x20;
+**Description**:\
+Add new authentication credentials (e.g., client secrets, certificates) to Azure Service Principals or Managed Identities to maintain access even after rotation.
 
-1. **Additional Cloud Credentials (T1098.001)**
-   * **Example in Azure:** Adding additional Azure Entra application secrets or certificates to an application to maintain persistence. Attackers may exploit stolen Azure Entra credentials to register new secrets for applications they compromised, allowing continued access even if the original credentials are revoked.
-2. **Additional Cloud Roles (T1098.003)**
-   * **Example in Azure:** Assigning themselves additional roles in Azure AD (e.g., granting `Contributor` or `Owner` roles to maintain broader control). This can be achieved by exploiting compromised privileged accounts to modify role assignments.
-3. **SSH Authorized Keys (T1098.003)**
-   * **Example in Azure:** Inserting SSH keys into Linux virtual machines deployed in Azure. Attackers can use the Azure CLI to modify the SSH key configurations via az vm user update commands.
+**Azure Example**:
 
-### **Create Account (T1136)**
+```bash
+bashCopyEditaz ad sp credential reset --name <service-principal-id> --append --password <new-password>
+```
 
-The technique involves creating new accounts to establish unauthorized access or persistence. In Azure, attackers may exploit administrative privileges to create cloud accounts with elevated roles, enabling ongoing access to resources. Let's take a look at the associated subtechnique.
+✅ **Mapping**:\
+**MITRE ID**: T1098.001 – _Account Manipulation: Additional Cloud Credentials_
 
-1. **Cloud Account (T1136.003)**
-   * **Example in Azure:** Attackers can use compromised global administrator credentials to create new Azure Entra ID accounts with elevated permissions. This provides persistence while concealing the attacker’s presence.
+***
 
-### **Event Triggered Execution (**&#x54;1546)
+**➡️ T1098.003 – Additional Cloud Roles**
 
-This technique involves setting up mechanisms that execute malicious code in response to specific system events or conditions.&#x20;
+**Description**:\
+Assign new or elevated Azure RBAC roles to existing compromised identities to maintain privileged access.
 
-* **Example in Azure: A**ttackers might use VM startup scripts, custom images, or scheduled tasks, or Azure functions to trigger unauthorized actions automatically during resource initialization or usage.
+**Azure Example**:
 
-### **Implant Internal Image (T1525)**
+```bash
+bashCopyEditaz role assignment create --assignee <spn-id> --role Contributor --scope /subscriptions/<sub-id>
+```
 
-* **Example in Azure:** Creating custom VM images with malicious payloads. These images, when deployed, execute the attacker's code automatically. Azure Compute Gallery can be abused to share such malicious images across multiple subscriptions.
+✅ **Mapping**:\
+**MITRE ID**: T1098.003 – _Account Manipulation: Additional Cloud Roles_
 
-### **Modify Authentication Process (T1556)**
+***
 
-This tactic involves altering authentication mechanisms to bypass security controls or maintain access. In Azure, this can include disabling MFA, manipulating Conditional Access Policies, or exploiting hybrid identity configurations to weaken authentication and facilitate persistence. Let's look at the specific subtechniques.&#x20;
+**➡️ T1098.004 – SSH Authorized Keys**
 
-1. **Multi-Factor Authentication  (T1556.006)**
-   * **Example in Azure:** Disabling MFA for critical accounts or creating conditional access policies to bypass MFA requirements. This ensures attackers can access the environment without triggering MFA challenges.
-2. **Hybrid Identity (T1556.007)**
-   * **Example in Azure:** Exploiting misconfigurations in hybrid identity setups, such as Azure AD Connect. Attackers might sync malicious on-premises accounts to Azure AD or manipulate the sync rules to bypass security policies.
-3. **Conditional Access Policies (T1556.009)**
-   * **Example in Azure:** Modifying or disabling conditional access policies to weaken security controls, allowing unrestricted access to specific accounts or resources.
+**Description**:\
+Plant SSH keys into Azure VMs to maintain persistent remote access.
 
-### **Valid Accounts (T1078)**
+**Azure Example**:
 
-This technique involves using legitimate credentials to gain or maintain unauthorized access. In Azure, attackers may exploit default accounts, compromised credentials, or inactive cloud accounts to blend in with normal user activity, avoid detection, and sustain persistence within the environment. Let's look at the sub-techniques more closely.
+```bash
+bashCopyEditaz vm extension set --publisher Microsoft.OSTCExtensions --name VMAccessForLinux --vm-name victim-vm --resource-group victim-rg --protected-settings '{"username":"azureuser","ssh_key":"ssh-rsa AAAAB3..."}'
+```
 
-1. **Default Accounts (T1078.001)**
-   * **Example in Azure:** Exploiting default credentials in Azure services, such as storage accounts or default administrative accounts in deployed VMs. Attackers may use these accounts to pivot or escalate privileges.
-2. **Cloud Accounts (T1078.004)**
-   * **Example in Azure:** Utilizing compromised Azure Entra accounts or guest accounts to maintain access. Guest accounts in Azure Entra are often overlooked and can be used for long-term persistence.
+✅ **Mapping**:\
+**MITRE ID**: T1098.004 – _Account Manipulation: SSH Authorized Keys_
+
+***
+
+#### 🛠️ Create Account → **T1136 – Create Account**
+
+***
+
+**➡️ T1136.003 – Cloud Account**
+
+**Description**:\
+Create hidden Azure AD users, service principals, or guest accounts for ongoing access.
+
+**Azure Example**:
+
+```bash
+bashCopyEditaz ad sp create-for-rbac --name hidden-spn --role Reader --scopes /subscriptions/<sub-id>
+```
+
+✅ **Mapping**:\
+**MITRE ID**: T1136.003 – _Create Account: Cloud Account_
+
+***
+
+#### 📅 Event Triggered Execution → **T1546 – Event Triggered Execution**
+
+***
+
+**Description**:\
+Use Azure Event Grid, Logic Apps, or Functions to automatically trigger attacker-controlled operations.
+
+**Azure Example**:
+
+```bash
+bashCopyEditaz logic workflow create --resource-group victim-rg --name evil-logicapp --definition @evilworkflow.json
+```
+
+✅ **Mapping**:\
+**MITRE ID**: T1546 – _Event Triggered Execution_\
+(_no subtechnique yet defined specifically for Azure Event Triggers, but still covered under general T1546_)
+
+***
+
+#### 🧬 Implant Internal Image → **T1587.006 – Develop Capabilities: Implant Internal Image**
+
+***
+
+**Description**:\
+Push backdoored containers into Azure Container Registry or AKS clusters to persist access.
+
+**Azure Example**:
+
+```bash
+bashCopyEditdocker push victimacr.azurecr.io/malicious-backdoor:latest
+```
+
+✅ **Mapping**:\
+**MITRE ID**: T1587.006 – _Develop Capabilities: Implant Internal Image_
+
+***
+
+#### 🛡️ Modify Authentication Process → **T1556 – Modify Authentication Process**
+
+***
+
+**➡️ T1556.006 – Multi-Factor Authentication**
+
+**Description**:\
+Disable, weaken, or bypass MFA enforcement in Azure AD.
+
+**Azure Example**:
+
+```bash
+bashCopyEditaz ad conditional-access policy update --id <policy-id> --state disabled
+```
+
+✅ **Mapping**:\
+**MITRE ID**: T1556.006 – _Modify Authentication Process: Multi-Factor Authentication_
+
+***
+
+**➡️ T1556.007 – Hybrid Identity**
+
+**Description**:\
+Abuse Azure AD Connect to sync rogue accounts across on-premises and cloud.
+
+**Azure Example**:
+
+✅ **Mapping**:\
+**MITRE ID**: T1556.007 – _Modify Authentication Process: Hybrid Identity_
+
+***
+
+**➡️ T1556.008 – Conditional Access Policies**
+
+**Description**:\
+Alter Azure Conditional Access (CA) policies to create easier access paths.
+
+**Azure Example**:
+
+```bash
+bashCopyEditaz ad conditional-access policy update --id <policy-id> --conditions '{"locations":["trusted-location-id"]}'
+```
+
+✅ **Mapping**:\
+**MITRE ID**: T1556.008 – _Modify Authentication Process: Conditional Access Policies_
+
+***
+
+#### 👥 Valid Accounts → **T1078 – Valid Accounts**
+
+***
+
+**➡️ T1078.004 – Default Accounts**
+
+**Description**:\
+Use Azure default service principals or unmanaged accounts left behind.
+
+**Azure Example**:
+
+✅ **Mapping**:\
+**MITRE ID**: T1078.004 – _Valid Accounts: Default Accounts_
+
+***
+
+**➡️ T1078.004 – Cloud Accounts**
+
+**Description**:\
+Use valid stolen Azure AD user or service principal accounts for persistence.
+
+**Azure Example**:
+
+```bash
+bashCopyEditaz login --username stolenuser@victimdomain.com
+```
+
+✅ **Mapping**:\
+**MITRE ID**: T1078.004 – _Valid Accounts: Cloud Accounts_\
+(_same subtechnique number, Cloud Accounts roll under Default/Cloud Service Accounts in T1078.004_)
+
+***
+
+## 📊 Final Mapping Table (Persistence Techniques in Azure)
+
+| Technique/Subtechnique             | MITRE ID  | Azure Example                          |
+| ---------------------------------- | --------- | -------------------------------------- |
+| Additional Cloud Credentials       | T1098.001 | Add client secret to Service Principal |
+| Additional Cloud Roles             | T1098.003 | Grant Contributor to SPN               |
+| SSH Authorized Keys                | T1098.004 | Add SSH key via VM extension           |
+| Create Cloud Account               | T1136.003 | Create hidden SPN                      |
+| Event Triggered Execution          | T1546     | Deploy malicious Logic App             |
+| Implant Internal Image             | T1587.006 | Push malicious container to ACR        |
+| Modify MFA                         | T1556.006 | Disable CA policy enforcing MFA        |
+| Modify Hybrid Identity             | T1556.007 | Abuse Azure AD Connect                 |
+| Modify Conditional Access Policies | T1556.008 | Add trusted location to CA policy      |
+| Default Accounts                   | T1078.004 | Use leftover SPN or managed identity   |
+| Cloud Accounts                     | T1078.004 | Use stolen Azure AD user credentials   |
