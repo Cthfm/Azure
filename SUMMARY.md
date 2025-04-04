@@ -286,6 +286,16 @@
 
 ## Azure Sentinel
 
+* [Sentinel Introduction](azure-sentinel/sentinel-introduction.md)
+* [Setting up Sentinel](azure-sentinel/setting-up-sentinel.md)
+* [Data Ingestion](azure-sentinel/data-ingestion.md)
+* [Rules](azure-sentinel/rules.md)
+* [Alerts vs Incidents](azure-sentinel/alerts-vs-incidents.md)
+* [SOAR](azure-sentinel/soar.md)
+* [Threat Hunting in Sentinel](azure-sentinel/threat-hunting-in-sentinel.md)
+* [Workbooks and Reporting](azure-sentinel/workbooks-and-reporting.md)
+* [Best Practices](azure-sentinel/best-practices.md)
+* [Threat Intelligence Integration](azure-sentinel/threat-intelligence-integration.md)
 * [Sentinel Overview](azure-sentinel/sentinel-overview.md)
 * [Azure Sentinel Deployments](azure-sentinel/azure-sentinel-deployments.md)
 * [Supported Data](azure-sentinel/supported-data.md)
