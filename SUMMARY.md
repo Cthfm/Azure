@@ -197,7 +197,6 @@
   * [MITRE Data Sources](mitre-att-and-ck/mitre-att-and-ck/mitre-data-sources.md)
   * [MITRE Att\&ck Mitigations](mitre-att-and-ck/mitre-att-and-ck/mitre-att-and-ck-mitigations.md)
   * [MITRE Att\&ck: Azure](mitre-att-and-ck/mitre-att-and-ck/mitre-att-and-ck-azure/README.md)
-    * [MITRE Att\&ck Identity Provider Matrix](mitre-att-and-ck/mitre-att-and-ck/mitre-att-and-ck-azure/mitre-att-and-ck-azure-ad-matrix.md)
     * [MITRE Att\&CK: Azure Security Control Mapping](mitre-att-and-ck/mitre-att-and-ck/mitre-att-and-ck-azure/mitre-att-and-ck-azure-security-control-mapping.md)
 * [Azure MITRE Frameworks](mitre-att-and-ck/azure-mitre-frameworks/README.md)
   * [Identity Provider Matrix (Entra ID)](mitre-att-and-ck/azure-mitre-frameworks/identity-provider-matrix-entra-id/README.md)
