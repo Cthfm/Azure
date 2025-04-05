@@ -2,55 +2,47 @@
 
 ## **Defensive Strategies Against Execution in Azure Environments**
 
-In Azure, defending against Execution means **restricting what code can be run**, **who can deploy workloads**, **securing serverless and container platforms**, and **monitoring cloud-native command execution** at scale.
+In Azure, defending against Execution means restricting what code can be run, who can deploy workloads, securing serverless and container platforms, and monitoring cloud-native command execution at scale.
 
-You want to **trap, restrict, and catch** any adversary trying to go active.
-
-***
-
-### 🧑‍💻 Cloud Administration Command (T1651)
-
-| Defensive Action                                                                                                                 | Why It Matters                                       |
-| -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| 🔒 Apply strict Role-Based Access Control (RBAC) in Azure — only admins can deploy resources or run scripts                      | Least privilege reduces risk of abuse                |
-| 📜 Require Privileged Identity Management (PIM) for admin roles with Just-in-Time (JIT) activation                               | Attackers can't live on privileged roles permanently |
-| 🛡️ Enable Microsoft Defender for Cloud to detect risky operations (e.g., VM extensions, script execution)                       | Alerts when common execution paths are abused        |
-| 🚫 Apply Azure Policy to deny creation of high-risk extensions (CustomScript, RunCommand) unless necessary                       | Block mass deployment of RCE scripts via extensions  |
-| 🔍 Monitor Resource Manager (ARM) activity logs for deployment operations (`Microsoft.Compute/virtualMachines/extensions/write`) | Real-time execution tracking                         |
-
-✅ **Effect**: Restricts who can perform cloud-native administrative execution.
+You want to trap, restrict, and catch any adversary trying to go active.
 
 ***
 
-### 🖥️ Command and Scripting Interpreter → Cloud API
+### Cloud Administration Command (T1651)
 
-| Defensive Action                                                                                                            | Why It Matters                                         |
-| --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| 📜 Use Azure Policy to enforce allowed resource types (e.g., only specific container types, no arbitrary resource creation) | Attackers can't deploy new infrastructure easily       |
-| 🛡️ Enable Defender for APIs and monitor all Azure API usage                                                                | Detect unauthorized API actions and anomalous behavior |
-| 🔒 Apply Conditional Access for API access (e.g., require managed device)                                                   | Attackers can't abuse stolen tokens easily             |
-| 🚫 Require signed API requests and service principal restrictions with minimum needed permissions                           | Reduce API abuse risk                                  |
-| 🔍 Use Azure Monitor to detect anomalous API deployment patterns (mass deployments, unusual resource types)                 | Spot attacker API activity fast                        |
+| Defensive Action                                                                                                              | Why It Matters                                       |
+| ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Apply strict Role-Based Access Control (RBAC) in Azure — only admins can deploy resources or run scripts                      | Least privilege reduces risk of abuse                |
+| Require Privileged Identity Management (PIM) for admin roles with Just-in-Time (JIT) activation                               | Attackers can't live on privileged roles permanently |
+| Enable Microsoft Defender for Cloud to detect risky operations (e.g., VM extensions, script execution)                        | Alerts when common execution paths are abused        |
+| Apply Azure Policy to deny creation of high-risk extensions (CustomScript, RunCommand) unless necessary                       | Block mass deployment of RCE scripts via extensions  |
+| Monitor Resource Manager (ARM) activity logs for deployment operations (`Microsoft.Compute/virtualMachines/extensions/write`) | Real-time execution tracking                         |
 
-✅ **Effect**: Controls who can execute code via direct API interaction.
-
-***
-
-### 🛠️ Serverless Execution
-
-| Defensive Action                                                                                                 | Why It Matters                                          |
-| ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| 🛡️ Apply Azure Policy to restrict serverless deployments to trusted resource groups                             | Attackers can't scatter functions everywhere            |
-| 📜 Enforce CI/CD pipeline validations for Azure Functions — no direct function edits in production               | Blocks rogue code injection                             |
-| 🔒 Require Azure AD Authentication on Azure Function endpoints                                                   | Stop unauthenticated function trigger abuse             |
-| 🚫 Deploy Functions in VNET-integrated plans whenever possible                                                   | Private execution only — no public serverless endpoints |
-| 🔍 Monitor App Service/Function App deployment events and trigger anomalies (new function, sudden traffic spike) | Detects rapid serverless-based C2 channels              |
-
-✅ **Effect**: Makes serverless code execution safe, validated, and auditable.
+&#x20;Restricts who can perform cloud-native administrative execution.
 
 ***
 
-### 👥 User Execution → Malicious Image
+### Command and Scripting Interpreter → Cloud API T1059.009
+
+Controls who can execute code via direct API interaction.
+
+***
+
+### Serverless Execution
+
+| Defensive Action                                                                                              | Why It Matters                                          |
+| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| Apply Azure Policy to restrict serverless deployments to trusted resource groups                              | Attackers can't scatter functions everywhere            |
+| Enforce CI/CD pipeline validations for Azure Functions — no direct function edits in production               | Blocks rogue code injection                             |
+| Require Azure AD Authentication on Azure Function endpoints                                                   | Stop unauthenticated function trigger abuse             |
+| Deploy Functions in VNET-integrated plans whenever possible                                                   | Private execution only — no public serverless endpoints |
+| Monitor App Service/Function App deployment events and trigger anomalies (new function, sudden traffic spike) | Detects rapid serverless-based C2 channels              |
+
+Makes serverless code execution safe, validated, and auditable.
+
+***
+
+### User Execution → Malicious Image (T1204.003)
 
 | Defensive Action                                                                                            | Why It Matters                                      |
 | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
@@ -60,11 +52,11 @@ You want to **trap, restrict, and catch** any adversary trying to go active.
 | 🛡️ Use Kubernetes admission controllers (Gatekeeper, Kyverno) to validate image sources and configurations | Block unauthorized images before they run           |
 | 🔍 Monitor ACR push logs and AKS deployment logs for unapproved images                                      | Detect compromised supply chains                    |
 
-✅ **Effect**: Stops malicious container images from ever reaching execution in AKS, ACI, or App Services.
+Stops malicious container images from ever reaching execution in AKS, ACI, or App Services.
 
 ***
 
-## 📊 Defensive Coverage Table (Execution in Azure)
+## Defensive Coverage Table (Execution in Azure)
 
 | Attack Vector                     | Defensive Strategy                                                               |
 | --------------------------------- | -------------------------------------------------------------------------------- |
@@ -75,7 +67,7 @@ You want to **trap, restrict, and catch** any adversary trying to go active.
 
 ***
 
-## 🎯 Final Summary
+## Final Summary
 
 Defending against Execution in Azure focuses on:
 

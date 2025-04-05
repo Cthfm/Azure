@@ -12,7 +12,7 @@ Conditional Access allows organizations to provide a smooth user experience by a
 
 ### **3. Risk Reduction:**
 
-Conditional Access helps mitigate the risk of compromised accounts by applying risk-based access controls. If Azure AD detects an unusual or risky sign-in, Conditional Access can automatically require the user to reset their password or deny access altogether.
+Conditional Access helps mitigate the risk of compromised accounts by applying risk-based access controls. If Azure Entra ID detects an unusual or risky sign-in, Conditional Access can automatically require the user to reset their password or deny access altogether.
 
 ### **4. Compliance and Governance:**
 

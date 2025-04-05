@@ -2,7 +2,7 @@
 
 ## **What Are Named Locations?**
 
-**Named Locations** in Azure AD Conditional Access policies allow organizations to define specific geographic regions or network IP ranges that can be used to enforce access controls. These locations are typically categorized as either **trusted** or **untrusted**, and can influence how Conditional Access policies are applied.
+**Named Locations** in Azure Entra ID Conditional Access policies allow organizations to define specific geographic regions or network IP ranges that can be used to enforce access controls. These locations are typically categorized as either trusted or untrusted and can influence how Conditional Access policies are applied.
 
 Named Locations allow you to:
 
@@ -22,7 +22,7 @@ These are specific IP addresses or IP ranges that are associated with trusted ne
 
 **2. Country or Region-Based Locations:**
 
-These locations are based on the geographic location from which a user is signing in. Azure AD detects the user’s location based on their IP address and determines the associated country or region.
+These locations are based on the geographic location from which a user is signing in. Azure Entra ID detects the user’s location based on their IP address and determines the associated country or region.
 
 ### **Best Practices for Using Named Locations**
 

@@ -2,9 +2,9 @@
 
 ## **What is Sign-in Risk?**
 
-**Sign-in risk** refers to the likelihood that a sign-in attempt is fraudulent or that the user’s credentials have been compromised. Azure Active Directory (Azure AD) uses machine learning and various signals to assess the risk of every sign-in and categorizes it into **low**, **medium**, or **high** risk levels.
+**Sign-in risk** refers to the likelihood that a sign-in attempt is fraudulent or that the user’s credentials have been compromised. Azure Entra ID uses machine learning and various signals to assess the risk of every sign-in and categorizes it into **low**, **medium**, or **high** risk levels.
 
-Azure AD evaluates the risk based on:
+Azure Entra ID evaluates the risk based on:
 
 * **User behavior**: Unusual activities such as sign-ins from unexpected locations or devices.
 * **Known compromised credentials**: Credentials that have been exposed in breaches or phishing attempts.
@@ -12,9 +12,9 @@ Azure AD evaluates the risk based on:
 
 By integrating this risk evaluation into Conditional Access policies, organizations can dynamically adjust security measures based on the assessed risk, enhancing protection without overburdening users.
 
-## **Azure AD Identity Protection**
+## **Entra ID Identity Protection**
 
-**Azure AD Identity Protection** is a feature that helps organizations detect, investigate, and respond to potential identity risks. It leverages Microsoft's vast threat intelligence network and machine learning to assess the risk level of user accounts and sign-in attempts.
+**Azure Entra ID Identity Protection** is a feature that helps organizations detect, investigate, and respond to potential identity risks. It leverages Microsoft's vast threat intelligence network and machine learning to assess the risk level of user accounts and sign-in attempts.
 
 **Key Features of Identity Protection:**
 
@@ -26,19 +26,19 @@ Identity Protection works in conjunction with Conditional Access to enforce risk
 
 ### **Types of Sign-in Risk**
 
-Azure AD Identity Protection evaluates multiple risk signals to determine the level of risk associated with a sign-in attempt. These signals include:
+Azure Entra ID Identity Protection evaluates multiple risk signals to determine the level of risk associated with a sign-in attempt. These signals include:
 
 **1. Atypical Travel:**
 
-Occurs when a user signs in from a location that is not consistent with their typical behavior. For example, if a user signs in from New York and a few minutes later from Tokyo, Azure AD detects this as a sign-in risk because it is unlikely the user could travel that fast.
+Occurs when a user signs in from a location that is not consistent with their typical behavior. For example, if a user signs in from New York and a few minutes later from Tokyo, Azure Entra ID detects this as a sign-in risk because it is unlikely the user could travel that fast.
 
 **2. Anonymous IP Address:**
 
-If a sign-in attempt is made using an anonymous proxy or TOR network, Azure AD flags the sign-in as risky. This behavior is often associated with attempts to hide the origin of the sign-in and may indicate a fraudulent attempt.
+If a sign-in attempt is made using an anonymous proxy or TOR network, Azure Entra ID flags the sign-in as risky. This behavior is often associated with attempts to hide the origin of the sign-in and may indicate a fraudulent attempt.
 
 **3. Unfamiliar Sign-in Properties:**
 
-Azure AD detects sign-ins from devices, browsers, or IP addresses that the user hasn’t used before. Even if the location seems familiar, unfamiliar devices or browsers can trigger a medium or high sign-in risk.
+Azure Entra ID detects sign-ins from devices, browsers, or IP addresses that the user hasn’t used before. Even if the location seems familiar, unfamiliar devices or browsers can trigger a medium or high sign-in risk.
 
 **4. Malware-linked IP Address:**
 
@@ -50,7 +50,7 @@ If Microsoft detects that a user’s credentials have been exposed in a breach o
 
 ### **Sign-in Risk Levels**
 
-Azure AD categorizes sign-in risk into three levels:
+Azure Entra ID categorizes sign-in risk into three levels:
 
 **1. Low Risk:**
 
@@ -69,7 +69,7 @@ Azure AD categorizes sign-in risk into three levels:
 
 ### **Integrating Sign-in Risk with Conditional Access**
 
-Sign-in risk is a powerful condition that can be used to dynamically enforce access controls. By combining Conditional Access with Azure AD Identity Protection, you can automate actions based on the risk level of the sign-in.
+Sign-in risk is a powerful condition that can be used to dynamically enforce access controls. By combining Conditional Access with Azure Entra ID Identity Protection, you can automate actions based on the risk level of the sign-in.
 
 **Example Policy Configuration:**
 
@@ -79,7 +79,7 @@ Sign-in risk is a powerful condition that can be used to dynamically enforce acc
 
 **How to Configure Sign-in Risk in Conditional Access:**
 
-1. **Navigate to Conditional Access**: In the Azure AD portal, go to **Security** > **Conditional Access**.
+1. **Navigate to Conditional Access**: In the Azure Entra ID portal, go to **Security** > **Conditional Access**.
 2. **Create or Modify a Policy**: Select a policy to edit or create a new one.
 3. **Configure Conditions**: Under **Conditions**, select **Sign-in risk**.
 4. **Set the Risk Level**: Choose whether to apply the policy for low, medium, or high-risk sign-ins.

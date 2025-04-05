@@ -42,6 +42,14 @@
 
 ## Azure CLI
 
+* [Introduction to Azure CLI](azure-cli/introduction-to-azure-cli.md)
+* [Installing Azure CLI](azure-cli/installing-azure-cli.md)
+* [CLI Commands](azure-cli/cli-commands.md)
+* [Resource Group Management](azure-cli/resource-group-management.md)
+* [Creating and Managing Resources with Azure CLI](azure-cli/creating-and-managing-resources-with-azure-cli.md)
+* [Managing IAM](azure-cli/managing-iam.md)
+* [Azure CLI Automation](azure-cli/azure-cli-automation.md)
+* [Monitoring and Troubleshooting in Azure CLI](azure-cli/monitoring-and-troubleshooting-in-azure-cli.md)
 * [Azure CLI Overview](azure-cli/azure-cli-overview/README.md)
   * [Azure CLI: Linux](azure-cli/azure-cli-overview/azure-cli-linux.md)
   * [Azure CLI: Windows](azure-cli/azure-cli-overview/azure-cli-windows.md)
@@ -56,6 +64,20 @@
   * [Render](kql/kql-overview/render.md)
   * [Basic Queries](kql/kql-overview/basic-queries.md)
 
+## Microsoft Graph API
+
+* [Microsoft Graph API Introduction](microsoft-graph-api/microsoft-graph-api-introduction.md)
+* [Authentication](microsoft-graph-api/authentication.md)
+* [Main Tools](microsoft-graph-api/main-tools.md)
+* [Graph API Requests](microsoft-graph-api/graph-api-requests.md)
+
+***
+
+* [Users and Groups](users-and-groups.md)
+* [Graph Permissions](graph-permissions.md)
+* [Microsoft Graph Security API](microsoft-graph-security-api.md)
+* [Microsoft Documentation Microsoft Graph Powershell SDK](powershell-microsoft-graph-sdk.md)
+
 ## Powershell
 
 * [PowerShell for Azure](powershell/powershell-for-azure/README.md)
@@ -64,13 +86,6 @@
   * [Understanding Powershell Variables](powershell/powershell-for-azure/understanding-powershell-variables.md)
   * [Understanding Cmdlets](powershell/powershell-for-azure/understanding-cmdlets.md)
   * [Powershell Console & ISE](powershell/powershell-for-azure/powershell-console-and-ise.md)
-  * [Powershell: Microsoft Graph SDK](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/README.md)
-    * [Permission Types](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/permission-types.md)
-    * [Authentication Examples](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/authentication-examples.md)
-    * [Cmdlet Reference](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/cmdlet-reference.md)
-    * [Permission Reference](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/permission-reference.md)
-    * [Microsoft Graph PowerShell Transition](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/microsoft-graph-powershell-transition.md)
-    * [Security API References](powershell/powershell-for-azure/powershell-microsoft-graph-sdk/security-api-references.md)
   * [Powershell: Entra Module](powershell/powershell-for-azure/powershell-entra-module/README.md)
     * [Module Reference & Getting Started](powershell/powershell-for-azure/powershell-entra-module/module-reference-and-getting-started.md)
   * [Powershell: Azure Module](powershell/powershell-for-azure/powershell-azure-module/README.md)
