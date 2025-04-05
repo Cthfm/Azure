@@ -1,49 +1,94 @@
 # Lateral Movement
 
-### **Lateral Movement in Containerized Environments**
+## **Lateral Movement Techniques in Containerized Environments**
 
-In Kubernetes and container-native infrastructures, adversaries move laterally across nodes, namespaces, or services by abusing legitimate authentication material like **application access tokens**. These tokens are often service account credentials, cloud metadata tokens, or internal secrets used to access APIs and services — allowing attackers to pivot stealthily between resources and elevate control.
+In Kubernetes and container-native infrastructures, adversaries use **Lateral Movement** techniques to **pivot across pods, namespaces, nodes, and cloud services**.\
+Rather than exploiting new vulnerabilities, attackers abuse **stolen tokens** or **identity artifacts** to **move stealthily** between resources and escalate access within clusters or cloud environments.
 
-#### Use Alternate Authentication Material → Application Access Token (T1550.001)
+Tokens like Kubernetes Service Account credentials, Azure Managed Identity tokens, or federated OIDC tokens become **weapons of lateral movement** when improperly secured.
 
-**Description**:\
-Steal and reuse application tokens (e.g., Kubernetes Service Account tokens, Azure Managed Identity tokens, or Azure Workload Identity tokens) to access additional cluster resources, Azure services, or escalate privileges within the cloud environment.
+***
 
-**AKS Example**:\
-An attacker compromises a pod running in Azure Kubernetes Service (AKS) and extracts its Service Account token:
+#### 🔑 Use Alternate Authentication Material → Application Access Token
+
+\| MITRE ID | **T1550.001** |
+
+***
+
+#### **Description**
+
+Steal and reuse application tokens — including Kubernetes service account tokens, Azure Managed Identity tokens, or Azure Workload Identity tokens — to pivot into new Kubernetes resources, namespaces, or connected cloud APIs.
+
+***
+
+#### **Container Example**
+
+* **Steal Kubernetes Service Account Token**:
 
 ```bash
-cat /var/run/secrets/kubernetes.io/serviceaccount/token
+bashCopyEditcat /var/run/secrets/kubernetes.io/serviceaccount/token
 ```
 
-The attacker can reuse this token with `kubectl` or raw Kubernetes API requests to pivot into other namespaces or access secrets:
+* **Use the stolen token to pivot within Kubernetes**:
 
 ```bash
-curl -k -H "Authorization: Bearer $TOKEN" https://<aks-api-server>/api/v1/secrets
+bashCopyEditcurl -k -H "Authorization: Bearer $TOKEN" https://<aks-api-server>/api/v1/secrets
 ```
 
-Alternatively, the attacker can target the Azure Instance Metadata Service (IMDS) from within the compromised pod to steal an Azure Managed Identity token:
+✅ **Result**:\
+Access Kubernetes secrets, ConfigMaps, pods, or even take over namespaces without triggering MFA or standard login audits.
+
+***
+
+#### **Azure-Specific Example: Lateral Movement in AKS**
+
+* **Harvest an Azure Managed Identity token via Instance Metadata Service (IMDS)**:
 
 ```bash
-curl -H Metadata:true "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com"
+bashCopyEditcurl -H Metadata:true "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com"
 ```
 
-The stolen Azure access token can then be used to interact with Azure services, such as listing resource groups or accessing storage accounts:
+* **Use the Azure access token to list Azure resource groups**:
 
 ```bash
-curl -X GET https://management.azure.com/subscriptions/<subscription-id>/resourcegroups?api-version=2021-04-01 \
+bashCopyEditcurl -X GET https://management.azure.com/subscriptions/<subscription-id>/resourcegroups?api-version=2021-04-01 \
   -H "Authorization: Bearer $ACCESS_TOKEN"
 ```
 
-If AKS is configured with Azure Workload Identity, the attacker can also extract the federated OIDC token:
+✅ **Result**:\
+Move from Kubernetes into broader Azure control planes like storage accounts, Key Vaults, resource groups, or VMs.
+
+***
+
+#### **Azure Workload Identity Example**
+
+* **Steal a federated OIDC token inside AKS**:
 
 ```bash
-cat /var/run/secrets/azure/tokens/azure-identity-token
+bashCopyEditcat /var/run/secrets/azure/tokens/azure-identity-token
 ```
 
-And exchange it for an Azure access token to assume roles assigned to the compromised identity:
+* **Exchange the federated token for Azure access**:
 
 ```bash
-az login --service-principal --username <client-id> --federated-token <stolen-token> --tenant <tenant-id>
+bashCopyEditaz login --service-principal --username <client-id> --federated-token <stolen-token> --tenant <tenant-id>
 ```
+
+✅ **Result**:\
+Authenticate into Azure using the stolen identity, escalate permissions, and persist across cloud services.
+
+***
+
+## 📊 **Summary Table**
+
+| Technique/Subtechnique   | MITRE ID  | Container Example                                                          |
+| ------------------------ | --------- | -------------------------------------------------------------------------- |
+| Application Access Token | T1550.001 | Steal Kubernetes tokens or Azure Managed Identity tokens to move laterally |
+
+***
+
+## 🎯 **Final Summary**
+
+**Lateral Movement using Alternate Authentication Material** lets attackers **expand their foothold invisibly**.\
+By stealing tokens instead of hacking passwords, adversaries **leap across namespaces, clusters, and cloud tenants** without triggering alarms.
 

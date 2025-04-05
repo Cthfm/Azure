@@ -78,7 +78,7 @@ Gives real-time monitoring for credential access behaviors.
 
 ***
 
-## Final Summary
+### Final Summary
 
 Defending against Credentialed Access focuses on:
 
