@@ -7,69 +7,69 @@ Your goal is to detect, restrict, and cleanly block persistent footholds.
 
 ***
 
-### 🧰 1. **Restrict Creation of New Accounts, Roles, and Bindings**
+### 1. **Restrict Creation of New Accounts, Roles, and Bindings**
 
-| Action                                                                     | Why It Matters                                      |
-| -------------------------------------------------------------------------- | --------------------------------------------------- |
-| 🔒 Monitor and restrict RoleBinding and ClusterRoleBinding creations       | Attackers use new bindings to maintain admin access |
-| 🚫 Block ServiceAccounts from being created outside specific namespaces    | Limit service account sprawl                        |
-| 📜 Audit ServiceAccounts and role assignments regularly                    | Spot unexpected privilege grants                    |
-| 🧠 Use tight RBAC (least privilege) — no cluster-admin unless truly needed | Shrinks persistence paths                           |
+| Action                                                                  | Why It Matters                                      |
+| ----------------------------------------------------------------------- | --------------------------------------------------- |
+| Monitor and restrict RoleBinding and ClusterRoleBinding creations.      | Attackers use new bindings to maintain admin access |
+| Block ServiceAccounts from being created outside specific namespaces    | Limit service account sprawl                        |
+| Audit ServiceAccounts and role assignments regularly                    | Spot unexpected privilege grants                    |
+| Use tight RBAC (least privilege) — no cluster-admin unless truly needed | Shrinks persistence paths                           |
 
-✅ Detects and prevents **T1098 – Account Manipulation**.
-
-***
-
-### 🐳 2. **Control and Monitor Workload Changes (Pods, CronJobs, DaemonSets)**
-
-| Action                                                                      | Why It Matters                                      |
-| --------------------------------------------------------------------------- | --------------------------------------------------- |
-| 📜 Use Admission Control to block creation of CronJobs/Jobs unless needed   | Prevent attacker-triggered scheduled persistence    |
-| 🚫 Restrict privileged DaemonSets (no auto-start malware agents)            | DaemonSets persist across node reboots              |
-| 🛡️ Protect Deployments with immutable fields                               | Stop attackers from silently replacing running pods |
-| 🔎 Monitor for new workload deployments (e.g., kubectl apply, Helm install) | Fresh workloads = potential implants                |
-
-✅ Stops attackers from **implanting internal images** or setting **orchestration jobs** for persistence.
+Detects and prevents account manipulation
 
 ***
 
-### 🔥 3. **Protect and Limit Image Sources**
+### 2. **Control and Monitor Workload Changes (Pods, CronJobs, DaemonSets)**
 
-| Action                                                                                  | Why It Matters                                   |
-| --------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| 📋 Enforce container image signing (Cosign, Notary)                                     | Block unsigned or tampered images                |
-| 🔎 Scan images for hidden persistence implants (reverse shells, cron inside containers) | Catch trojanized container bases                 |
-| 🧠 Whitelist trusted registries only                                                    | No pulling images from DockerHub or random repos |
+| Action                                                                   | Why It Matters                                      |
+| ------------------------------------------------------------------------ | --------------------------------------------------- |
+| Use Admission Control to block creation of CronJobs/Jobs unless needed   | Prevent attacker-triggered scheduled persistence    |
+| Restrict privileged DaemonSets (no auto-start malware agents)            | DaemonSets persist across node reboots              |
+| Protect Deployments with immutable fields                                | Stop attackers from silently replacing running pods |
+| Monitor for new workload deployments (e.g., kubectl apply, Helm install) | Fresh workloads = potential implants                |
 
-✅ Blocks **implanting malicious internal images** as persistent footholds.
-
-***
-
-### 🛡️ 4. **Service Account and Token Hardening**
-
-| Action                                                              | Why It Matters                      |
-| ------------------------------------------------------------------- | ----------------------------------- |
-| 📜 Set `automountServiceAccountToken: false` by default on all pods | Reduce service account token sprawl |
-| 🔒 Limit access to token secrets and Kubernetes Secrets overall     | Make it harder to reuse tokens      |
-| 🛡️ Rotate service account tokens periodically                      | Reduce persistence window if stolen |
-
-✅ Protects against persistent **token-based access reuse**.
+Stops attackers from implanting internal images or setting orchestration jobs for persistence.
 
 ***
 
-### 🧠 5. **Monitor Persistence Indicators at Runtime**
+### 3. **Protect and Limit Image Sources**
 
-| Action                                                                       | Why It Matters                                         |
-| ---------------------------------------------------------------------------- | ------------------------------------------------------ |
-| 📡 Use Falco to detect creation of new CronJobs, DaemonSets, or unusual pods | Real-time visibility into suspicious workload creation |
-| 🔥 Alert on ServiceAccount binding to cluster-admin dynamically              | Huge persistence red flag                              |
-| 📜 Parse audit logs for new workload or privileged role creations            | Build forensic trails for post-breach investigations   |
+| Action                                                                               | Why It Matters                                   |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------ |
+| Enforce container image signing (Cosign, Notary                                      | Block unsigned or tampered images                |
+| Scan images for hidden persistence implants (reverse shells, cron inside containers) | Catch trojanized container bases                 |
+| Whitelist trusted registries only                                                    | No pulling images from DockerHub or random repos |
 
-✅ Catch persistence techniques during execution before full compromise.
+Blocks implanting malicious internal images as persistent footholds.
 
 ***
 
-### 📊 Defensive Coverage Table (Persistence)
+### 4. **Service Account and Token Hardening**
+
+| Action                                                           | Why It Matters                      |
+| ---------------------------------------------------------------- | ----------------------------------- |
+| Set `automountServiceAccountToken: false` by default on all pods | Reduce service account token sprawl |
+| Limit access to token secrets and Kubernetes Secrets overall     | Make it harder to reuse tokens      |
+| Rotate service account tokens periodically                       | Reduce persistence window if stolen |
+
+Protects against persistent token-based access reuse.
+
+***
+
+### 5. **Monitor Persistence Indicators at Runtime**
+
+| Action                                                                    | Why It Matters                                         |
+| ------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Use Falco to detect creation of new CronJobs, DaemonSets, or unusual pods | Real-time visibility into suspicious workload creation |
+| Alert on ServiceAccount binding to cluster-admin dynamically              | Huge persistence red flag                              |
+| Parse audit logs for new workload or privileged role creations            | Build forensic trails for post-breach investigations   |
+
+Catch persistence techniques during execution before full compromise.
+
+***
+
+### Defensive Coverage Table (Persistence)
 
 | Attack Vector                      | Defensive Strategy                                   |
 | ---------------------------------- | ---------------------------------------------------- |

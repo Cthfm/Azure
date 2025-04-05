@@ -1,141 +1,232 @@
 # Privilege Esclation
 
-### Privilege Escalation in Containerized Environments
+## **Privilege Escalation Techniques in Containerized Environments**
 
-In containerized ecosystems like Kubernetes and Docker, attackers use privilege escalation techniques to move from limited container access to root privileges, host-level compromise, or broader cluster control. These actions often involve escaping containers, abusing default accounts, exploiting misconfigured service roles, or hijacking system processes and orchestration tasks.
+In Kubernetes and Docker ecosystems, adversaries use Privilege Escalation techniques to move from limited container access to root privileges, host-level compromise, or full cluster control.\
+This escalation is often achieved by escaping containers, abusing default accounts, manipulating roles, or exploiting runtime vulnerabilities.
 
-#### Account Manipulation → **Additional Container Cluster Roles (T1098.004)**
+***
 
-**Description**: Abuse cluster-role bindings to elevate privileges within Kubernetes.
+### **Account Manipulation: 1098**
 
-**Container Example**:
+Account Manipulation refers to adversaries creating, modifying, or hijacking legitimate accounts to gain or maintain access to a target environment.\
+Instead of exploiting software vulnerabilities, attackers abuse the identity layer — altering permissions, adding backdoor users, or hijacking service accounts.
 
-*   A low-privileged service account is granted `cluster-admin`:
+In containerized ecosystems like Kubernetes or Docker, this often means:
 
-    ```bash
-    kubectl create clusterrolebinding pe-escalation --clusterrole=cluster-admin --serviceaccount=default:compromised-sa
-    ```
-* Modify an existing role binding to include attacker identity or service account.
+* Creating or modifying Kubernetes ServiceAccounts
+* Adding attacker-controlled identities to ClusterRoleBindings
+* Adjusting RBAC rules to grant elevated privileges
+* Modifying user configurations on the container host
 
-**Impact**:
+By embedding themselves into the environment’s identity and access management fabric, adversaries ensure long-term persistence and stealthy movement.
 
-* Grants full control over the cluster, including node access, secret retrieval, and pod spawning.
+#### Additional Container Cluster Roles T1098.004
 
-#### Create or Modify System Process → **Container Service (T1543.003)**
-
-**Description**: Modify containerized processes or init systems to run with elevated privileges.
-
-**Container Example**:
-
-*   Replace the command in a Deployment or DaemonSet to launch a shell as root:
-
-    ```bash
-    kubectl patch deployment app -p '{"spec":{"template":{"spec":{"containers":[{"name":"app","command":["/bin/bash"]}]}}}'
-    ```
-* Abuse init containers or host-mounted volume paths to inject malicious services.
-
-#### Escape to Host (T1611)
-
-**Description**: Break out of a container to execute commands on the host system.
+**Description**:\
+Abuse Kubernetes ClusterRoleBindings to elevate privileges from a low-privileged service account or user.
 
 **Container Example**:
 
-*   Exploit a privileged container to mount the host and chroot:
+* A compromised service account escalates to `cluster-admin`:
 
-    ```bash
-    docker run -v /:/mnt --privileged --rm -it alpine chroot /mnt
-    ```
-* Abuse Kubernetes with misconfigured `hostPID`, `hostNetwork`, or `hostPath` mounts.
+```bash
+kubectl create clusterrolebinding pe-escalation --clusterrole=cluster-admin --serviceaccount=default:compromised-sa
+```
 
-**Known Tactics**:
+* Modify an existing ClusterRoleBinding to add the attacker's service account.
 
-* Mount `/proc`, `/sys` from host and inject code into host-level binaries.
-* Run container with `--cap-add=SYS_ADMIN` and abuse Linux namespaces to escape.
+**Result**:\
+Full cluster control — node access, secret retrieval, pod spawning, and administrative actions.
 
-#### Exploitation for Privilege Escalation (T1068)
+***
 
-**Description**: Exploit container runtime flaws or kernel vulnerabilities to escalate privileges.
+### Create or Modify System Process T1543
 
-**Container Example**:
+**Description**
 
-*   Use dirtypipe, cgroups escape, or misconfigured container runtimes (e.g., containerd or runc vuln):
+Create or Modify System Process refers to adversaries creating new system-level processes or modifying existing ones to ensure malicious code is automatically executed.
 
-    ```bash
-    gcc -o exploit dirtypipe.c && ./exploit
-    ```
-* Known exploits:
-  * CVE-2019-5736 (runc escape)
-  * Dirty Pipe (CVE-2022-0847)
-  * cr8escape (containerd bug)
+In containerized environments, this technique commonly involves:
 
-**Post-Exploitation**:
+* Deploying malicious Kubernetes resources (like Deployments, DaemonSets, InitContainers)
+* Patching existing workloads to run attacker-controlled code
+* Modifying container startup commands or systemd services (on hosts)
 
-* If running on managed cloud K8s (e.g., EKS/GKE), use host access to extract cloud metadata or tokens.
+The goal is to embed the attacker's code into normal cluster operations, so it runs automatically during routine activities like pod restarts, node joins, or scaling events.
 
-#### Scheduled Task/Job → **Container Orchestration Job (T1053.007)**
+#### Container Service **T1543.003**
 
-**Description**: Abuse `CronJob` or long-running Job to escalate or maintain root access.
+**Description**:\
+Modify containerized processes or init systems (e.g., Deployments, DaemonSets) to run attacker-controlled code with elevated privileges.
 
 **Container Example**:
 
-*   CronJob is scheduled to restart with elevated privileges or mount host volumes:
+* Patch a Deployment to launch a root shell:
 
-    ```yaml
-    yamlCopyEditcontainers:
-      - name: escalate
-        image: busybox
-        volumeMounts:
-          - mountPath: /host
-            name: host-mount
-        command: ["sh", "-c", "chroot /host bash"]
-    ```
+```bash
+kubectl patch deployment app -p '{"spec":{"template":{"spec":{"containers":[{"name":"app","command":["/bin/bash"]}]}}}'
+```
 
-**Impact**:
+* Abuse InitContainers to inject pre-startup scripts or access host-mounted volumes.
 
-* Persistent, timed privilege escalation backdoor across cluster lifecycle.
+**Result**:\
+Malicious processes run with higher privileges, allowing system modification or breakout.
 
-#### &#x20;Valid Accounts → **Default Accounts (T1078.001)**
+***
 
-**Description**: Abuse default service accounts with over-permissioned roles to elevate access.
+### Escape to Host **T1611**&#x20;
+
+**Description**:\
+Break out of the container runtime and execute commands directly on the underlying host system.
 
 **Container Example**:
 
-*   Default service account (`default/default`) can list secrets or create pods:
+* Mount and chroot into the host filesystem:
 
-    ```bash
-    bashCopyEditkubectl get secrets
-    kubectl create pod ...
-    ```
+```bash
+docker run -v /:/mnt --privileged --rm -it alpine chroot /mnt
+```
 
-**Offensive Tactic**:
+* Abuse Kubernetes `hostPID`, `hostNetwork`, `hostPath` misconfigurations to interact with host resources.
 
-* Harvest token at `/var/run/secrets/kubernetes.io/serviceaccount/token` and use `kubectl` or API to escalate.
+**Result**:\
+Escape container isolation, gaining direct host control for further escalation or persistence.
 
-#### &#x20;Valid Accounts → **Local Accounts (T1078.003)**
+***
 
-**Description**: Use of existing local accounts on container host or inside image to escalate access.
+### Exploitation for Privilege Escalation **T1068**
+
+**Description**:\
+Exploit container runtime vulnerabilities or Linux kernel flaws to escalate privileges.
 
 **Container Example**:
 
-*   SSH into container host with known creds, then escalate via `sudo`, suid binaries, or poorly configured PAM:
+* Compile and run Dirty Pipe (CVE-2022-0847) to gain root:
 
-    ```bash
-    bashCopyEditssh user@node
-    sudo su -
-    ```
+```bash
+gcc -o exploit dirtypipe.c && ./exploit
+```
 
-**Persistence Path**:
+* Exploit CVE-2019-5736 (runc escape) to break container boundaries.
 
-* Add user to `sudoers`, install SSH key, or modify init scripts for future root access.
+✅ **Result**:\
+Privilege escalation from container user to root on the host system, often leading to full node or cluster compromise.
 
-#### Summary Table
+***
 
-| Technique             | Sub-Technique            | Container Use Case                                 |
-| --------------------- | ------------------------ | -------------------------------------------------- |
-| Account Manipulation  | Additional Cluster Roles | Grant `cluster-admin` to attacker/service account  |
-| Modify System Process | Container Service        | Patch workloads to run as root or launch shell     |
-| Escape to Host        | —                        | Use privileged pod + `hostPath` to chroot host     |
-| Exploitation for PE   | —                        | Run Dirty Pipe or runc exploits from container     |
-| Scheduled Task        | Orchestration Job        | Deploy CronJob to escalate or re-gain host shell   |
-| Valid Accounts        | Default Accounts         | Abuse default service account tokens               |
-| Valid Accounts        | Local Accounts           | Reuse SSH/root credentials or exploit sudo on host |
+### Scheduled Task/Job T1053
+
+**Description**
+
+Adversaries may abuse scheduled task mechanisms to execute malicious code automatically at predefined times or intervals.\
+In containerized environments, this often involves creating Kubernetes CronJobs or other orchestration-level scheduled tasks.
+
+Using scheduled jobs allows attackers to persist after reboot, periodically beacon to C2 servers, pull new payloads, or maintain access without continuous interaction.\
+Scheduling execution provides automation, covert operation windows, and resilience against remediation efforts.
+
+#### **Result**
+
+* Persistent execution of attacker-controlled code, surviving pod crashes or node reboots.
+* Stealthier C2 communication or data exfiltration by using short-lived, periodic connections.
+* Automated reinstallation of malware or backdoors after defender cleanup efforts.
+
+#### Container Orchestration Job **T1053.007**
+
+**Description**:\
+Abuse Kubernetes CronJobs or Jobs to maintain or escalate privileges persistently over time.
+
+**Container Example**:
+
+* Deploy a CronJob that mounts the host and chroots:
+
+```yaml
+yamlCopyEditcontainers:
+- name: escalate
+  image: busybox
+  volumeMounts:
+    - mountPath: /host
+      name: host-mount
+  command: ["sh", "-c", "chroot /host bash"]
+```
+
+**Result:**\
+Persistent, scheduled privilege escalation channel that survives reboots and cluster changes.
+
+***
+
+####
+
+#### 👤 Valid Accounts → Default Accounts
+
+\| MITRE ID | **T1078.001** |
+
+**Description**:\
+Abuse default Kubernetes service accounts that are over-permissioned and unprotected.
+
+**Container Example**:
+
+* Use the default service account token to list secrets:
+
+```bash
+bashCopyEditcat /var/run/secrets/kubernetes.io/serviceaccount/token
+kubectl get secrets
+```
+
+✅ **Result**:\
+Privilege escalation via unrestricted default service account access.
+
+***
+
+### Valid Accounts T1078
+
+Valid Accounts refers to adversaries leveraging existing, legitimate credentials to gain access to systems or environments.
+
+In containerized environments, this often means attackers abuse Kubernetes service accounts, default or exposed credentials, or previously stolen cloud IAM identities to authenticate and operate without raising immediate suspicion.
+
+By using valid accounts, adversaries bypass traditional security controls (like firewall rules or authentication systems) because they appear to be authorized users or services.
+
+#### Local Accounts **T1078.003**
+
+**Description**:\
+Use stolen or existing local Linux user accounts on container hosts to escalate privileges.
+
+**Container Example**:
+
+* SSH into the node and escalate privileges:
+
+```bash
+ssh user@node
+sudo su -
+```
+
+* Add attacker SSH keys or add the user to `sudoers` for persistent root access.
+
+**Result**:\
+Persistent, privileged access at the host level beyond the container boundary.
+
+***
+
+### **Privilege Escalation Techniques in Containerized Environments Summary**
+
+| Technique/Subtechnique                | MITRE ID  | Container Example                                    |
+| ------------------------------------- | --------- | ---------------------------------------------------- |
+| Additional Container Cluster Roles    | T1098.004 | Escalate Kubernetes roles                            |
+| Container Service Modification        | T1543.003 | Modify deployments/DaemonSets for elevated execution |
+| Escape to Host                        | T1611     | Break out of container to access the host            |
+| Exploitation for Privilege Escalation | T1068     | Exploit container runtime or kernel vulnerabilities  |
+| Container Orchestration Job           | T1053.007 | Abuse CronJobs for persistent escalation             |
+| Default Accounts                      | T1078.001 | Abuse default service account tokens                 |
+| Local Accounts                        | T1078.003 | SSH and escalate via local host accounts             |
+
+***
+
+### Final Summary
+
+Defending against Privilege Escalation in container environments focuses on:
+
+* **Locking down Kubernetes RBAC** to prevent role abuse
+* **Hardening container configurations** (no privileged containers, minimal capabilities)
+* **Patching container runtimes and Linux kernels quickly**
+* **Monitoring CronJob, DaemonSet, and deployment modifications**
+* **Restricting host filesystem access from containers**

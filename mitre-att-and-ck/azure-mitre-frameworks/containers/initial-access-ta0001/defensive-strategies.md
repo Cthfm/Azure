@@ -2,7 +2,7 @@
 
 ## Defensive Strategies Against Initial Access in Containerized Environments
 
-In Kubernetes and cloud-native environments, **Initial Access** is typically gained through:
+In Kubernetes and cloud-native environments, Initial Access is typically gained through:
 
 * Exploited public-facing applications
 * Exposed remote services
@@ -10,76 +10,76 @@ In Kubernetes and cloud-native environments, **Initial Access** is typically gai
 * Misconfigured cloud resources
 * Poor API hardening
 
-Your goal as a defender is to reduce attack surface, tighten access controls, and monitor for early signs of exploitation.
+**Outcome:** Your goal as a defender is to reduce attack surface, tighten access controls, and monitor for early signs of exploitation.
 
 ***
 
-### 🧰 1. **Harden Kubernetes API & Cluster Exposure**
+### &#x20;1. **Harden Kubernetes API & Cluster Exposure**
 
-| Action                                                                                   | Why It Matters                                 |
-| ---------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| ❌ Don't expose Kubernetes API server to the public internet                              | Prevent direct attacker enumeration/bruteforce |
-| 🔒 Restrict API server access to trusted IP ranges using API Server Authorized IP Ranges | Only allow your office/VPN access              |
-| 🔑 Require Azure AD / OIDC authentication for `kubectl`                                  | No static kubeconfigs with long-lived tokens   |
-| 🔍 Enable Kubernetes API audit logging                                                   | Detect reconnaissance attempts and brute-force |
-
-***
-
-### 🌐 2. **Protect Public-Facing Applications**
-
-| Action                                                                | Why It Matters                                    |
-| --------------------------------------------------------------------- | ------------------------------------------------- |
-| 🔍 Regularly scan Ingress / LoadBalancer services for exposure        | Find and fix publicly accessible dashboards, apps |
-| 🛡️ Apply WAF (Web Application Firewall) to protect Ingress endpoints | Block common web exploits like RCE, SQLi          |
-| 🧱 Deploy API Gateway with authentication and rate-limiting           | Stop mass probing and bot scanning                |
-| 📜 Conduct security reviews of any third-party images                 | Images are a huge initial access vector           |
+| Action                                                                                | Why It Matters                                 |
+| ------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| Don't expose Kubernetes API server to the public internet                             | Prevent direct attacker enumeration/bruteforce |
+| Restrict API server access to trusted IP ranges using API Server Authorized IP Ranges | Only allow your office/VPN access              |
+| Require Azure Entra ID / OIDC authentication for `kubectl`                            | No static kubeconfigs with long-lived tokens   |
+| Enable Kubernetes API audit logging                                                   | Detect reconnaissance attempts and brute-force |
 
 ***
 
-### 👤 3. **Lock Down Remote Services (Dashboards, APIs, Cloud Ports)**
+### 2. **Protect Public-Facing Applications**
 
-| Action                                                               | Why It Matters                                  |
-| -------------------------------------------------------------------- | ----------------------------------------------- |
-| 🛡️ Deploy Kubernetes Dashboard only internally, with RBAC           | Dashboard should never be public or admin-bound |
-| 🔒 Secure cloud metadata services (IMDS) from pods                   | Prevent token theft (Azure, AWS, GCP)           |
-| 🔐 Require strong authentication for exposed services (OAuth2, mTLS) | Prevent external bruteforcing/login spray       |
-| 🚫 Remove unused services, close unused ports (NodePorts are risky!) | Fewer services = smaller attack surface         |
-
-***
-
-### 🔐 4. **Enforce Strong Credential Hygiene**
-
-| Action                                                                     | Why It Matters                        |
-| -------------------------------------------------------------------------- | ------------------------------------- |
-| 📜 Rotate Kubernetes ServiceAccount tokens regularly                       | Reduce window if token gets leaked    |
-| 🛡️ Block auto-mount of ServiceAccount tokens unless needed                | `automountServiceAccountToken: false` |
-| 🧠 Disable default passwords (ArgoCD, Grafana, Jenkins, etc.)              | Common paths into a cluster           |
-| 🔎 Continuously scan for leaked credentials in code repos (GitHub, GitLab) | Secrets sprawl is real                |
+| Action                                                            | Why It Matters                                    |
+| ----------------------------------------------------------------- | ------------------------------------------------- |
+| Regularly scan Ingress / LoadBalancer services for exposures      | Find and fix publicly accessible dashboards, apps |
+| Apply WAF (Web Application Firewall) to protect Ingress endpoints | Block common web exploits like RCE, SQLi          |
+| Deploy API Gateway with authentication and rate-limited           | Stop mass probing and bot scanning                |
+| Conduct security reviews of any third-party images                | Images are a huge initial access vector           |
 
 ***
 
-### 🚨 5. **Enable Real-Time Detection and Alerting**
+### 3. **Lock Down Remote Services (Dashboards, APIs, Cloud Ports)**
 
-| Action                                                                     | Why It Matters                         |
-| -------------------------------------------------------------------------- | -------------------------------------- |
-| 📡 Use Falco to detect suspicious container exec activity (`kubectl exec`) | Early signs of compromise              |
-| 🔥 Monitor network traffic with Cilium Hubble or Calico Flow Logs          | Detect unexpected external connections |
-| 📜 Parse and alert on Kubernetes audit logs for rolebinding/secret reads   | Signs of internal exploration          |
-| 🔔 Enable cloud-native security tools like Azure Defender for Kubernetes   | Baseline + anomaly detection           |
+| Action                                                            | Why It Matters                                  |
+| ----------------------------------------------------------------- | ----------------------------------------------- |
+| Deploy Kubernetes Dashboard only internally, with RBAC            | Dashboard should never be public or admin-bound |
+| Secure cloud metadata services (IMDS) from pods                   | Prevent token theft (Azure, AWS, GCP)           |
+| Require strong authentication for exposed services (OAuth2, mTLS) | Prevent external bruteforcing/login spray       |
+| Remove unused services, close unused ports (NodePorts are risky!) | Fewer services = smaller attack surface         |
 
 ***
 
-### 🛡️ 6. **Apply Admission Control to Preempt Bad Deployments**
+### 4. **Enforce Strong Credential Hygiene**
+
+| Action                                                                  | Why It Matters                        |
+| ----------------------------------------------------------------------- | ------------------------------------- |
+| Rotate Kubernetes ServiceAccount tokens regularly                       | Reduce window if token gets leaked    |
+| Block auto-mount of ServiceAccount tokens unless needed                 | `automountServiceAccountToken: false` |
+| Disable default passwords (ArgoCD, Grafana, Jenkins, etc.)              | Common paths into a cluster           |
+| Continuously scan for leaked credentials in code repos (GitHub, GitLab) | Secrets sprawl                        |
+
+***
+
+### 5. **Enable Real-Time Detection and Alerting**
+
+| Action                                                                  | Why It Matters                         |
+| ----------------------------------------------------------------------- | -------------------------------------- |
+| Use Falco to detect suspicious container exec activity (`kubectl exec)` | Early signs of compromise              |
+|  Monitor network traffic with Cilium Hubble or Calico Flow Logs         | Detect unexpected external connections |
+| Parse and alert on Kubernetes audit logs for rolebinding/secret reads   | Signs of internal exploration          |
+| Enable cloud-native security tools like Azure Defender for Kubernetes   | Baseline + anomaly detection           |
+
+***
+
+### 6. **Apply Admission Control to Preempt Bad Deployments**
 
 | Action                                                                  | Why It Matters                                            |
 | ----------------------------------------------------------------------- | --------------------------------------------------------- |
 | 📜 Use OPA Gatekeeper or Kyverno to block risky deployments             | No hostPath, no privileged pods, enforce image signatures |
 | 🧪 Enforce security context (no privilege escalation, read-only rootfs) | Containers should not run as root                         |
-| 🚫 Require network policies to isolate pods                             | Stop lateral movement if attacker compromises one pod     |
+| Require network policies to isolate pods                                | Stop lateral movement if attacker compromises one pod     |
 
 ***
 
-### 🛡️ Defensive Coverage Table (Initial Access)
+### Defensive Coverage Table (Initial Access)
 
 | Attack Vector                  | Defensive Strategy                                             |
 | ------------------------------ | -------------------------------------------------------------- |
@@ -91,7 +91,7 @@ Your goal as a defender is to reduce attack surface, tighten access controls, an
 
 ***
 
-## 🎯 Final Summary
+### Final Summary
 
 Defending against Initial Access in Kubernetes is all about:
 

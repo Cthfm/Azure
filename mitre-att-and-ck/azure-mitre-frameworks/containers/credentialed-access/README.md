@@ -6,7 +6,25 @@ In containerized infrastructures, adversaries may seek credentials to escalate p
 
 ***
 
-#### 🧠 Brute Force → **Password Guessing (T1110.001)**
+### **Brute Force T1110**
+
+**Description**
+
+Brute Force refers to adversaries systematically attempting multiple password guesses against authentication mechanisms to gain unauthorized access.
+
+Rather than exploiting vulnerabilities, attackers use guessing techniques (manual or automated) to crack passwords by:
+
+* Trying different passwords for a single user (classic brute-force)
+* Trying a single password across multiple users (password spraying)
+* Replaying leaked credentials from data breaches (credential stuffing)
+
+In containerized environments like Kubernetes or Docker, brute-force attacks commonly target:
+
+* Exposed web interfaces (e.g., Kubernetes Dashboard, ArgoCD, Grafana)
+* Internal authentication portals (e.g., GitLab, Keycloak, Jenkins)
+* Private registries (Harbor, Docker Registries)
+
+#### **Password Guessing (T1110.001)**
 
 **Description**: Attempt to guess passwords through repeated login attempts.
 
@@ -15,15 +33,13 @@ In containerized infrastructures, adversaries may seek credentials to escalate p
 *   Attacker brute-forces internal services like Redis, MySQL, Jenkins, or dashboards exposed via NodePort/Ingress:
 
     ```bash
-    bashCopyEdithydra -l admin -P rockyou.txt http://<service-ip>/login
+    hydra -l admin -P rockyou.txt http://<service-ip>/login
     ```
 * Common targets: ArgoCD, Grafana, Kubeapps, Harbor, Kubernetes Dashboard.
 
 **Goal**: Gain access to exposed services with weak authentication mechanisms.
 
-***
-
-#### 🧠 Brute Force → **Password Spraying (T1110.003)**
+#### **Password Spraying (T1110.003)**
 
 **Description**: Attempt the same password across multiple accounts to avoid lockout.
 
@@ -32,16 +48,14 @@ In containerized infrastructures, adversaries may seek credentials to escalate p
 *   Spray `Password123!` across all known usernames (e.g., from ConfigMaps or public repos):
 
     ```bash
-    bashCopyEdithydra -L users.txt -p Password123! http-post-form "/login:username=^USER^&password=^PASS^:F=incorrect"
+    hydra -L users.txt -p Password123! http-post-form "/login:username=^USER^&password=^PASS^:F=incorrect"
     ```
 
 **Realistic Targets**:
 
 * Internal GitLab, Keycloak, internal dashboards with multiple users.
 
-***
-
-#### 🧠 Brute Force → **Credential Stuffing (T1110.004)**
+**Credential Stuffing (T1110.004)**
 
 **Description**: Use leaked or stolen username/password pairs to access services.
 
@@ -50,7 +64,7 @@ In containerized infrastructures, adversaries may seek credentials to escalate p
 *   Try known breached credentials from `haveibeenpwned`, GitHub leaks, or phishing:
 
     ```bash
-    bashCopyEditcrackmapexec http <target-ip> -u users.txt -p passwords.txt
+    crackmapexec http <target-ip> -u users.txt -p passwords.txt
     ```
 
 **Kubernetes Specific**:
@@ -59,7 +73,7 @@ In containerized infrastructures, adversaries may seek credentials to escalate p
 
 ***
 
-#### 🎟️ Steal Application Access Token (T1528)
+#### Steal Application Access Token (T1528)
 
 **Description**: Steal cloud provider metadata tokens or service account tokens to impersonate applications.
 
@@ -68,24 +82,35 @@ In containerized infrastructures, adversaries may seek credentials to escalate p
 *   Inside compromised container:
 
     ```bash
-    bashCopyEditcat /var/run/secrets/kubernetes.io/serviceaccount/token
+    cat /var/run/secrets/kubernetes.io/serviceaccount/token
     ```
-*   AWS (from EC2, EKS pod):
+*   Azure (from VM, AKS pod):
 
     ```bash
-    bashCopyEditcurl -H "X-aws-ec2-metadata-token: TOKEN" http://169.254.169.254/latest/meta-data/iam/security-credentials/
-    ```
-*   GCP (from GKE or Cloud Run):
-
-    ```bash
-    bashCopyEditcurl -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token
+    curl -H "Metadata:true" "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/"
     ```
 
 **Outcome**: Access APIs, Kubernetes clusters, or cloud services without valid user credentials.
 
 ***
 
-#### 📂 Unsecured Credentials → **Credentials in Files (T1552.001)**
+### Unsecured Credentials T1552
+
+#### **Description**
+
+Unsecured Credentials refers to adversaries searching for and extracting sensitive authentication material stored insecurely across systems.\
+Instead of stealing credentials in transit, attackers find secrets at rest — sitting unprotected inside files, containers, mounted volumes, environment variables, APIs, or cloud storage.
+
+In containerized environments, this typically means:
+
+* Finding hardcoded passwords, API keys, or tokens in container images
+* Harvesting secrets from mounted Kubernetes volumes
+* Pulling environment variables with embedded credentials
+* Abusing exposed Docker or Kubernetes APIs to access secret data
+
+Secrets management mistakes are very common in Kubernetes and Docker setups, making this one of the easiest and most damaging attack paths.
+
+#### &#x20;**Credentials in Files (T1552.001)**
 
 **Description**: Extract hardcoded or mounted credentials from known file locations.
 
@@ -94,7 +119,7 @@ In containerized infrastructures, adversaries may seek credentials to escalate p
 *   Scan image or mounted volume for:
 
     ```bash
-    bashCopyEditfind / -name "*.env" -o -name "*.yaml" -o -name "*config*" 2>/dev/null | xargs grep -Ei "pass|token|api_key|secret"
+    find / -name "*.env" -o -name "*.yaml" -o -name "*config*" 2>/dev/null | xargs grep -Ei "pass|token|api_key|secret"
     ```
 
 **Common Targets**:
@@ -103,7 +128,7 @@ In containerized infrastructures, adversaries may seek credentials to escalate p
 
 ***
 
-#### 📦 Unsecured Credentials → **Container API (T1552.007)**
+#### **Container API (T1552.007)**
 
 **Description**: Abuse exposed container APIs (e.g., Docker API or Kubernetes API) to retrieve secrets or container environment data.
 
@@ -112,12 +137,12 @@ In containerized infrastructures, adversaries may seek credentials to escalate p
 *   Access the Docker socket:
 
     ```bash
-    bashCopyEditcurl --unix-socket /var/run/docker.sock http://localhost/containers/json
+    curl --unix-socket /var/run/docker.sock http://localhost/containers/json
     ```
 *   Query environment variables with embedded credentials:
 
     ```bash
-    bashCopyEditkubectl exec -it <pod> -- env | grep -Ei "secret|key|token"
+    kubectl exec -it <pod> -- env | grep -Ei "secret|key|token"
     ```
 
 **Impact**:
@@ -126,13 +151,24 @@ In containerized infrastructures, adversaries may seek credentials to escalate p
 
 ***
 
-### 🔎 Summary Table
+### **Credential Access Techniques in Containers Summary**
 
-| Technique               | Sub-Technique        | Containerized Use Case                              |
-| ----------------------- | -------------------- | --------------------------------------------------- |
-| Brute Force             | Password Guessing    | Use `hydra` or `medusa` to brute exposed dashboards |
-| Brute Force             | Password Spraying    | Attempt common passwords across all users           |
-| Brute Force             | Credential Stuffing  | Use leaked creds to hit known web interfaces        |
-| Steal Application Token | —                    | Grab K8s SA token or cloud metadata credentials     |
-| Unsecured Credentials   | Credentials in Files | Look for secrets in mounted volumes, env files      |
-| Unsecured Credentials   | Container API        | Abuse Docker/Kubelet API or env to steal secrets    |
+| Technique/Subtechnique         | MITRE ID  | Container Example                                     |
+| ------------------------------ | --------- | ----------------------------------------------------- |
+| Password Guessing              | T1110.001 | Brute-force internal web services                     |
+| Password Spraying              | T1110.003 | Spray common passwords across accounts                |
+| Credential Stuffing            | T1110.004 | Replay known credential dumps                         |
+| Steal Application Access Token | T1528     | Steal service account tokens or cloud metadata tokens |
+| Credentials in Files           | T1552.001 | Extract secrets from config files or mounted volumes  |
+| Container API                  | T1552.007 | Abuse Docker/Kubernetes APIs to extract secrets       |
+
+***
+
+### Final Summary
+
+Defending against Credential Access in containers focuses on:
+
+* Locking down metadata services and service account token access
+* Auditing and securing all credential storage paths
+* Enforcing strong passwords and MFA across internal services
+* Monitoring for suspicious token or API usage

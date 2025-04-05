@@ -7,67 +7,67 @@ Your goal is to block escalation paths, detect suspicious privilege changes, and
 
 ***
 
-### 🧰 1. **Enforce Strong Pod Security Standards**
+### 1. **Enforce Strong Pod Security Standards**
 
-| Action                                                                          | Why It Matters                                               |
-| ------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| 🛡️ Enforce PodSecurity Admission "restricted" mode (or OPA/Kyverno equivalent) | Blocks privileged containers, hostPath, hostPID, hostNetwork |
-| 🚫 Disallow adding Linux capabilities (`capAdd`) like `SYS_ADMIN`, `NET_ADMIN`  | No unnecessary kernel-level powers                           |
-| 📜 Force non-root users in containers                                           | No `USER 0` in container images                              |
+| Action                                                                      | Why It Matters                                               |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Enforce PodSecurity Admission "restricted" mode (or OPA/Kyverno equivalent) | Blocks privileged containers, hostPath, hostPID, hostNetwork |
+| Disallow adding Linux capabilities (`capAdd`) like `SYS_ADMIN`, `NET_ADMIN` | No unnecessary kernel-level powers                           |
+| Force non-root users in containers                                          | No `USER 0` in container images                              |
 
-✅ Stops container-based privilege escalation through misconfigured security contexts (T1611 – Escape to Host).
-
-***
-
-### 🔒 2. **Tighten RBAC and Role Assignment**
-
-| Action                                                                          | Why It Matters                                         |
-| ------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| 🔒 Grant only necessary permissions at namespace and cluster levels             | Enforce least privilege — deny broad access by default |
-| 🚫 Prevent `cluster-admin` bindings unless absolutely necessary                 | Attackers love landing on cluster-admin                |
-| 📜 Monitor for creation or modification of RoleBindings and ClusterRoleBindings | Detect escalations in progress                         |
-
-✅ Blocks abuse of **T1098 – Account Manipulation** and **T1068 – Exploitation for Privilege Escalation**.
+Stops container-based privilege escalation through misconfigured security contexts (T1611 – Escape to Host).
 
 ***
 
-### 🐳 3. **Restrict Sensitive Kubernetes API Access**
+### 2. **Tighten RBAC and Role Assignment**
+
+| Action                                                                       | Why It Matters                                         |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Grant only necessary permissions at namespace and cluster levels             | Enforce least privilege — deny broad access by default |
+| Prevent `cluster-admin` bindings unless absolutely necessary                 | Attackers love landing on cluster-admin                |
+| Monitor for creation or modification of RoleBindings and ClusterRoleBindings | Detect escalations in progress                         |
+
+Blocks abuse of account manipulation and exploitation to cause privilege escalation. &#x20;
+
+***
+
+### 3. **Restrict Sensitive Kubernetes API Access**
 
 | Action                                                                  | Why It Matters                                                      |
 | ----------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| 🛡️ Block pod creation/update permissions to low-trust service accounts | Attackers can't deploy their own privileged pods                    |
-| 🔒 Restrict `create pods/exec` to trusted users only                    | Stops using kubectl exec for hidden privilege escalation            |
-| 📜 Use Azure AD Pod Identity or Workload Identity with tight scoping    | Azure AKS best practice for least privilege at cloud identity layer |
+| Block pod creation/update permissions to low-trust service accounts     | Attackers can't deploy their own privileged pods                    |
+| Restrict `create pods/exec` to trusted users only                       | Stops using kubectl exec for hidden privilege escalation            |
+| Use Azure Entra ID Pod Identity or Workload Identity with tight scoping | Azure AKS best practice for least privilege at cloud identity layer |
 
-✅ Defends against privilege escalation via Kubernetes-native resources like new pods, Jobs, or access tokens.
-
-***
-
-### 🔥 4. **Restrict Node Access and Protect Node Components**
-
-| Action                                                                | Why It Matters                                                    |
-| --------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| 🚫 Block hostPath mounts in pods unless strictly needed               | Prevent access to `/etc/kubernetes`, `/proc`, or host filesystems |
-| 🛡️ Harden kubelet API access — require client certs, IP whitelisting | Kubelet abuse = escalate node control                             |
-| 📜 Enable AuditD/eBPF monitoring at the node level (Falco, Tracee)    | See escalation attempts on the OS level                           |
-
-✅ Limits lateral movement into the node host, stops container escape attacks.
+Defends against privilege escalation via Kubernetes-native resources like new pods, Jobs, or access tokens.
 
 ***
 
-### 📡 5. **Monitor and Detect Escalation Behavior**
+### 4. **Restrict Node Access and Protect Node Components**
 
-| Action                                                                                               | Why It Matters                                        |
-| ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| 📜 Audit Kubernetes API for new RoleBindings, ClusterRoleBindings, or ServiceAccount elevation       | Early warning for privilege escalation                |
-| 📡 Use Falco to detect high-risk container activity: `privileged: true`, hostPath, hostNetwork usage | Runtime alerts on suspicious containers               |
-| 🔥 Alert on new deployments of pods with `privileged: true` or added `capabilities`                  | Attackers hiding inside scheduled jobs or deployments |
+| Action                                                            | Why It Matters                                                    |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Block hostPath mounts in pods unless strictly needed              | Prevent access to `/etc/kubernetes`, `/proc`, or host filesystems |
+| Harden kubelet API access — require client certs, IP whitelisting | Kubelet abuse = escalate node control                             |
+| Enable AuditD/eBPF monitoring at the node level (Falco, Tracee)   | See escalation attempts on the OS level                           |
 
-✅ Gives real-time visibility when an attacker attempts escalation.
+Limits lateral movement into the node host, stops container escape attacks.
 
 ***
 
-### 📊 Defensive Coverage Table (Privilege Escalation)
+### 5. **Monitor and Detect Escalation Behavior**
+
+| Action                                                                                            | Why It Matters                                        |
+| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| Audit Kubernetes API for new RoleBindings, ClusterRoleBindings, or ServiceAccount elevation       | Early warning for privilege escalation                |
+| Use Falco to detect high-risk container activity: `privileged: true`, hostPath, hostNetwork usage | Runtime alerts on suspicious containers               |
+| Alert on new deployments of pods with `privileged: true` or added `capabilities`                  | Attackers hiding inside scheduled jobs or deployments |
+
+Gives real-time visibility when an attacker attempts escalation.
+
+***
+
+### Defensive Coverage Table (Privilege Escalation)
 
 | Attack Vector                                          | Defensive Strategy                                          |
 | ------------------------------------------------------ | ----------------------------------------------------------- |
@@ -79,7 +79,7 @@ Your goal is to block escalation paths, detect suspicious privilege changes, and
 
 ***
 
-## 🎯 Final Summary
+### Final Summary
 
 Defending against Privilege Escalation focuses on:
 
