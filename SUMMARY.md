@@ -57,6 +57,19 @@
 
 ## KQL
 
+* [KQL New](kql/kql-new/README.md)
+  * [KQL Introduction New](kql/kql-new/kql-introduction-new.md)
+  * [Common Operators](kql/kql-new/common-operators.md)
+  * [Search and Filtering](kql/kql-new/search-and-filtering.md)
+  * [Project and Extend Deep Dive](kql/kql-new/project-and-extend-deep-dive.md)
+  * [Summarize](kql/kql-new/summarize.md)
+  * [Time Generated](kql/kql-new/time-generated.md)
+  * [Joins](kql/kql-new/joins.md)
+  * [Parsing Data](kql/kql-new/parsing-data.md)
+  * [Advanced KQL Techniques](kql/kql-new/advanced-kql-techniques.md)
+  * [Presenting Data](kql/kql-new/presenting-data.md)
+  * [Real World Examples](kql/kql-new/real-world-examples.md)
+  * [Best Practices](kql/kql-new/best-practices.md)
 * [KQL Overview](kql/kql-overview/README.md)
   * [KQL Introduction](kql/kql-overview/kql-introduction.md)
   * [Data Types](kql/kql-overview/data-types.md)
@@ -99,10 +112,6 @@
 
 * [Bicep File Structure](bicep/bicep-file-structure.md)
 * [Variable Types](bicep/variable-types.md)
-
-## Sigma
-
-* [Sigma Rule Structure](sigma/sigma-rule-structure.md)
 
 ## Azure Logging References
 
@@ -182,6 +191,7 @@
   * [Intune](azure-logging-references/logging/intune.md)
   * [Sysmon](azure-logging-references/logging/sysmon.md)
   * [Purview Audit Log Schema](azure-logging-references/logging/purview-audit-log-schema.md)
+  * [Kubernetes Audit Log (AKS)](azure-logging-references/logging/kubernetes-audit-log-aks.md)
 
 ## Threat Hunting
 
@@ -196,6 +206,10 @@
   * [Azure Threat Hunting Ideas](threat-hunting/threat-hunting-in-azure/azure-threat-hunting-ideas.md)
   * [Hands On Threat Hunting Examples](threat-hunting/threat-hunting-in-azure/hands-on-threat-hunting-examples.md)
   * [OSINT Feeds](threat-hunting/threat-hunting-in-azure/osint-feeds.md)
+
+## Sigma
+
+* [Sigma Rule Structure](sigma/sigma-rule-structure.md)
 
 ## Microsoft Defender TI
 
@@ -441,3 +455,22 @@
 * [Verifying Logs in Log Analytics Workspace](verifying-logs-in-log-analytics-workspace.md)
 * [Creating Detections: Azure Monitor](creating-detections-azure-monitor.md)
 * [Cost Management: Billing Alarms](cost-management-billing-alarms.md)
+
+## Purview
+
+* [Introduction](purview/introduction.md)
+* [Architecture and Key Concepts](purview/architecture-and-key-concepts.md)
+* [Data Classification and Sensitivity Labels](purview/data-classification-and-sensitivity-labels.md)
+* [DLP](purview/dlp.md)
+* [Create a Basic Policy](purview/create-a-basic-policy.md)
+* [Insider Risk Management](purview/insider-risk-management.md)
+* [Communication Compliance](purview/communication-compliance.md)
+* [Information Protection and Encryption](purview/information-protection-and-encryption.md)
+* [Records Management](purview/records-management.md)
+* [Page](purview/page.md)
+* [DLM](purview/dlm.md)
+* [Data Governance Data Map](purview/data-governance-data-map.md)
+* [Advanced Auditing](purview/advanced-auditing.md)
+* [Risk and Privacy Management](purview/risk-and-privacy-management.md)
+* [eDiscovery](purview/ediscovery.md)
+* [Purview Integrations](purview/purview-integrations.md)
