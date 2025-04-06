@@ -79,17 +79,15 @@
 
 ## Microsoft Graph API
 
-* [Microsoft Graph API Introduction](microsoft-graph-api/microsoft-graph-api-introduction.md)
-* [Authentication](microsoft-graph-api/authentication.md)
-* [Main Tools](microsoft-graph-api/main-tools.md)
-* [Graph API Requests](microsoft-graph-api/graph-api-requests.md)
-
-***
-
-* [Users and Groups](users-and-groups.md)
-* [Graph Permissions](graph-permissions.md)
-* [Microsoft Graph Security API](microsoft-graph-security-api.md)
-* [Microsoft Documentation Microsoft Graph Powershell SDK](powershell-microsoft-graph-sdk.md)
+* [Graph New](microsoft-graph-api/graph-new/README.md)
+  * [Microsoft Graph API Introduction](microsoft-graph-api/graph-new/microsoft-graph-api-introduction.md)
+  * [Authentication](microsoft-graph-api/graph-new/authentication/README.md)
+    * [Graph Permissions](microsoft-graph-api/graph-new/authentication/graph-permissions.md)
+  * [Users and Groups](microsoft-graph-api/graph-new/users-and-groups.md)
+  * [Main Tools](microsoft-graph-api/graph-new/main-tools/README.md)
+    * [Graph API Requests](microsoft-graph-api/graph-new/main-tools/graph-api-requests.md)
+    * [Microsoft Documentation Microsoft Graph Powershell SDK](microsoft-graph-api/graph-new/main-tools/powershell-microsoft-graph-sdk.md)
+  * [Microsoft Graph Security API](microsoft-graph-api/graph-new/microsoft-graph-security-api.md)
 
 ## Powershell
 
